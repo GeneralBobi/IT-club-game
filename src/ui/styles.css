@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap");
-@import "tailwindcss";
+@import "tailwindcss" source(none);
+@source "../";
 
 .zero-intro-copy .call-sign-label,
 label.challenger-name {
