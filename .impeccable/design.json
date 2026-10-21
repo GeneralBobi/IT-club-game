@@ -1,0 +1,356 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-21T16:35:17.721074+00:00",
+  "title": "Design System: EMU IT Club — EMUCON Games",
+  "extensions": {
+    "colorMeta": {
+      "amber": {
+        "role": "primary",
+        "displayName": "Festival Amber",
+        "tonalRamp": [
+          "oklch(15% 0.1376 75.15)",
+          "oklch(26% 0.1376 75.15)",
+          "oklch(38% 0.1376 75.15)",
+          "oklch(49% 0.1376 75.15)",
+          "oklch(61% 0.1376 75.15)",
+          "oklch(72% 0.1376 75.15)",
+          "oklch(84% 0.1376 75.15)",
+          "oklch(95% 0.1376 75.15)"
+        ]
+      },
+      "amber-hover": {
+        "role": "primary",
+        "displayName": "Hover Amber",
+        "tonalRamp": [
+          "oklch(15% 0.1317 78.49)",
+          "oklch(26% 0.1317 78.49)",
+          "oklch(38% 0.1317 78.49)",
+          "oklch(49% 0.1317 78.49)",
+          "oklch(61% 0.1317 78.49)",
+          "oklch(72% 0.1317 78.49)",
+          "oklch(84% 0.1317 78.49)",
+          "oklch(95% 0.1317 78.49)"
+        ]
+      },
+      "coral": {
+        "role": "secondary",
+        "displayName": "Registration Coral",
+        "tonalRamp": [
+          "oklch(15% 0.1420 25.85)",
+          "oklch(26% 0.1420 25.85)",
+          "oklch(38% 0.1420 25.85)",
+          "oklch(49% 0.1420 25.85)",
+          "oklch(61% 0.1420 25.85)",
+          "oklch(72% 0.1420 25.85)",
+          "oklch(84% 0.1420 25.85)",
+          "oklch(95% 0.1420 25.85)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Neutral Paper",
+        "tonalRamp": [
+          "oklch(15% 0.0099 87.47)",
+          "oklch(26% 0.0099 87.47)",
+          "oklch(38% 0.0099 87.47)",
+          "oklch(49% 0.0099 87.47)",
+          "oklch(61% 0.0099 87.47)",
+          "oklch(72% 0.0099 87.47)",
+          "oklch(84% 0.0099 87.47)",
+          "oklch(95% 0.0099 87.47)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Midnight Ink",
+        "tonalRamp": [
+          "oklch(15% 0.0375 265.22)",
+          "oklch(26% 0.0375 265.22)",
+          "oklch(38% 0.0375 265.22)",
+          "oklch(49% 0.0375 265.22)",
+          "oklch(61% 0.0375 265.22)",
+          "oklch(72% 0.0375 265.22)",
+          "oklch(84% 0.0375 265.22)",
+          "oklch(95% 0.0375 265.22)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted Slate",
+        "tonalRamp": [
+          "oklch(15% 0.0239 260.12)",
+          "oklch(26% 0.0239 260.12)",
+          "oklch(38% 0.0239 260.12)",
+          "oklch(49% 0.0239 260.12)",
+          "oklch(61% 0.0239 260.12)",
+          "oklch(72% 0.0239 260.12)",
+          "oklch(84% 0.0239 260.12)",
+          "oklch(95% 0.0239 260.12)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Warm Line",
+        "tonalRamp": [
+          "oklch(15% 0.0099 100.03)",
+          "oklch(26% 0.0099 100.03)",
+          "oklch(38% 0.0099 100.03)",
+          "oklch(49% 0.0099 100.03)",
+          "oklch(61% 0.0099 100.03)",
+          "oklch(72% 0.0099 100.03)",
+          "oklch(84% 0.0099 100.03)",
+          "oklch(95% 0.0099 100.03)"
+        ]
+      },
+      "field": {
+        "role": "neutral",
+        "displayName": "Field White",
+        "tonalRamp": [
+          "oklch(15% 0.0082 91.48)",
+          "oklch(26% 0.0082 91.48)",
+          "oklch(38% 0.0082 91.48)",
+          "oklch(49% 0.0082 91.48)",
+          "oklch(61% 0.0082 91.48)",
+          "oklch(72% 0.0082 91.48)",
+          "oklch(84% 0.0082 91.48)",
+          "oklch(95% 0.0082 91.48)"
+        ]
+      },
+      "focus": {
+        "role": "neutral",
+        "displayName": "Focus Blue",
+        "tonalRamp": [
+          "oklch(15% 0.1144 254.29)",
+          "oklch(26% 0.1144 254.29)",
+          "oklch(38% 0.1144 254.29)",
+          "oklch(49% 0.1144 254.29)",
+          "oklch(61% 0.1144 254.29)",
+          "oklch(72% 0.1144 254.29)",
+          "oklch(84% 0.1144 254.29)",
+          "oklch(95% 0.1144 254.29)"
+        ]
+      },
+      "myth": {
+        "role": "secondary",
+        "displayName": "Myth Maroon",
+        "tonalRamp": [
+          "oklch(15% 0.1071 25.21)",
+          "oklch(26% 0.1071 25.21)",
+          "oklch(38% 0.1071 25.21)",
+          "oklch(49% 0.1071 25.21)",
+          "oklch(61% 0.1071 25.21)",
+          "oklch(72% 0.1071 25.21)",
+          "oklch(84% 0.1071 25.21)",
+          "oklch(95% 0.1071 25.21)"
+        ]
+      },
+      "fact": {
+        "role": "secondary",
+        "displayName": "Fact Green",
+        "tonalRamp": [
+          "oklch(15% 0.0696 160.04)",
+          "oklch(26% 0.0696 160.04)",
+          "oklch(38% 0.0696 160.04)",
+          "oklch(49% 0.0696 160.04)",
+          "oklch(61% 0.0696 160.04)",
+          "oklch(72% 0.0696 160.04)",
+          "oklch(84% 0.0696 160.04)",
+          "oklch(95% 0.0696 160.04)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Festival invitation."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Programme invitation."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Featured game names."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Readable instructions and prose."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Language and utility controls."
+      },
+      "case-time": {
+        "displayName": "Case Time",
+        "purpose": "Actual case timestamps."
+      },
+      "club-name": {
+        "displayName": "Club Name",
+        "purpose": "Header identity text only."
+      }
+    },
+    "shadows": [
+      {
+        "name": "poster-registration",
+        "value": "3px 3px 0 var(--coral)",
+        "purpose": "Text shadow on festival display text only."
+      },
+      {
+        "name": "preview-cursor",
+        "value": "drop-shadow(1px 2px 2px #0005)",
+        "purpose": "Filter on the Target Rush preview cursor only."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Arrival and control motion."
+      },
+      {
+        "name": "poster-arrival",
+        "value": "650ms",
+        "purpose": "One headline and underline arrival."
+      },
+      {
+        "name": "rocket-float",
+        "value": "6s ease-in-out infinite",
+        "purpose": "Source rocket only; paused while home is hidden or offscreen."
+      },
+      {
+        "name": "preview-demo",
+        "value": "750ms–1100ms",
+        "purpose": "One-shot hover and keyboard-focus demos."
+      },
+      {
+        "name": "route-exit",
+        "value": "160ms ease-out",
+        "purpose": "Native view transition exit."
+      },
+      {
+        "name": "route-entry",
+        "value": "300ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Native view transition entry."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "festival-intermediate",
+        "value": "1200px"
+      },
+      {
+        "name": "stack",
+        "value": "800px"
+      },
+      {
+        "name": "compact",
+        "value": "540px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Shared play and continue action.",
+      "html": "<button class=\"ds-primary\">Oyna →</button>",
+      "css": ".ds-primary{font:800 17px/1.2 Bricolage,Arial,sans-serif;background:var(--amber,#de9e36);color:var(--ink,#121a2c);border:1px solid transparent;border-radius:10px;padding:11px 20px;min-height:49px;transition:background 160ms,transform 200ms cubic-bezier(.16,1,.3,1)}.ds-primary:hover{background:#efb654}.ds-primary:active{transform:scale(.97)}.ds-primary:focus-visible{outline:3px solid #154b87;outline-offset:5px}"
+    },
+    {
+      "name": "Quiet Action",
+      "kind": "button",
+      "refersTo": "button-quiet",
+      "description": "Secondary dialog action.",
+      "html": "<button class=\"ds-quiet\">Vazgeç</button>",
+      "css": ".ds-quiet{font:400 17px/1.5 Bricolage,Arial,sans-serif;background:transparent;color:var(--ink,#121a2c);border:1px solid var(--ink,#121a2c);border-radius:3px;padding:10px 18px;min-height:44px}.ds-quiet:focus-visible{outline:3px solid #154b87;outline-offset:5px}"
+    },
+    {
+      "name": "Player Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Player name and score filtering field.",
+      "html": "<input class=\"ds-field\" placeholder=\"Oyuncu adı\" aria-label=\"Oyuncu adı\">",
+      "css": ".ds-field{font:400 17px/1.5 Bricolage,Arial,sans-serif;background:#fffdf7;color:var(--ink,#121a2c);border:1px solid var(--line,#b6b5ae);border-radius:3px;padding:11px 14px;min-height:44px}.ds-field:focus-visible{outline:3px solid #154b87;outline-offset:5px}"
+    },
+    {
+      "name": "Language Navigation",
+      "kind": "nav",
+      "description": "Two language choices with a selected underline.",
+      "html": "<nav class=\"ds-language\" aria-label=\"Dil\"><button aria-pressed=\"true\">Türkçe</button><button aria-pressed=\"false\">English</button></nav>",
+      "css": ".ds-language{display:flex;gap:20px}.ds-language button{font:800 14px/1.5 Bricolage,Arial,sans-serif;color:var(--ink,#121a2c);background:none;border:0;border-bottom:3px solid transparent;padding:12px 0}.ds-language button[aria-pressed=true]{border-color:var(--amber,#de9e36)}.ds-language button:focus-visible{outline:3px solid #154b87;outline-offset:5px}"
+    },
+    {
+      "name": "Game Row",
+      "kind": "card",
+      "refersTo": "game-row",
+      "description": "Rounded surface for a featured game and its instructions.",
+      "html": "<article class=\"ds-game\"><h2>Zero Point</h2><p>Zamanı hisset.</p></article>",
+      "css": ".ds-game{background:#f6f3ec66;color:var(--ink,#121a2c);border:1.5px solid var(--ink,#121a2c);border-radius:14px;padding:12px}.ds-game h2{font:900 46px/1.1 \"Big Shoulders Display\",sans-serif;letter-spacing:-.025em;margin:0}.ds-game p{font:400 23px/1.3 Bricolage,Arial,sans-serif;margin:5px 0 0}"
+    },
+    {
+      "name": "Key Hint",
+      "kind": "custom",
+      "refersTo": "key-hint",
+      "description": "Readable keyboard instruction before play.",
+      "html": "<span class=\"ds-hint\"><kbd>Boşluk</kbd><span>tuşuna bas.</span></span>",
+      "css": ".ds-hint{display:flex;align-items:center;gap:12px;font:400 17px/1.5 Bricolage,Arial,sans-serif;color:var(--ink,#121a2c)}.ds-hint kbd{font:500 17px/1.5 Bricolage,Arial,sans-serif;border:1.5px solid var(--ink,#121a2c);background:#f9f6ef;border-radius:5px;padding:7px 20px}"
+    },
+    {
+      "name": "Efsane Choice",
+      "kind": "button",
+      "refersTo": "choice-myth",
+      "description": "Large answer control in Myth or Fact.",
+      "html": "<button class=\"ds-myth\">Efsane</button>",
+      "css": ".ds-myth{font:800 30px/1.5 Bricolage,Arial,sans-serif;background:var(--myth,#7a2e2b);color:#f3efe6;border:1px solid transparent;border-radius:12px;min-height:100px;padding:12px 30px}.ds-myth:hover{filter:brightness(1.15)}.ds-myth:focus-visible{outline:3px solid #154b87;outline-offset:5px}"
+    },
+    {
+      "name": "Gerçek Choice",
+      "kind": "button",
+      "refersTo": "choice-fact",
+      "description": "Large answer control in Myth or Fact.",
+      "html": "<button class=\"ds-fact\">Gerçek</button>",
+      "css": ".ds-fact{font:800 30px/1.5 Bricolage,Arial,sans-serif;background:var(--fact,#285b42);color:#f3efe6;border:1px solid transparent;border-radius:12px;min-height:100px;padding:12px 30px}.ds-fact:hover{filter:brightness(1.15)}.ds-fact:focus-visible{outline:3px solid #154b87;outline-offset:5px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Supplied Festival Print",
+    "overview": "The supplied festival poster kit sets the world: neutral paper, dense dark ink, amber fields, coral registration, grain and halftone. Condensed headlines carry the invitation; rounded game surfaces keep the controls approachable. The source rocket, planet, stars and year stamp retain the event’s drawn and printed character.\n\nThe shared shell gives original institutional identities quiet space above and below the games. Festival is the default composition; Lobby and Classic are valid expressions of the same palette, typography, controls and source artwork. Turkish and English use the same hierarchy and complete identity strips.",
+    "keyCharacteristics": [
+      "Printed source material with neutral paper and dark ink.",
+      "Condensed headlines paired with readable Bricolage instructions.",
+      "Rounded game surfaces, visible controls and direct amber actions.",
+      "Static original identities and restrained, purposeful motion."
+    ],
+    "rules": [
+      {
+        "name": "The Original Identity Rule",
+        "body": "Use complete supplied identity artwork at its original proportions, with quiet clearspace; keep logos static and free of effects.",
+        "section": "colors"
+      },
+      {
+        "name": "The Role Separation Rule",
+        "body": "Use Big Shoulders Display for headlines, Bricolage for instructions and controls, and Courier Prime for actual case timestamps. The Georgia club name is confined to the identity area.",
+        "section": "typography"
+      },
+      {
+        "name": "The Printed Depth Rule",
+        "body": "Use borders, source texture and tonal layering for depth. The coral registration on festival display text belongs to the poster; it is not a general container shadow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use the final paper token for shared page backgrounds.",
+      "Do preserve original event illustrations, grain, halftone and complete institutional artwork.",
+      "Do keep both language states legible and use the corresponding supplied organizer strip.",
+      "Do show the control hint beside each game and keep the primary action broad.",
+      "Do honor reduced motion and pause home animation when hidden or offscreen."
+    ],
+    "donts": [
+      "Don't redraw, distort, recolor, rotate or animate institutional identities.",
+      "Don't carry the rejected neon command-center or sci-fi HUD treatment into new surfaces.",
+      "Don't turn poster registration into hard offset shadows on controls or containers.",
+      "Don't run repeating game demonstrations across the menu; demonstrations are one-shot responses to hover or keyboard focus."
+    ]
+  }
+}

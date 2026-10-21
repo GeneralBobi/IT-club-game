@@ -1,0 +1,32 @@
+[
+  {
+    "file": "year-stamp.png",
+    "layer": "/Stamp: 2026/Stamp: 2026 shape",
+    "size": [
+      412,
+      198
+    ],
+    "source": "EMUCON 2026 poster kit PSD",
+    "drive": "https://drive.google.com/file/d/1Y1bIt9erdzNZ1UJkTHEhJJg5m97UB_yN/view"
+  },
+  {
+    "file": "riso-grain.png",
+    "layer": "/Texture: riso grain (Multiply)/Riso grain",
+    "size": [
+      264,
+      236
+    ],
+    "source": "EMUCON 2026 poster kit PSD",
+    "drive": "https://drive.google.com/file/d/1Y1bIt9erdzNZ1UJkTHEhJJg5m97UB_yN/view"
+  },
+  {
+    "file": "halftone-dots.png",
+    "layer": "/Texture: halftone (Multiply)/Halftone dots",
+    "size": [
+      244,
+      230
+    ],
+    "source": "EMUCON 2026 poster kit PSD",
+    "drive": "https://drive.google.com/file/d/1Y1bIt9erdzNZ1UJkTHEhJJg5m97UB_yN/view"
+  }
+]

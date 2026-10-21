@@ -10,6 +10,9 @@ import { SQLiteSessionStore } from "./session-store.js";
 import { createArena, gameIds } from "./arena.js";
 import { mythRouter } from "./myth-fact/routes.js";
 import { detectiveRouter } from "./digital-detective/routes.js";
+import { createDetective } from "./digital-detective/service.js";
+import { createMythService } from "./myth-fact/service.js";
+import { standGamesRouter } from "./stand-games.js";
 
 const app = express();
 const arena = createArena(database);
@@ -67,6 +70,22 @@ app.get("/api/health", async (_req, res) => {
 
 app.use("/api/myth", mythRouter(publish));
 app.use("/api/detective", detectiveRouter(publish));
+app.use("/api/stand",standGamesRouter(publish));
+
+app.post("/api/player/reset", rateLimit({windowMs:60_000,limit:60,standardHeaders:"draft-8",legacyHeaders:false}), async (req,res,next) => {
+  const site=req.get("sec-fetch-site"),origin=req.get("origin");
+  let sameOrigin=!origin;
+  try{sameOrigin ||= Boolean(origin&&new URL(origin).host===req.get("host"));}catch{/* Reject malformed origins. */}
+  if(site==="cross-site"||(site!=="same-origin"&&!sameOrigin)){res.status(403).json({error:"Cross-site request rejected."});return;}
+  try{
+    if(req.session.detectiveOwner)await createDetective(database,publish).reset(req.session.detectiveOwner);
+    if(req.session.mythOwner){const service=createMythService(database,publish);const pending=await service.pending(req.session.mythOwner);if(pending)await service.abandon(pending.id,req.session.mythOwner);}
+    if(req.session.standOwner){await database.prepare("UPDATE game_sessions SET last_seen_at=0 WHERE id IN (SELECT id FROM stand_attempts WHERE owner=? AND completed_at IS NULL)").run(req.session.standOwner);await database.prepare("UPDATE stand_attempts SET owner=? WHERE owner=? AND completed_at IS NULL").run(`retired:${Date.now()}`,req.session.standOwner);}
+    delete req.session.detectiveOwner;delete req.session.mythOwner;delete req.session.arenaParticipantId;delete req.session.standOwner;
+    // The shared laptop's staff login remains intact; only player ownership is reset.
+    req.session.save(error=>error?next(error):res.status(204).end());
+  }catch(error){next(error);}
+});
 
 app.use("/api", (_req, res, next) => { res.setHeader("Cache-Control", "no-store"); next(); });
 app.get("/api/events", (req, res) => {
@@ -81,7 +100,8 @@ app.get("/api/events", (req, res) => {
 app.get("/api/leaderboard/:game", async (req, res) => {
   const game = z.enum(gameIds).safeParse(req.params.game);
   if (!game.success) { res.status(400).json({ error: "Unknown game." }); return; }
-  res.json((await arena.rankings(game.data)));
+  const rules = req.query.rules === "2" ? 2 : 1;
+  res.json((await arena.rankings(game.data, rules)));
 });
 app.get("/api/leaderboards", async (_req, res) => {
   res.json(Object.fromEntries((await Promise.all(gameIds.map(async (game) => [game, (await arena.rankings(game))])))));
@@ -89,11 +109,11 @@ app.get("/api/leaderboards", async (_req, res) => {
 const playLimiter = rateLimit({ windowMs: 60_000, limit: 120, standardHeaders: "draft-8", legacyHeaders: false });
 app.use("/api/play", playLimiter);
 app.post("/api/play", async (req, res) => {
-  const input = z.object({ participantId: z.uuid(), game: z.enum(gameIds), challenger: z.string().trim().max(24) }).safeParse(req.body);
+  const input = z.object({ participantId: z.uuid(), game: z.enum(gameIds), challenger: z.string().trim().max(24), rulesVersion:z.union([z.literal(1),z.literal(2)]).default(1) }).safeParse(req.body);
   if (!input.success) { res.status(400).json({ error: "Enter a valid challenger name and game." }); return; }
   if (input.data.game === "digital-detective") { res.status(400).json({ error: "Start Digital Detective through its investigation flow." }); return; }
   if (input.data.game === "myth-fact") { res.status(400).json({ error: "Start Myth or Fact through its server-controlled game flow." }); return; }
-  const id = (await arena.start(input.data.participantId, input.data.game, input.data.challenger));
+  const id = (await arena.start(input.data.participantId, input.data.game, input.data.challenger,input.data.rulesVersion));
   publish();
   res.status(201).json({ id });
 });

@@ -1,0 +1,228 @@
+.case-intro-art {
+  background: #e9e3d5;
+  padding: 36px;
+  min-height: 270px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 22px;
+  border-radius: 4px;
+}
+.case-intro-art h2 {
+  font-size: 46px;
+}
+.case-intro-art p {
+  font-size: 18px;
+  line-height: 1.5;
+}
+.case-error {
+  padding: 15px 20px;
+  background: #f5d9d1;
+  border: 1px solid #7a2e2b;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+.claim-statement {
+  font-family: Bricolage, sans-serif !important;
+  font-size: clamp(28px, 3.5vw, 45px);
+  line-height: 1.3 !important;
+  text-transform: none;
+  letter-spacing: -0.02em;
+  margin: 60px auto !important;
+  max-width: 32ch;
+  text-align: center;
+  min-height: 110px;
+}
+.claim-choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+.stand-root .claim-choices button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  min-height: 100px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  font-size: 30px;
+  font-weight: 800;
+  color: #f3efe6;
+}
+.claim-choices kbd {
+  border: 1px solid currentColor;
+  padding: 2px 9px;
+  border-radius: 3px;
+  font-size: 15px;
+  font-family: inherit;
+}
+.claim-myth {
+  background: #7a2e2b;
+}
+.claim-fact {
+  background: #285b42;
+}
+.claim-choices button:hover {
+  filter: brightness(1.15);
+}
+.case-key-hint {
+  text-align: center;
+  font-size: 14px;
+  color: #48505d;
+  margin: 20px auto !important;
+}
+.case-brief {
+  margin: 25px 0 !important;
+  font-size: 19px;
+}
+.clue-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  margin: 30px 0 40px;
+}
+.clue-list article {
+  border-top: 2px solid #121a2c;
+  padding-top: 15px;
+}
+.clue-list article > span {
+  font:
+    700 22px "Courier Prime",
+    monospace;
+}
+.clue-list p {
+  margin-top: 12px;
+  font-size: 17px;
+  line-height: 1.6;
+}
+.detective-questions {
+  display: grid;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+.detective-questions fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.detective-questions legend {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 15px;
+}
+.detective-questions label {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  min-height: 48px;
+  padding: 10px 14px;
+  border: 1px solid #b6b5ae;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+.detective-questions label:has(input:checked) {
+  background: #ead4a8;
+  border-color: #121a2c;
+}
+.detective-questions input[type="radio"] {
+  appearance: auto;
+  min-height: 0;
+  width: 19px;
+  height: 19px;
+  accent-color: #121a2c;
+  flex-shrink: 0;
+}
+.detective-debrief {
+  max-width: 720px;
+  margin: 25px auto;
+  text-align: left;
+  display: grid;
+  gap: 25px;
+}
+.detective-debrief article {
+  border-top: 1px solid #b6b5ae;
+  padding-top: 20px;
+}
+.detective-debrief strong {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  font-size: 19px;
+}
+.detective-debrief p {
+  margin-top: 12px;
+  font-size: 17px;
+  line-height: 1.5;
+}
+.stand-case-page .stand-result > p {
+  max-width: 65ch;
+  line-height: 1.5;
+}
+.stand-case-page form > .play-link {
+  width: 100%;
+}
+@media (max-width: 800px) {
+  .clue-list {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+  .clue-list article {
+    display: grid;
+    grid-template-columns: 75px 1fr;
+    gap: 10px;
+  }
+  .clue-list p {
+    margin: 0;
+  }
+  .claim-statement {
+    margin: 40px auto !important;
+  }
+  .claim-choices {
+    gap: 14px;
+  }
+  .stand-root .claim-choices button {
+    font-size: 24px;
+    gap: 10px;
+  }
+  .case-intro-art {
+    padding: 25px;
+  }
+  .case-intro-art h2 {
+    font-size: 39px;
+  }
+}
+@media (max-width: 540px) {
+  .claim-choices {
+    grid-template-columns: 1fr;
+  }
+  .stand-root .claim-choices button {
+    min-height: 75px;
+  }
+  .claim-statement {
+    font-size: 28px;
+    min-height: 0;
+  }
+  .case-intro-art h2 {
+    font-size: 36px;
+  }
+  .case-error {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .detective-questions legend {
+    font-size: 20px;
+  }
+  .clue-list article {
+    grid-template-columns: 1fr;
+  }
+  .detective-questions label {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+}

@@ -1,4 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from "react";
+import "./styles.css";
+import "./readability.css";
 import {
   ArrowUpRight,
   AudioLines,
@@ -192,8 +194,8 @@ function App() {
       <header className="topbar">
         <button className="brand" onClick={() => navigate("home")} aria-label="EMUCON Arena home">
           <span className="brand-logos" aria-label="EMU Information Technologies Club and Eastern Mediterranean University">
-            <img src="/brand/it-club-logo.svg" alt="EMU Information Technologies Club" />
-            <img src="/brand/emu-logo.png" alt="Eastern Mediterranean University" />
+            <img src="/brand/itclub-original.png" alt="EMU Information Technologies Club" />
+            <img src="/brand/dau-signature.png" alt="Eastern Mediterranean University" />
           </span>
           <span className="brand-copy"><strong>EMUCON<span>26</span></strong><small>EMU IT CLUB · CHALLENGE ARENA</small></span>
         </button>

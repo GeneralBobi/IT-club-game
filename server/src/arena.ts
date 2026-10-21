@@ -10,13 +10,13 @@ const activeWindowMs = 90_000;
 
 export function createArena(db: DataStore) {
   return atomicService(db, {
-    async start(participantId: string, game: GameId, challenger: string) {
+    async start(participantId: string, game: GameId, challenger: string, rulesVersion = 1) {
       const id = randomUUID();
       const now = Date.now();
       (await db.transaction(async () => {
         (await db.prepare("INSERT OR IGNORE INTO participants (id, created_at) VALUES (?, ?)").run(participantId, now));
-        (await db.prepare(`INSERT INTO game_sessions (id, participant_id, game, challenger, started_at, last_seen_at)
-          VALUES (?, ?, ?, ?, ?, ?)`).run(id, participantId, game, challenger || "Anonymous Challenger", now, now));
+        (await db.prepare(`INSERT INTO game_sessions (id, participant_id, game, challenger, started_at, last_seen_at, rules_version)
+          VALUES (?, ?, ?, ?, ?, ?, ?)`).run(id, participantId, game, challenger || "Anonymous Challenger", now, now, rulesVersion));
       })());
       return id;
     },
@@ -49,9 +49,9 @@ export function createArena(db: DataStore) {
         database: "connected", configuredGames: gameIds.length, updatedAt: new Date().toISOString()
       };
     },
-    async rankings(game: GameId) {
-      if (game === "digital-detective") return { game, entries: [], updatedAt: new Date().toISOString(), segmented: true };
-      if (game === "myth-fact") {
+    async rankings(game: GameId, rulesVersion = 1) {
+      if (game === "digital-detective" && rulesVersion === 1) return { game, entries: [], updatedAt: new Date().toISOString(), segmented: true };
+      if (game === "myth-fact" && rulesVersion === 1) {
         // Homepage preview uses only the current default Classic/solo rules, never mixed modes.
         const current = (await databaseConfig());
         const entries = (await db.prepare(`WITH best AS (
@@ -66,9 +66,9 @@ export function createArena(db: DataStore) {
       const entries = (await db.prepare(`WITH best AS (
         SELECT id, challenger, score, completed_at,
           ROW_NUMBER() OVER (PARTITION BY participant_id ORDER BY score DESC, completed_at ASC, id ASC) AS attempt
-        FROM game_sessions WHERE game = ? AND completed_at IS NOT NULL
+        FROM game_sessions WHERE game = ? AND rules_version = ? AND completed_at IS NOT NULL
       ) SELECT id, challenger, score, completed_at AS completedAt FROM best WHERE attempt = 1
-        ORDER BY score DESC, completed_at ASC, id ASC LIMIT 50`).all(game));
+        ORDER BY score DESC, completed_at ASC, id ASC LIMIT 50`).all(game, rulesVersion));
       return { game, entries: entries.map((entry, index) => ({ ...(entry as object), rank: index + 1 })), updatedAt: new Date().toISOString() };
     }
   });

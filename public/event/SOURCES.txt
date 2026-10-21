@@ -1,0 +1,2 @@
+Original artwork supplied by EMUCON 2026: https://drive.google.com/drive/folders/1e-vCj2Y1fvXdK3zlI87UGnOXX1XvUoBz
+Original SVGs retained without redrawing. planet-rocket.png is a transparent composition of planet-1.svg and rocket-flame.svg.

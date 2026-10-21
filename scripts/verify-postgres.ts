@@ -18,6 +18,13 @@ try {
     const entries = (await arena.rankings("zero-point")).entries as { id: string; completedAt: number }[];
     const saved = entries.find(entry => entry.id === id)!;
     assert.ok(saved.completedAt > 1_700_000_000_000, "Millisecond timestamps and camelCase aliases survive PostgreSQL");
+    const shortId = await arena.start(participant, "myth-fact", "Verification", 2);
+    const deadline = Date.now() + 90000;
+    await database.prepare("INSERT INTO stand_attempts(id,owner,game,seed,progress,deadline) VALUES(?,?,?,?,?,?)")
+      .run(shortId, "verification-owner", "myth-fact", JSON.stringify({order:[0,1,2,3,4]}), JSON.stringify({answers:[]}), deadline);
+    const attempt = await database.prepare("SELECT deadline FROM stand_attempts WHERE id=?").get(shortId) as {deadline:number};
+    assert.equal(attempt.deadline, deadline, "Short-round deadlines retain millisecond precision");
+    await arena.rankings("myth-fact", 2);
     const detective = createDetective(database, () => {});
     const started = await detective.start({ participantId: participant, nickname: "Verification", mode: "solo", caseId: "case-001", difficulty: "beginner" }, "verification-owner");
     const active = await detective.begin(started.id, "verification-owner");

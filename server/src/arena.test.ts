@@ -184,4 +184,36 @@ describe("connected arena API", () => {
     expect(snake.entries[0]).toMatchObject({ challenger: "Grid Runner", score: 1250 });
     expect((await api("/api/admin/overview", "GET", undefined, true)).status).toBe(200);
   }, 20_000);
+
+  it("separates shorter stand rules from every historical score", async()=>{
+    const response=await api("/api/play","POST",{participantId:randomUUID(),game:"zero-point",challenger:"Short round",rulesVersion:2});
+    expect(response.status).toBe(201);const {id}=await response.json();
+    expect((await api(`/api/play/${id}/complete`,"POST",{score:321})).status).toBe(200);
+    const current=await(await api("/api/leaderboard/zero-point?rules=2")).json();
+    expect(current.entries).toHaveLength(1);expect(current.entries[0]).toMatchObject({id,score:321});
+    const historical=await(await api("/api/leaderboard/zero-point?rules=1")).json();
+    expect(historical.entries.some((entry:{id:string})=>entry.id===id)).toBe(false);
+    expect(historical.entries[0]).toMatchObject({challenger:"Grace",score:8000});
+    expect((await api("/api/play","POST",{participantId:randomUUID(),game:"zero-point",challenger:"Invalid",rulesVersion:3})).status).toBe(400);
+  });
+
+  it("owns bilingual stand cases, rejects replay, preserves saved scores and staff login on next-player reset",async()=>{
+    const identity=randomUUID();
+    const start=await api("/api/stand/start","POST",{participantId:identity,game:"myth-fact",nickname:"Stand visitor",language:"tr"},true);
+    expect(start.status).toBe(201);const view=await start.json();expect(view.cursor).toBe(0);expect(view.reveal).toBeNull();expect(view).not.toHaveProperty("seed");
+    expect((await api(`/api/stand/${view.id}`)).status).toBe(401);
+    const en=await(await api(`/api/stand/${view.id}?language=en`,"GET",undefined,true)).json();expect(en.statement).not.toBe(view.statement);
+    const responses=await Promise.all([api(`/api/stand/${view.id}/answer`,"POST",{cursor:0,answer:false,language:"tr"},true),api(`/api/stand/${view.id}/answer`,"POST",{cursor:0,answer:false,language:"tr"},true)]);
+    expect(responses.map(r=>r.status).sort()).toEqual([200,409]);
+    expect((await api(`/api/play/${view.id}/complete`,"POST",{score:500})).status).toBe(400);
+    const dd=await api("/api/stand/start","POST",{participantId:identity,game:"digital-detective",nickname:"Stand visitor",language:"tr"},true);expect(dd.status).toBe(201);const caseView=await dd.json();expect(caseView.clues).toHaveLength(3);expect(caseView.questions).toHaveLength(3);expect(caseView.questions[0]).not.toHaveProperty("correctOption");
+    expect((await api(`/api/stand/${view.id}`,"GET",undefined,true)).status).toBe(404);
+    const submitted=await api(`/api/stand/${caseView.id}/report`,"POST",{answers:[null,null,null],language:"tr"},true);expect(submitted.status).toBe(200);const result=await submitted.json();expect(result).toMatchObject({completed:true,score:0});expect(result.questions[0]).toHaveProperty("explanation");
+    const repeated=await(await api(`/api/stand/${caseView.id}/report`,"POST",{answers:[0,1,2],language:"en"},true)).json();expect(repeated.score).toBe(result.score);
+    expect((await api("/api/player/reset","POST",undefined,true)).status).toBe(204);
+    expect((await api("/api/admin/session","GET",undefined,true)).status).toBe(200);expect(await(await api("/api/admin/session","GET",undefined,true)).json()).toMatchObject({authenticated:true});
+    expect((await api(`/api/stand/${caseView.id}`,"GET",undefined,true)).status).toBe(401);
+    const board=await(await api("/api/leaderboard/digital-detective?rules=2")).json();expect(board.entries[0]).toMatchObject({id:caseView.id,score:0});
+    const rejected=await fetch(`${base}/api/player/reset`,{method:"POST",headers:{Cookie:cookie,Origin:"https://outside.example","Sec-Fetch-Site":"cross-site"}});expect(rejected.status).toBe(403);
+  });
 });

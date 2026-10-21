@@ -1,0 +1,10 @@
+.git/
+node_modules/
+.env
+.env.*
+data/
+.impeccable/
+test-results/
+playwright-report/
+dist/
+dist-server/

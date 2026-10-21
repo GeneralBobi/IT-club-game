@@ -1,0 +1,1078 @@
+@font-face {
+  font-family: Bricolage;
+  src: url("/fonts/bricolage-400.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: Bricolage;
+  src: url("/fonts/bricolage-500.ttf") format("truetype");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: Bricolage;
+  src: url("/fonts/bricolage-600.ttf") format("truetype");
+  font-weight: 600;
+  font-display: swap;
+}
+
+.stand-root {
+  --paper: #f0ede6;
+  --bg: #f0ede6;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  font-weight: 400;
+}
+body:has(.stand-root) {
+  background: #f0ede6;
+}
+.stand-header {
+  min-height: 104px;
+  padding-block: 4px;
+}
+.stand-header:after {
+  left: 0;
+  right: 0;
+  border-color: #d5d1c7;
+}
+.stand-identity > span {
+  font-family: Georgia, serif;
+  font-size: 23px;
+  font-weight: 400;
+  letter-spacing: 0.015em;
+}
+.stand-identity small {
+  font-size: 15px;
+  letter-spacing: 0.2em;
+}
+.play-link,
+.stand-root .primary-button {
+  border-radius: 10px;
+  transition:
+    background 160ms,
+    transform 200ms var(--ease-out);
+}
+.play-link:active,
+.stand-root .primary-button:active {
+  transform: scale(0.97);
+}
+.stand-game {
+  border-radius: 14px;
+}
+.game-preview {
+  border-radius: 10px;
+  isolation: isolate;
+}
+.stand-dialog,
+.stand-result {
+  border-radius: 16px;
+}
+.other-games button {
+  border-radius: 8px;
+  transition:
+    background 180ms,
+    transform 240ms var(--ease-out);
+}
+.other-games button:active {
+  transform: scale(0.98);
+}
+.event-signatures {
+  max-width: 1000px;
+  margin: 12px auto 0;
+  padding: 24px 40px 36px;
+  background: var(--paper);
+}
+.event-signatures img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.layout-festival {
+  grid-template-columns: 39.35% 60.65%;
+  min-height: calc(100svh - 104px);
+}
+.layout-festival .home-programme {
+  padding: 28px 34px 36px;
+  min-width: 0;
+}
+.layout-festival .home-intro {
+  margin-bottom: 18px;
+  padding: 0 6px;
+}
+.layout-festival .home-intro h1 {
+  font-size: clamp(48px, 4.65vw, 70px);
+  line-height: 1;
+  text-wrap: nowrap;
+  letter-spacing: -0.025em;
+}
+.layout-festival .home-intro h1:after {
+  content: "";
+  display: block;
+  width: 112px;
+  height: 6px;
+  margin-top: 12px;
+  background: var(--amber);
+  border-radius: 9px;
+  transform-origin: left;
+}
+.layout-festival .stand-game-grid {
+  gap: 16px;
+}
+.layout-festival .stand-game {
+  grid-template-columns: 37% minmax(0, 1fr) 22%;
+  grid-template-rows: 1fr auto;
+  padding: 12px;
+  gap: 6px 24px;
+  min-height: 188px;
+  border: 1.5px solid var(--ink);
+  border-radius: 14px;
+  background: #f6f3ec66;
+}
+.layout-festival .game-preview {
+  height: 162px;
+  min-height: 0;
+  align-self: stretch;
+}
+.layout-festival .stand-game h2 {
+  font-size: clamp(31px, 3vw, 46px);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+.layout-festival .stand-game-copy {
+  align-self: end;
+}
+.layout-festival .stand-game-copy p {
+  font-size: clamp(17px, 1.5vw, 23px);
+  line-height: 1.3;
+  margin-top: 5px;
+}
+.layout-festival .control-hint {
+  font-size: clamp(14px, 1.25vw, 19px);
+  gap: 12px;
+  align-self: start;
+  min-height: 44px;
+  margin-bottom: 10px;
+  white-space: nowrap;
+}
+.layout-festival .control-hint kbd {
+  font-size: 17px;
+  font-weight: 500;
+  border: 1.5px solid var(--ink);
+  background: #f9f6ef;
+  border-radius: 5px;
+  padding: 7px 20px;
+}
+.layout-festival .control-hint > svg {
+  width: 30px;
+  height: 36px;
+  stroke-width: 1.5;
+}
+.layout-festival .play-link {
+  padding: 18px 20px;
+  min-height: 68px;
+  gap: 10px;
+  justify-content: center;
+  font:
+    700 28px/1.1 Bricolage,
+    sans-serif;
+  border-radius: 10px;
+}
+.layout-festival .play-link > span {
+  flex: 0;
+}
+.layout-festival .play-link svg {
+  width: 25px;
+  height: 25px;
+  transition: transform 240ms var(--ease-out);
+}
+.layout-festival .play-link:is(:hover, :focus-visible) svg {
+  transform: translateX(4px);
+}
+.layout-festival .other-games {
+  margin-top: 32px;
+  padding: 12px 6px 0;
+  border-top: 2px solid var(--ink);
+}
+.layout-festival .other-games > h2 {
+  font:
+    900 32px/1.2 "Big Shoulders Display",
+    sans-serif;
+  margin-bottom: 15px;
+}
+.layout-festival .other-games > h2:after {
+  content: "";
+  display: block;
+  width: 58px;
+  height: 4px;
+  background: var(--amber);
+  margin-top: 3px;
+  border-radius: 8px;
+}
+.layout-festival .other-games > div {
+  gap: 9px;
+}
+.layout-festival .other-games button {
+  min-height: 54px;
+  border: 1.5px solid var(--ink);
+  border-radius: 7px;
+  padding: 10px 13px;
+  gap: 7px;
+}
+.layout-festival .other-games strong {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: center;
+}
+.layout-festival .other-games button > svg:last-child {
+  width: 19px;
+}
+
+.festival-poster {
+  padding: 50px 42px 260px;
+  min-height: 940px;
+  background: #de9e36;
+  isolation: isolate;
+  container-type: inline-size;
+}
+.festival-poster:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: url("/event/riso-grain.png") repeat;
+  background-size: 190px 170px;
+  mix-blend-mode: multiply;
+  opacity: 0.27;
+  pointer-events: none;
+}
+.festival-poster:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: url("/event/halftone-dots.png") repeat;
+  background-size: 160px 151px;
+  mask-image: linear-gradient(
+    90deg,
+    #000,
+    transparent 22%,
+    transparent 78%,
+    #000
+  );
+  opacity: 0.75;
+  pointer-events: none;
+}
+.festival-wordmark {
+  display: block;
+  font:
+    900 44cqw/0.9 "Big Shoulders Display",
+    sans-serif;
+  letter-spacing: -0.04em;
+  position: relative;
+}
+.festival-wordmark > .festival-title {
+  display: block;
+  width: 128%;
+  font-size: inherit;
+  line-height: 0.93;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  text-shadow: 3px 3px 0 var(--coral);
+  transform: scaleX(0.78) rotate(-3deg);
+  transform-origin: left;
+}
+.festival-wordmark > .festival-year {
+  display: table;
+  margin: -10px 0 0 1px;
+  background: transparent url("/event/year-stamp.png") center/100% 100%
+    no-repeat;
+  color: var(--paper);
+  font-size: 0.5em;
+  line-height: 1.05;
+  border: 0;
+  padding: 9px 20px 3px;
+  letter-spacing: -0.02em;
+  transform: rotate(-3deg);
+}
+.festival-club {
+  font-size: clamp(28px, 3.1vw, 46px);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  margin-top: 12px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--ink);
+  transform: rotate(-3deg);
+  transform-origin: left;
+}
+.festival-poster h1 {
+  font-size: clamp(68px, 8.15vw, 123px);
+  line-height: 1;
+  margin-top: 12px;
+  letter-spacing: -0.03em;
+  text-shadow: 3px 3px 0 var(--coral);
+  transform: rotate(-3deg);
+  transform-origin: left;
+}
+.festival-poster > p {
+  font-size: clamp(19px, 2vw, 30px);
+  font-weight: 600;
+  line-height: 1.25;
+  margin-top: 12px;
+  transform: rotate(-3deg);
+  transform-origin: left;
+}
+.festival-rocket {
+  height: 180px;
+  left: 43%;
+  right: auto;
+  bottom: 130px;
+  transform: rotate(23deg);
+  z-index: 2;
+  animation: rocket-float 6s ease-in-out infinite;
+}
+.festival-planet {
+  height: auto;
+  width: 160%;
+  max-width: none;
+  left: -30%;
+  bottom: -45px;
+  object-fit: contain;
+  object-position: center top;
+  z-index: 0;
+}
+.festival-date {
+  left: 34px;
+  right: 34px;
+  bottom: 31px;
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  padding: 10px 0;
+  background: var(--coral);
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  z-index: 3;
+}
+
+.preview-zero-point,
+.preview-perfect-align {
+  background: linear-gradient(155deg, #151d33 0%, #292139 100%) !important;
+  color: var(--paper);
+  padding-bottom: 16px;
+  gap: 20px;
+}
+.preview-zero-point > strong {
+  position: relative;
+  font-size: 52px !important;
+  z-index: 1;
+}
+.preview-horizon {
+  position: absolute;
+  left: -10%;
+  bottom: 0;
+  width: 120%;
+  height: 30%;
+  min-height: 36px;
+  max-height: 52px;
+  object-fit: cover;
+  object-position: center top;
+  max-width: none;
+  z-index: 0;
+  pointer-events: none;
+}
+.preview-stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.preview-stars img {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  opacity: 0.7;
+}
+.preview-stars img:nth-child(1) {
+  left: 10%;
+  top: 15%;
+}
+.preview-stars img:nth-child(2) {
+  left: 77%;
+  top: 23%;
+  width: 4px;
+  height: 4px;
+  opacity: 0.4;
+}
+.preview-stars img:nth-child(3) {
+  left: 38%;
+  top: 36%;
+  width: 3px;
+  height: 3px;
+  opacity: 0.4;
+}
+.preview-stars img:nth-child(4) {
+  left: 84%;
+  top: 61%;
+}
+.preview-stars img:nth-child(5) {
+  left: 55%;
+  top: 11%;
+  width: 3px;
+  height: 3px;
+  opacity: 0.4;
+}
+.preview-time-track {
+  height: 13px;
+  width: 76%;
+  background: #40374c;
+  border: 1.5px solid var(--paper);
+  border-radius: 6px;
+  z-index: 1;
+  overflow: hidden;
+}
+.preview-time-track:after {
+  display: none;
+}
+.preview-time-track i {
+  position: absolute;
+  left: 40%;
+  width: 10%;
+  background: var(--coral);
+  border-radius: 0;
+}
+.preview-align-track {
+  width: 83%;
+  height: 24px;
+  background: #a6a3b0aa;
+  border: 1.5px solid var(--paper);
+  border-radius: 6px;
+  z-index: 1;
+}
+.preview-align-track span {
+  left: 24%;
+  width: 52%;
+  background: #de9e36d9;
+}
+.preview-align-track i {
+  left: 49%;
+  height: 48px;
+  top: -13px;
+  width: 4px;
+  background: var(--paper);
+  border-radius: 1px;
+}
+.preview-target-rush,
+.layout-festival .preview-target-rush,
+.layout-classic .preview-target-rush {
+  background-color: #1e2232 !important;
+  background-image:
+    linear-gradient(#f3efe60e 1px, transparent 1px),
+    linear-gradient(90deg, #f3efe60e 1px, transparent 1px);
+  background-size: 26px 26px;
+  color: var(--paper);
+}
+.preview-targets {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+.preview-targets i,
+.layout-festival .preview-targets i {
+  position: absolute;
+  border: 1.5px solid var(--paper);
+  outline: 2px solid var(--coral);
+  outline-offset: 7px;
+  background: var(--coral);
+  width: 48px;
+  height: 48px;
+  left: 43%;
+  top: 28%;
+  border-radius: 50%;
+}
+.preview-targets i:after,
+.layout-festival .preview-targets i:after {
+  inset: 14px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+}
+.preview-targets i:nth-child(2) {
+  width: 27px;
+  height: 27px;
+  left: 16%;
+  top: 57%;
+  outline-offset: 4px;
+}
+.preview-targets i:nth-child(2):after {
+  inset: 7px;
+}
+.preview-targets i:nth-child(3) {
+  width: 19px;
+  height: 19px;
+  left: 85%;
+  top: 22%;
+  outline-offset: 3px;
+}
+.preview-targets i:nth-child(3):after {
+  inset: 4px;
+}
+.preview-targets i:nth-child(4) {
+  width: 20px;
+  height: 20px;
+  left: 75%;
+  top: 76%;
+  background: #7e899b;
+  outline: 2px solid #7e899b;
+  outline-offset: 4px;
+}
+.preview-targets i:nth-child(4):after {
+  inset: 5px;
+}
+.preview-cursor {
+  position: absolute;
+  left: 53%;
+  top: 47%;
+  color: var(--ink);
+  stroke-width: 1.5;
+  filter: drop-shadow(1px 2px 2px #0005);
+}
+.game-preview {
+  --preview-ink: var(--ink);
+}
+.layout-classic .game-preview {
+  --preview-ink: var(--paper);
+}
+.game-preview.preview-brain-firewall,
+.game-preview.preview-myth-fact,
+.game-preview.preview-digital-detective {
+  padding: 18px;
+  gap: 12px;
+}
+.preview-answers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  width: min(100%, 210px);
+  color: var(--preview-ink);
+}
+.preview-answers > span {
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  padding: 3px 12px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.25;
+}
+.preview-answer-choice {
+  display: flex;
+  gap: 8px;
+}
+.preview-answer-choice > span {
+  display: block;
+  background: var(--amber);
+  color: var(--ink);
+  border-radius: 5px;
+  padding: 5px 14px;
+  font-size: 13px;
+  line-height: 1.25;
+  font-weight: 600;
+}
+.preview-case-record {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  width: min(100%, 240px);
+  color: var(--preview-ink);
+  font-size: 12px;
+  line-height: 1.3;
+}
+.preview-case-record > strong {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+.preview-case-record > span {
+  display: flex;
+  gap: 10px;
+}
+.preview-case-record time {
+  font-variant-numeric: tabular-nums;
+  color: inherit;
+  opacity: 0.8;
+}
+.game-preview .preview-question {
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+@keyframes rocket-float {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(23deg);
+  }
+  50% {
+    transform: translate(4px, -9px) rotate(25deg);
+  }
+}
+@keyframes poster-arrive {
+  from {
+    transform: translateY(18px) rotate(-3deg);
+    filter: blur(1px);
+  }
+  to {
+    transform: translateY(0) rotate(-3deg);
+    filter: blur(0);
+  }
+}
+@keyframes underline-arrive {
+  from {
+    transform: scaleX(0.25);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes preview-tick {
+  0% {
+    transform: translateX(-90%);
+  }
+  65%,
+  100% {
+    transform: translateX(0);
+  }
+}
+@keyframes preview-align {
+  0% {
+    transform: translateX(-70px);
+  }
+  65%,
+  100% {
+    transform: translateX(0);
+  }
+}
+@keyframes preview-aim {
+  0% {
+    transform: translate(30px, 20px);
+  }
+  60%,
+  100% {
+    transform: translate(0, 0);
+  }
+}
+@keyframes preview-hit {
+  0%,
+  55% {
+    transform: scale(1);
+  }
+  70% {
+    transform: scale(0.83);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes page-enter {
+  from {
+    transform: translateY(12px);
+    filter: blur(2px);
+  }
+  to {
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .festival-poster h1 {
+    animation: poster-arrive 650ms var(--ease-out);
+  }
+  .layout-festival .home-intro h1:after {
+    animation: underline-arrive 650ms var(--ease-out);
+  }
+  .stand-game:is(:hover, :focus-within) .preview-time-track i {
+    animation: preview-tick 1100ms var(--ease-out) both;
+  }
+  .stand-game:is(:hover, :focus-within) .preview-align-track i {
+    animation: preview-align 1100ms var(--ease-out) both;
+  }
+  .stand-game:is(:hover, :focus-within) .preview-cursor {
+    animation: preview-aim 750ms var(--ease-out) both;
+  }
+  .stand-game:is(:hover, :focus-within) .preview-targets i:first-child {
+    animation: preview-hit 900ms var(--ease-out) both;
+  }
+  .stand-game-page {
+    animation: page-enter 450ms var(--ease-out);
+  }
+  ::view-transition-old(root) {
+    animation: 160ms ease-out both fade-out;
+  }
+  ::view-transition-new(root) {
+    animation: 300ms var(--ease-out) both page-enter;
+  }
+}
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+.stand-home[data-motion="paused"] * {
+  animation-play-state: paused !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .stand-root *,
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (min-width: 1506px) {
+  .layout-festival {
+    border-inline: 1px solid #d5d1c7;
+  }
+}
+@media (min-width: 801px) and (max-width: 1200px) {
+  .layout-festival {
+    grid-template-columns: 36% 64%;
+  }
+  .layout-festival .home-programme {
+    padding: 28px 22px;
+  }
+  .layout-festival .stand-game {
+    grid-template-columns: 32% minmax(0, 1fr) 19%;
+    gap: 6px 16px;
+    min-height: 172px;
+  }
+  .layout-festival .game-preview {
+    height: 146px;
+  }
+  .layout-festival .play-link {
+    font-size: 22px;
+    padding: 15px 10px;
+    min-height: 58px;
+  }
+  .layout-festival .stand-game h2 {
+    font-size: 34px;
+  }
+  .layout-festival .control-hint {
+    font-size: 13px;
+    gap: 7px;
+    white-space: normal;
+  }
+  .layout-festival .control-hint kbd {
+    font-size: 14px;
+    padding: 7px 12px;
+  }
+  .festival-poster {
+    padding: 40px 25px 270px;
+    min-height: 830px;
+  }
+  .festival-poster h1 {
+    font-size: 8vw;
+  }
+  .festival-club {
+    font-size: 32px;
+  }
+  .festival-date {
+    font-size: 12px;
+    left: 20px;
+    right: 20px;
+  }
+  .festival-rocket {
+    height: 160px;
+  }
+  .layout-festival .other-games > div {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 800px) {
+  .stand-identity > span {
+    font-size: 16px;
+  }
+  .stand-identity small {
+    font-size: 12px;
+  }
+  .layout-festival {
+    display: block;
+    padding: 0;
+    min-height: 0;
+  }
+  .festival-poster {
+    padding: 26px 26px 105px;
+    min-height: 410px;
+    container-type: normal;
+  }
+  .festival-wordmark {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 100px;
+    letter-spacing: -0.04em;
+  }
+  .festival-wordmark > .festival-title {
+    width: auto;
+    transform: rotate(-3deg);
+  }
+  .festival-wordmark > .festival-year {
+    margin: 0;
+    font-size: 58px;
+    padding: 6px 12px 0;
+  }
+  .festival-club {
+    font-size: 23px;
+    max-width: 64%;
+    margin-top: 16px;
+    padding-bottom: 12px;
+  }
+  .festival-poster h1 {
+    font-size: 76px;
+    margin-top: 18px;
+  }
+  .festival-poster > p {
+    font-size: 20px;
+    max-width: 65%;
+    margin-top: 8px;
+  }
+  .festival-planet {
+    width: 110%;
+    left: -5%;
+    bottom: -25%;
+  }
+  .festival-rocket {
+    height: 145px;
+    left: auto;
+    right: 10%;
+    bottom: 70px;
+  }
+  .festival-date {
+    font-size: 13px;
+    left: 25px;
+    right: 25px;
+    bottom: 15px;
+    padding: 7px 0;
+  }
+  .layout-festival .home-programme {
+    padding: 28px 22px 20px;
+  }
+  .layout-festival .home-intro {
+    padding: 0;
+    margin-bottom: 22px;
+  }
+  .layout-festival .home-intro h1 {
+    font-size: 52px;
+    white-space: normal;
+    text-wrap: balance;
+  }
+  .layout-festival .stand-game {
+    grid-template-columns: 32% minmax(0, 1fr) 20%;
+    gap: 6px 14px;
+    min-height: 170px;
+  }
+  .layout-festival .game-preview {
+    height: 144px;
+    grid-column: 1;
+    grid-row: 1/3;
+  }
+  .layout-festival .stand-game h2 {
+    font-size: 34px;
+  }
+  .layout-festival .stand-game-copy p {
+    font-size: 18px;
+    min-height: 0;
+  }
+  .layout-festival .control-hint {
+    font-size: 13px;
+    gap: 7px;
+    white-space: normal;
+    margin-bottom: 5px;
+    min-height: 38px;
+  }
+  .layout-festival .control-hint kbd {
+    font-size: 14px;
+    padding: 5px 12px;
+  }
+  .layout-festival .play-link {
+    font-size: 23px;
+    min-height: 56px;
+    grid-column: 3;
+    grid-row: 1/3;
+    padding: 12px 8px;
+    gap: 6px;
+  }
+  .layout-festival .play-link svg {
+    width: 20px;
+  }
+  .layout-festival .other-games > div {
+    grid-template-columns: 1fr 1fr;
+  }
+  .layout-festival .other-games strong {
+    font-size: 16px;
+  }
+  .event-signatures {
+    padding: 18px 22px 28px;
+  }
+}
+@media (max-width: 540px) {
+  .stand-identity > span {
+    display: none;
+  }
+  .festival-poster {
+    min-height: 370px;
+    padding: 22px 22px 104px;
+  }
+  .festival-wordmark {
+    font-size: 76px;
+    gap: 12px;
+  }
+  .festival-wordmark > .festival-year {
+    font-size: 46px;
+    padding: 6px 10px 0;
+  }
+  .festival-club {
+    font-size: 19px;
+    max-width: 68%;
+    margin-top: 14px;
+  }
+  .festival-poster h1 {
+    font-size: 64px;
+    margin-top: 14px;
+  }
+  .festival-poster > p {
+    font-size: 17px;
+    max-width: 70%;
+  }
+  .festival-rocket {
+    height: 115px;
+    right: 7%;
+    bottom: 65px;
+  }
+  .festival-planet {
+    bottom: -9%;
+    width: 130%;
+    left: -15%;
+  }
+  .festival-date {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    left: 22px;
+    right: 22px;
+  }
+  .layout-festival .home-intro h1 {
+    font-size: 46px;
+  }
+  .layout-festival .stand-game {
+    grid-template-columns: 43% minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    min-height: 242px;
+    gap: 10px 14px;
+    padding: 13px;
+  }
+  .layout-festival .stand-game .game-preview {
+    height: 133px;
+    grid-column: 1;
+    grid-row: 1/3;
+  }
+  .layout-festival .stand-game-copy {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: end;
+  }
+  .layout-festival .stand-game h2 {
+    font-size: 32px;
+    white-space: normal;
+  }
+  .layout-festival .stand-game-copy p {
+    font-size: 16px;
+  }
+  .layout-festival .control-hint {
+    grid-column: 2;
+    grid-row: 2;
+    gap: 7px;
+    flex-wrap: wrap;
+    align-self: start;
+    font-size: 12px;
+  }
+  .layout-festival .control-hint kbd {
+    font-size: 13px;
+    padding: 5px 12px;
+  }
+  .layout-festival .control-hint > svg {
+    width: 22px;
+    height: 28px;
+  }
+  .layout-festival .play-link {
+    grid-column: 1/3;
+    grid-row: 3;
+    min-height: 48px;
+    padding: 10px 16px;
+    justify-content: space-between;
+  }
+  .layout-festival .other-games {
+    padding-inline: 0;
+    margin-top: 26px;
+  }
+  .layout-festival .other-games strong {
+    font-size: 14px;
+  }
+  .preview-zero-point > strong {
+    font-size: 42px !important;
+  }
+  .preview-horizon {
+    bottom: 0;
+  }
+  .preview-targets i,
+  .layout-festival .preview-targets i {
+    left: 40%;
+    top: 30%;
+    width: 36px;
+    height: 36px;
+    outline-offset: 5px;
+  }
+  .preview-targets i:after,
+  .layout-festival .preview-targets i:after {
+    inset: 10px;
+  }
+  .preview-targets i:nth-child(2) {
+    width: 17px;
+    height: 17px;
+    left: 14%;
+    top: 65%;
+    outline-offset: 3px;
+  }
+  .preview-targets i:nth-child(2):after {
+    inset: 4px;
+  }
+  .preview-targets i:nth-child(3) {
+    width: 13px;
+    height: 13px;
+    left: 83%;
+    top: 18%;
+    outline-offset: 2px;
+  }
+  .preview-targets i:nth-child(3):after {
+    inset: 2px;
+  }
+  .preview-targets i:nth-child(4) {
+    width: 12px;
+    height: 12px;
+    left: 78%;
+    top: 79%;
+    outline-offset: 3px;
+  }
+  .preview-targets i:nth-child(4):after {
+    inset: 2px;
+  }
+  .preview-cursor {
+    width: 29px;
+    left: 54%;
+    top: 50%;
+  }
+  .event-signatures {
+    padding-inline: 12px;
+  }
+}

@@ -101,6 +101,31 @@ if (database.dialect === "postgres") {
   })();
 } else await initialize();
 
+// Keep earlier records intact when introducing the shorter stand rules.
+if (database.dialect === "postgres") {
+  await database.transaction(async () => {
+    if (!await database.prepare("SELECT version FROM arena_schema_version WHERE version = 2").get()) {
+      await database.exec("ALTER TABLE game_sessions ADD COLUMN IF NOT EXISTS rules_version INTEGER NOT NULL DEFAULT 1");
+      await database.exec("INSERT INTO arena_schema_version VALUES (2)");
+    }
+  })();
+} else {
+  const columns = await database.pragma("table_info(game_sessions)") as {name:string}[];
+  if (!columns.some(column=>column.name==="rules_version")) await database.exec("ALTER TABLE game_sessions ADD COLUMN rules_version INTEGER NOT NULL DEFAULT 1");
+}
+async function initializeStandAttempts(){await database.exec(`CREATE TABLE IF NOT EXISTS stand_attempts (
+ id TEXT PRIMARY KEY REFERENCES game_sessions(id), owner TEXT NOT NULL, game TEXT NOT NULL,
+ seed TEXT NOT NULL, progress TEXT NOT NULL, deadline INTEGER NOT NULL, completed_at INTEGER, score INTEGER
+); CREATE INDEX IF NOT EXISTS stand_attempt_owner ON stand_attempts(owner);`);}
+if(database.dialect==="postgres"){
+  await database.transaction(async()=>{
+    if(!await database.prepare("SELECT version FROM arena_schema_version WHERE version=3").get()){
+      await initializeStandAttempts();
+      await database.exec("INSERT INTO arena_schema_version VALUES(3)");
+    }
+  })();
+}else await initializeStandAttempts();
+
 export async function closeDatabase(): Promise<void> {
   (await database.close());
 }

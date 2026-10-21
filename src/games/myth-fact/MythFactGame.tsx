@@ -256,12 +256,12 @@ export default function MythFactGame({ onBack }: { onBack: () => void }) {
 
     {!attempt && <section className="myth-intro">
       <div className="myth-club-masthead">
-        <img src="/brand/it-club-logo.svg" alt="EMU Information Technologies Club emblem" />
+        <img src="/brand/itclub-original.png" alt="EMU Information Technologies Club emblem" />
         <div>
           <strong>EMU Information Technologies Club</strong>
           <small>DIGITAL TRUTH · OFFICIAL CHALLENGE</small>
         </div>
-        <img src="/brand/emu-logo.png" alt="Eastern Mediterranean University" />
+        <img src="/brand/dau-signature.png" alt="Eastern Mediterranean University" />
       </div>
       <div className="eyebrow"><span className="eyebrow-line" /> CHALLENGE 06 · DIGITAL TRUTH</div>
       <h1>MYTH <span>OR FACT?</span></h1>
@@ -436,9 +436,9 @@ export default function MythFactGame({ onBack }: { onBack: () => void }) {
         <button className="outline-button" onClick={() => { void newPlayer(); }}>NEW PLAYER · KIOSK RESET</button>
       </div>
       <div className="myth-club-signoff">
-        <img src="/brand/it-club-logo.svg" alt="EMU Information Technologies Club" />
+        <img src="/brand/itclub-original.png" alt="EMU Information Technologies Club" />
         <span>EMU INFORMATION TECHNOLOGIES CLUB · DIGITAL TRUTH CHALLENGE</span>
-        <img src="/brand/emu-logo.png" alt="Eastern Mediterranean University" />
+        <img src="/brand/dau-signature.png" alt="Eastern Mediterranean University" />
       </div>
       <p className="local-score-note">Scores, timing, confidence, and answers are validated by the server. Completed scores appear on their mode-specific hall of fame.</p>
     </section>}

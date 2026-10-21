@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "./i18n";
 
 export type Ranking = { id: string; rank: number; challenger: string; score: number; completedAt: number };
 export type Rankings = { game: string; entries: Ranking[]; updatedAt: string };
@@ -65,7 +66,7 @@ export function useChallengerIdentity() {
   };
 }
 
-export function useGameSession(game: string, phase: string, score: number) {
+export function useGameSession(game: string, phase: string, score: number, rulesVersion = 1) {
   const [challenger, setName] = useState(() => stored("arena-challenger", () => ""));
   const [participantId] = useState(() => stored("arena-participant", () => crypto.randomUUID()));
   const [status, setStatus] = useState("");
@@ -84,7 +85,7 @@ export function useGameSession(game: string, phase: string, score: number) {
       const run = generation.current;
       const pending: Promise<string> = request<{ id: string }>("/api/play", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ participantId, game, challenger: name.current.trim() })
+        body: JSON.stringify({ participantId, game, challenger: name.current.trim(), rulesVersion })
       }).then(({ id }) => {
         if (run === generation.current) sessionId.current = id;
         else void fetch(`/api/play/${id}`, { method: "DELETE", keepalive: true }).catch(() => {});
@@ -168,10 +169,13 @@ export function useGameSession(game: string, phase: string, score: number) {
 }
 
 export function ChallengerName({ value, onChange }: { value: string; onChange: (value: string) => void }) {
-  return <label className="challenger-name">CALL SIGN <small>PUBLIC ON THE HALL OF FAME · OPTIONAL</small><input className="call-sign-input" value={value} onChange={(event) => onChange(event.target.value)} maxLength={24} placeholder="Anonymous Challenger" /></label>;
+  const {copy}=useLanguage();
+  return <label className="challenger-name">{copy("Takma ad","Nickname")}<input className="call-sign-input" value={value} onChange={(event) => onChange(event.target.value)} maxLength={24} placeholder={copy("İsimsiz oyna","Play anonymously")} /></label>;
 }
 
 export function ScoreStatus({ status, failed, retry }: { status: string; failed: boolean; retry: () => void }) {
+  const {copy}=useLanguage();
   if (!status) return null;
-  return <div className={`score-save-status ${failed ? "save-failed" : ""}`} role="status">{status}{failed && <button className="outline-button" onClick={retry}>RETRY SAVE</button>}</div>;
+  const translated=status.startsWith("SAVING")?copy("Skor kaydediliyor…","Saving score…"):status.startsWith("SCORE SAVED")?copy("Skorun kaydedildi.","Your score is saved."):copy("Skor henüz kaydedilmedi. Bağlantıyı kontrol edip tekrar dene.",status);
+  return <div className={`score-save-status ${failed ? "save-failed" : ""}`} role="status">{translated}{failed && <button className="outline-button" onClick={retry}>{copy("Kaydetmeyi tekrar dene","Retry save")}</button>}</div>;
 }

@@ -1,0 +1,230 @@
+---
+name: "EMU IT Club — EMUCON Games"
+description: "Source festival artwork, paper surfaces, and direct game controls."
+colors:
+  amber: "#de9e36"
+  amber-hover: "#efb654"
+  coral: "#c85a53"
+  paper: "#f0ede6"
+  ink: "#121a2c"
+  muted: "#48505d"
+  line: "#b6b5ae"
+  field: "#fffdf7"
+  focus: "#154b87"
+  myth: "#7a2e2b"
+  fact: "#285b42"
+typography:
+  display:
+    fontFamily: "Big Shoulders Display, sans-serif"
+    fontSize: "clamp(68px, 8.15vw, 123px)"
+    fontWeight: 900
+    lineHeight: 1
+    letterSpacing: "-0.03em"
+  headline:
+    fontFamily: "Big Shoulders Display, sans-serif"
+    fontSize: "clamp(48px, 4.65vw, 70px)"
+    fontWeight: 900
+    lineHeight: 1
+    letterSpacing: "-0.025em"
+  title:
+    fontFamily: "Big Shoulders Display, sans-serif"
+    fontSize: "clamp(31px, 3vw, 46px)"
+    fontWeight: 900
+    lineHeight: 1.1
+    letterSpacing: "-0.025em"
+  body:
+    fontFamily: "Bricolage, Arial, sans-serif"
+    fontSize: "17px"
+    fontWeight: 400
+    lineHeight: 1.5
+  label:
+    fontFamily: "Bricolage, Arial, sans-serif"
+    fontSize: "14px"
+    fontWeight: 800
+    lineHeight: 1.5
+  case-time:
+    fontFamily: "Courier Prime, monospace"
+    fontSize: "22px"
+    fontWeight: 700
+  club-name:
+    fontFamily: "Georgia, serif"
+    fontSize: "23px"
+    fontWeight: 400
+    letterSpacing: "0.015em"
+rounded:
+  field: "3px"
+  key: "5px"
+  secondary: "7px"
+  secondary-lobby: "8px"
+  action: "10px"
+  choice: "12px"
+  game: "14px"
+  dialog: "16px"
+spacing:
+  small: "6px"
+  control: "12px"
+  grid: "14px"
+  row: "16px"
+  content: "24px"
+  section: "28px"
+  desktop-gutter: "40px"
+  mobile-gutter: "22px"
+components:
+  button-primary:
+    backgroundColor: "{colors.amber}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.action}"
+    padding: "11px 20px"
+  button-primary-hover:
+    backgroundColor: "{colors.amber-hover}"
+  button-festival:
+    backgroundColor: "{colors.amber}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.action}"
+    padding: "18px 20px"
+    height: "68px"
+  button-quiet:
+    textColor: "{colors.ink}"
+    rounded: "{rounded.field}"
+    padding: "10px 18px"
+  game-row:
+    backgroundColor: "#f6f3ec66"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.game}"
+    padding: "12px"
+  input:
+    backgroundColor: "{colors.field}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.field}"
+    padding: "11px 14px"
+  key-hint:
+    backgroundColor: "#f9f6ef"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.key}"
+    padding: "7px 20px"
+  choice-myth:
+    backgroundColor: "{colors.myth}"
+    textColor: "#f3efe6"
+    rounded: "{rounded.choice}"
+  choice-fact:
+    backgroundColor: "{colors.fact}"
+    textColor: "#f3efe6"
+    rounded: "{rounded.choice}"
+---
+
+# Design System: EMU IT Club — EMUCON Games
+
+## Overview
+
+**Creative North Star: "Supplied Festival Print"**
+
+The supplied festival poster kit sets the world: neutral paper, dense dark ink, amber fields, coral registration, grain and halftone. Condensed headlines carry the invitation; rounded game surfaces keep the controls approachable. The source rocket, planet, stars and year stamp retain the event’s drawn and printed character.
+
+The shared shell gives original institutional identities quiet space above and below the games. Festival is the default composition; Lobby and Classic are valid expressions of the same palette, typography, controls and source artwork. Turkish and English use the same hierarchy and complete identity strips.
+
+**Key Characteristics:**
+
+- Printed source material with neutral paper and dark ink.
+- Condensed headlines paired with readable Bricolage instructions.
+- Rounded game surfaces, visible controls and direct amber actions.
+- Static original identities and restrained, purposeful motion.
+
+## Colors
+
+Amber and coral carry the festival print; neutral paper and ink carry reading and interaction. Frontmatter records the final cascading values.
+
+### Primary
+- **Festival Amber:** poster field, play actions, selected language underline and heading strokes. The lighter amber is the button hover state.
+
+### Secondary
+- **Registration Coral:** source planet, year stamp, poster registration and scene accents.
+- **Myth Maroon / Fact Green:** the two large Myth or Fact answer controls; paper lettering keeps both readable.
+
+### Neutral
+- **Neutral Paper:** shared page background and identity surroundings.
+- **Midnight Ink:** text, outlines, dividing rules and dark preview surfaces.
+- **Muted Slate:** secondary instructions; **Warm Line:** field and list dividers.
+- **Field White:** editable controls. **Focus Blue:** keyboard focus outline, separate from selection.
+
+### Named Rules
+**The Original Identity Rule.** Use complete supplied identity artwork at its original proportions, with quiet clearspace; keep logos static and free of effects.
+
+## Typography
+
+**Display Font:** Big Shoulders Display (sans-serif fallback), self-hosted black (900).
+**Body Font:** Bricolage (Arial, sans-serif fallback), self-hosted regular, medium, semibold, bold and extra bold.
+**Label/Mono Font:** Courier Prime (monospace fallback), self-hosted bold for actual case timestamps. The header club name uses Georgia (serif fallback).
+
+**Character:** Very condensed headlines provide poster scale without crowding the wider, rounded instruction text. Body text remains regular; heavier weights mark actions, choices and identity details.
+
+### Hierarchy
+- **Display:** the frontmatter display role is the festival invitation; the event wordmark separately scales with its container (44cqw), at a tighter line-height (0.9).
+- **Headline:** the programme invitation uses the headline role; game-page headings use the same display family at a fixed desktop size (72px).
+- **Title:** featured game names use the title role. Classic uses smaller condensed names (30px); Lobby uses a larger fluid title (38–66px).
+- **Body:** the base body role is used for instructions and prose, with paragraph measure capped (72ch). Featured game summaries scale (17–23px) with a tighter line-height (1.3).
+- **Label:** language buttons and utility navigation are compact (14px). Primary Festival actions are Bricolage bold (28px / 1.1); case choice labels are extra bold (30px).
+
+### Named Rules
+**The Role Separation Rule.** Use Big Shoulders Display for headlines, Bricolage for instructions and controls, and Courier Prime for actual case timestamps. The Georgia club name is confined to the identity area.
+
+## Layout
+
+The shared header, menu and footer are centered within a maximum canvas (1505px). Desktop outer gutters are generous (40px); the compact shell uses narrower gutters (22px). Thin horizontal rules separate identity, game choices and utility actions. Spacing is contextual rather than a strict arithmetic scale: repeated controls use small gaps, game rows use a steady gap (16px), and sections use broader breathing room.
+
+Festival uses an asymmetrical poster/programme split (39.35% / 60.65%). Its programme has inset padding (28px 34px 36px); featured rows arrange preview, copy/control and action in three columns (37% / remaining / 22%), with a minimum height (188px). At intermediate widths (801–1200px), the split shifts (36% / 64%). At 800px and below the poster stacks above the programme. At 540px and below rows become two columns with a full-width action beneath; secondary games remain a two-column group.
+
+Lobby uses three dominant game cards with a quieter four-choice group. Classic uses a centered intro and a four-column game library on desktop. Both retain their own responsive grids; the Festival poster split is a composition, not a requirement for future surfaces. Game pages use a narrower centered reading/play area (1120px maximum). Organizer artwork sits below the utility footer, inside a centered maximum width (1000px).
+
+## Elevation & Depth
+
+The interface is largely flat: buttons have no box shadow. Ink borders, colored preview scenes, source grain and halftone distinguish surfaces. Dialogs use a translucent ink backdrop (#121a2c80), without introducing a raised card shadow. Source art remains layered within the poster and previews.
+
+### Shadow Vocabulary
+- **Poster registration** (`text-shadow: 3px 3px 0 var(--coral)`): the event wordmark and festival invitation only.
+- **Preview cursor** (`filter: drop-shadow(1px 2px 2px #0005)`): the small aiming cursor inside Target Rush’s scene.
+
+### Named Rules
+**The Printed Depth Rule.** Use borders, source texture and tonal layering for depth. The coral registration on festival display text belongs to the poster; it is not a general container shadow.
+
+## Shapes
+
+The shared game-card radius is generous; previews and primary buttons use a slightly tighter curve. Small secondary choices use compact curves, while inputs and quiet utility buttons retain small corners. Dialog and result containers are the softest large surfaces. Myth or Fact answer controls have their own intermediate radius. These actual roles are recorded in frontmatter rather than forced into one radius.
+
+Featured Festival rows use a fine ink border (1.5px); general cards use a lighter stroke weight (1px). Header dividers and utility rules are thin (1px); section and poster rules are stronger (2px). Circular targets and small rounded scene marks belong to game graphics. Institutional artwork has no added border radius or clipping.
+
+## Components
+
+### Buttons
+Broad, confident actions with an amber fill and ink label. Base actions have a minimum height (49px); Festival actions are taller (68px desktop, 48px compact). Hover shifts the fill to lighter amber. Press scales the action (0.97); the Festival arrow moves right on hover or focus (4px). Shared keyboard focus uses a blue outline (3px) outside the edge (5px offset). Quiet actions are transparent with an ink border and a minimum height (44px). Disabled buttons reduce opacity (0.55).
+
+### Cards / Containers
+Game cards use paper or transparent surfaces, an ink outline and the shared game radius. Festival rows use a translucent light-paper fill, compact padding and a three-column arrangement; Lobby cards use more internal space, while Classic cards keep the library dense. Previews are clipped within their own rounded scene. Results and dialogs use the larger container radius.
+
+### Inputs / Fields
+Light field fill, warm thin border (1px), small corners and comfortable padding; editable controls have a minimum height (44px). The shared focus outline remains visible. Detective radio options keep native radio controls, with an amber-tinted checked row and ink outline. Errors use a pale coral field with dark maroon border and readable text.
+
+### Navigation
+The identity area leads the shared header. Language controls are text buttons with an amber underline on the selected state. Game navigation and footer utilities pair small line SVG icons with text; hover underlines the label. Responsive wrapping preserves language access while the club-name text is hidden at the narrowest width. Original IT Club artwork and the full DAÜ signature remain whole; the supplied Turkish or English EMURPG / DAÜ / ÖGESİM strip follows below.
+
+### Control Hints
+Real key labels sit in small light keycaps beside concise instructions; mouse and arrow controls use line SVGs. Festival keycaps use an ink outline (1.5px), medium body weight and a compact curve. The hint communicates the actual control before play.
+
+### Game Previews and Motion
+Previews show miniature mechanics: timer, target field, alignment zone, snake, quiz answers or case records. Dark scene surfaces keep pale text and coral/amber marks distinct; the source planet forms a foreground horizon. Treat previews as illustrations of gameplay rather than additional controls.
+
+Poster headline and underline arrive once (650ms). Hover and keyboard focus trigger short one-shot demonstrations (750–1100ms). The source rocket floats gently (6s); home animations pause when the page is hidden or the home surface is offscreen. Native route view transitions use a short exit (160ms) and entry (300ms), with a game-page arrival (450ms). Reduced-motion preference disables animations and transitions.
+
+## Do's and Don'ts
+
+### Do:
+- **Do** use the final paper token for shared page backgrounds.
+- **Do** preserve original event illustrations, grain, halftone and complete institutional artwork.
+- **Do** keep both language states legible and use the corresponding supplied organizer strip.
+- **Do** show the control hint beside each game and keep the primary action broad.
+- **Do** honor reduced motion and pause home animation when hidden or offscreen.
+
+### Don't:
+- **Don't** redraw, distort, recolor, rotate or animate institutional identities.
+- **Don't** carry the rejected neon command-center or sci-fi HUD treatment into new surfaces.
+- **Don't** turn poster registration into hard offset shadows on controls or containers.
+- **Don't** run repeating game demonstrations across the menu; demonstrations are one-shot responses to hover or keyboard focus.

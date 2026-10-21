@@ -11,3 +11,8 @@ data/
 test-results/
 playwright-report/
 .vercel/
+
+.impeccable/questions/
+.impeccable/review/
+.impeccable/build/
+.impeccable/mocks/decision/
