@@ -3,15 +3,17 @@ import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { initializeMythFact } from "./myth-fact/model.js";
 import { initializeDetective } from "./digital-detective/model.js";
+import { openPostgres, wrapSqlite } from "./database-driver.js";
 
 const databasePath = resolve(process.env.DATABASE_PATH ?? "./data/emucon.sqlite");
-mkdirSync(dirname(databasePath), { recursive: true });
+if (!process.env.DATABASE_URL) mkdirSync(dirname(databasePath), { recursive: true });
 
-export const database = new Database(databasePath);
-database.pragma("journal_mode = WAL");
-database.pragma("foreign_keys = ON");
+export const database = process.env.DATABASE_URL ? openPostgres(process.env.DATABASE_URL) : wrapSqlite(new Database(databasePath));
+(await database.pragma("journal_mode = WAL"));
+(await database.pragma("foreign_keys = ON"));
 
-database.exec(`
+async function initialize() {
+(await database.exec(`
   CREATE TABLE IF NOT EXISTS admin_users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL UNIQUE COLLATE NOCASE,
@@ -52,16 +54,16 @@ database.exec(`
   );
   CREATE INDEX IF NOT EXISTS game_rankings_idx ON game_sessions(game, score DESC, completed_at);
   CREATE INDEX IF NOT EXISTS game_activity_idx ON game_sessions(last_seen_at) WHERE completed_at IS NULL;
-`);
+`));
 
 // SQLite cannot alter a CHECK constraint. Upgrade existing event databases atomically,
 // retaining every session, score and existing extension foreign-key reference.
-const gameTable = database.prepare("SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'game_sessions'").get() as { sql: string };
-if (!gameTable.sql.includes("'digital-detective'")) {
-  database.pragma("foreign_keys = OFF");
+const gameTable = database.dialect === "sqlite" ? (await database.prepare("SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'game_sessions'").get()) as { sql: string } : null;
+if (gameTable && !gameTable.sql.includes("'digital-detective'")) {
+  (await database.pragma("foreign_keys = OFF"));
   try {
-    database.transaction(() => {
-      database.exec(`
+    (await database.transaction(async () => {
+      (await database.exec(`
       CREATE TABLE game_sessions_upgrade (
         id TEXT PRIMARY KEY,
         participant_id TEXT NOT NULL REFERENCES participants(id),
@@ -78,15 +80,27 @@ if (!gameTable.sql.includes("'digital-detective'")) {
       ALTER TABLE game_sessions_upgrade RENAME TO game_sessions;
       CREATE INDEX game_rankings_idx ON game_sessions(game, score DESC, completed_at);
       CREATE INDEX game_activity_idx ON game_sessions(last_seen_at) WHERE completed_at IS NULL;
-    `);
-      if ((database.pragma("foreign_key_check") as unknown[]).length) throw new Error("Game migration failed foreign-key integrity check.");
-    })();
-  } finally { database.pragma("foreign_keys = ON"); }
+    `));
+      if (((await database.pragma("foreign_key_check")) as unknown[]).length) throw new Error("Game migration failed foreign-key integrity check.");
+    })());
+  } finally { (await database.pragma("foreign_keys = ON")); }
 }
 
-initializeMythFact(database);
-initializeDetective(database);
+(await initializeMythFact(database));
+(await initializeDetective(database));
+if (database.dialect === "postgres") await database.exec("CREATE UNIQUE INDEX IF NOT EXISTS admin_username_ci ON admin_users (LOWER(username))");
+}
 
-export function closeDatabase(): void {
-  database.close();
+if (database.dialect === "postgres") {
+  await database.transaction(async () => {
+    await database.exec("CREATE TABLE IF NOT EXISTS arena_schema_version (version BIGINT PRIMARY KEY)");
+    if (!await database.prepare("SELECT version FROM arena_schema_version WHERE version = 1").get()) {
+      await initialize();
+      await database.exec("INSERT INTO arena_schema_version VALUES (1)");
+    }
+  })();
+} else await initialize();
+
+export async function closeDatabase(): Promise<void> {
+  (await database.close());
 }

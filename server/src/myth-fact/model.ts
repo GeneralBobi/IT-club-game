@@ -1,4 +1,4 @@
-import type Database from "better-sqlite3";
+import type { DataStore } from "../database-driver.js";
 import { z } from "zod";
 import { categories, seedQuestions } from "./seed.js";
 
@@ -41,8 +41,8 @@ export type QuestionInput = z.infer<typeof questionSchema>;
 export type Question = QuestionInput & { id: string; version: number; createdAt: string; reviewedAt: string | null };
 export const normalizeStatement = (value: string) => value.normalize("NFKC").toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
 
-export function initializeMythFact(db: Database.Database) {
-  db.exec(`
+export async function initializeMythFact(db: DataStore) {
+  (await db.exec(`
     CREATE TABLE IF NOT EXISTS teams (id TEXT PRIMARY KEY, fingerprint TEXT NOT NULL UNIQUE, name TEXT NOT NULL, captain TEXT NOT NULL, members TEXT NOT NULL, created_at INTEGER NOT NULL);
     CREATE TABLE IF NOT EXISTS mf_questions (id TEXT PRIMARY KEY, normalized TEXT NOT NULL UNIQUE, current_version INTEGER NOT NULL);
     CREATE TABLE IF NOT EXISTS mf_question_versions (question_id TEXT NOT NULL REFERENCES mf_questions(id), version INTEGER NOT NULL, content TEXT NOT NULL, created_at INTEGER NOT NULL, PRIMARY KEY(question_id, version));
@@ -68,25 +68,25 @@ export function initializeMythFact(db: Database.Database) {
       pair_id INTEGER, final INTEGER NOT NULL DEFAULT 0,
       PRIMARY KEY(attempt_id, ordinal), UNIQUE(attempt_id, question_id)
     );
-  `);
-  if (!(db.prepare("SELECT id FROM mf_configurations LIMIT 1").get())) {
-    db.prepare("INSERT INTO mf_configurations(config, created_at) VALUES (?, ?)").run(JSON.stringify(defaultConfig), Date.now());
+  `));
+  if (!((await db.prepare("SELECT id FROM mf_configurations LIMIT 1").get()))) {
+    (await db.prepare("INSERT INTO mf_configurations(config, created_at) VALUES (?, ?)").run(JSON.stringify(defaultConfig), Date.now()));
   }
-  db.transaction(() => {
+  (await db.transaction(async () => {
     for (const input of seedQuestions) {
-      if (db.prepare("SELECT id FROM mf_questions WHERE id = ?").get(input.id)) continue;
+      if ((await db.prepare("SELECT id FROM mf_questions WHERE id = ?").get(input.id))) continue;
       const question: Question = { ...input, version: 1 };
       questionSchema.parse(input);
-      db.prepare("INSERT INTO mf_questions(id, normalized, current_version) VALUES (?, ?, 1)").run(input.id, normalizeStatement(input.statement));
-      db.prepare("INSERT INTO mf_question_versions(question_id, version, content, created_at) VALUES (?, 1, ?, ?)").run(input.id, JSON.stringify(question), Date.now());
+      (await db.prepare("INSERT INTO mf_questions(id, normalized, current_version) VALUES (?, ?, 1)").run(input.id, normalizeStatement(input.statement)));
+      (await db.prepare("INSERT INTO mf_question_versions(question_id, version, content, created_at) VALUES (?, 1, ?, ?)").run(input.id, JSON.stringify(question), Date.now()));
     }
-  })();
+  })());
 }
 
-export function currentConfiguration(db: Database.Database): { id: number; config: Config } {
-  const row = db.prepare("SELECT id, config FROM mf_configurations ORDER BY id DESC LIMIT 1").get() as { id: number; config: string };
+export async function currentConfiguration(db: DataStore): Promise<{ id: number; config: Config }> {
+  const row = (await db.prepare("SELECT id, config FROM mf_configurations ORDER BY id DESC LIMIT 1").get()) as { id: number; config: string };
   return { id: row.id, config: JSON.parse(row.config) };
 }
-export function allQuestions(db: Database.Database): Question[] {
-  return (db.prepare(`SELECT v.content FROM mf_questions q JOIN mf_question_versions v ON v.question_id = q.id AND v.version = q.current_version`).all() as { content: string }[]).map((row) => JSON.parse(row.content));
+export async function allQuestions(db: DataStore): Promise<Question[]> {
+  return ((await db.prepare(`SELECT v.content FROM mf_questions q JOIN mf_question_versions v ON v.question_id = q.id AND v.version = q.current_version`).all()) as { content: string }[]).map((row) => JSON.parse(row.content));
 }

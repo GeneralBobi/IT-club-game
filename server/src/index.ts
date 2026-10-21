@@ -24,6 +24,7 @@ if (!sessionSecret || sessionSecret.length < 32) {
 }
 
 app.disable("x-powered-by");
+if (process.env.VERCEL) app.set("trust proxy", 1);
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -59,8 +60,8 @@ const loginLimiter = rateLimit({
   legacyHeaders: false
 });
 
-app.get("/api/health", (_req, res) => {
-  database.prepare("SELECT 1").get();
+app.get("/api/health", async (_req, res) => {
+  (await database.prepare("SELECT 1").get());
   res.json({ status: "ok" });
 });
 
@@ -74,40 +75,41 @@ app.get("/api/events", (req, res) => {
   res.write("event: change\ndata: {}\n\n");
   listeners.add(res);
   const timer = setInterval(() => res.write(": keep-alive\n\n"), 20_000);
-  req.on("close", () => { clearInterval(timer); listeners.delete(res); });
+  const deadline = process.env.VERCEL ? setTimeout(() => res.end(), 25_000) : undefined;
+  req.on("close", () => { clearInterval(timer); clearTimeout(deadline); listeners.delete(res); });
 });
-app.get("/api/leaderboard/:game", (req, res) => {
+app.get("/api/leaderboard/:game", async (req, res) => {
   const game = z.enum(gameIds).safeParse(req.params.game);
   if (!game.success) { res.status(400).json({ error: "Unknown game." }); return; }
-  res.json(arena.rankings(game.data));
+  res.json((await arena.rankings(game.data)));
 });
-app.get("/api/leaderboards", (_req, res) => {
-  res.json(Object.fromEntries(gameIds.map((game) => [game, arena.rankings(game)])));
+app.get("/api/leaderboards", async (_req, res) => {
+  res.json(Object.fromEntries((await Promise.all(gameIds.map(async (game) => [game, (await arena.rankings(game))])))));
 });
 const playLimiter = rateLimit({ windowMs: 60_000, limit: 120, standardHeaders: "draft-8", legacyHeaders: false });
 app.use("/api/play", playLimiter);
-app.post("/api/play", (req, res) => {
+app.post("/api/play", async (req, res) => {
   const input = z.object({ participantId: z.uuid(), game: z.enum(gameIds), challenger: z.string().trim().max(24) }).safeParse(req.body);
   if (!input.success) { res.status(400).json({ error: "Enter a valid challenger name and game." }); return; }
   if (input.data.game === "digital-detective") { res.status(400).json({ error: "Start Digital Detective through its investigation flow." }); return; }
   if (input.data.game === "myth-fact") { res.status(400).json({ error: "Start Myth or Fact through its server-controlled game flow." }); return; }
-  const id = arena.start(input.data.participantId, input.data.game, input.data.challenger);
+  const id = (await arena.start(input.data.participantId, input.data.game, input.data.challenger));
   publish();
   res.status(201).json({ id });
 });
-app.post("/api/play/:id/heartbeat", (req, res) => {
-  if ((database.prepare("SELECT game FROM game_sessions WHERE id=?").get(req.params.id) as { game: string } | undefined)?.game === "digital-detective") { res.status(400).json({ error: "Use the owned investigation endpoint." }); return; }
-  if (!arena.heartbeat(req.params.id)) { res.status(404).json({ error: "Active game session not found." }); return; }
+app.post("/api/play/:id/heartbeat", async (req, res) => {
+  if (((await database.prepare("SELECT game FROM game_sessions WHERE id=?").get(req.params.id)) as { game: string } | undefined)?.game === "digital-detective") { res.status(400).json({ error: "Use the owned investigation endpoint." }); return; }
+  if (!(await arena.heartbeat(req.params.id))) { res.status(404).json({ error: "Active game session not found." }); return; }
   res.status(204).end();
 });
-app.delete("/api/play/:id", (req, res) => {
-  if ((database.prepare("SELECT game FROM game_sessions WHERE id=?").get(req.params.id) as { game: string } | undefined)?.game === "digital-detective") { res.status(400).json({ error: "Use the owned investigation reset endpoint." }); return; }
-  arena.abandon(req.params.id); publish(); res.status(204).end();
+app.delete("/api/play/:id", async (req, res) => {
+  if (((await database.prepare("SELECT game FROM game_sessions WHERE id=?").get(req.params.id)) as { game: string } | undefined)?.game === "digital-detective") { res.status(400).json({ error: "Use the owned investigation reset endpoint." }); return; }
+  (await arena.abandon(req.params.id)); publish(); res.status(204).end();
 });
-app.post("/api/play/:id/complete", (req, res) => {
+app.post("/api/play/:id/complete", async (req, res) => {
   const input = z.object({ score: z.number().int().nonnegative() }).safeParse(req.body);
   if (!input.success) { res.status(400).json({ error: "Invalid score." }); return; }
-  const result = arena.finish(req.params.id, input.data.score);
+  const result = (await arena.finish(req.params.id, input.data.score));
   if (result !== "saved") {
     res.status(result === "missing" ? 404 : result === "conflict" ? 409 : 400).json({ error: "Score could not be accepted for this game session." });
     return;
@@ -139,9 +141,9 @@ app.post("/api/admin/login", loginLimiter, async (req, res, next) => {
   }
 
   try {
-    const admin = database
+    const admin = (await database
       .prepare("SELECT id, username, password_hash, role FROM admin_users WHERE username = ? COLLATE NOCASE")
-      .get(input.data.username) as
+      .get(input.data.username)) as
       | { id: number; username: string; password_hash: string; role: string }
       | undefined;
 
@@ -150,7 +152,7 @@ app.post("/api/admin/login", loginLimiter, async (req, res, next) => {
       return;
     }
 
-    req.session.regenerate((error) => {
+    req.session.regenerate(async (error) => {
       if (error) {
         next(error);
         return;
@@ -158,7 +160,7 @@ app.post("/api/admin/login", loginLimiter, async (req, res, next) => {
       req.session.adminId = admin.id;
       req.session.adminUsername = admin.username;
       req.session.adminRole = admin.role;
-      writeAuditLog(admin.id, "admin.login");
+      try { await writeAuditLog(admin.id, "admin.login"); } catch (cause) { next(cause); return; }
       req.session.save((saveError) => {
         if (saveError) {
           next(saveError);
@@ -177,19 +179,19 @@ app.post("/api/admin/login", loginLimiter, async (req, res, next) => {
 
 app.post("/api/admin/logout", requireAdmin, (req, res, next) => {
   const adminId = req.session.adminId!;
-  req.session.destroy((error) => {
+  req.session.destroy(async (error) => {
     if (error) {
       next(error);
       return;
     }
     res.clearCookie("connect.sid", { httpOnly: true, sameSite: "strict", secure: isProduction });
-    writeAuditLog(adminId, "admin.logout");
+    try { await writeAuditLog(adminId, "admin.logout"); } catch (cause) { next(cause); return; }
     res.status(204).end();
   });
 });
 
-app.get("/api/admin/overview", requireAdmin, (_req, res) => {
-  res.json(arena.overview());
+app.get("/api/admin/overview", requireAdmin, async (_req, res) => {
+  res.json((await arena.overview()));
 });
 
 if (isProduction) {
@@ -210,6 +212,9 @@ app.use((error: unknown, _req: express.Request, res: express.Response, _next: ex
   res.status(500).json({ error: "An unexpected server error occurred." });
 });
 
+export default app;
+
+if (!process.env.VERCEL) {
 const server = app.listen(port, "0.0.0.0", () => {
   const address = server.address();
   console.log(`EMUCON Arena API listening on port ${typeof address === "object" && address ? address.port : port}`);
@@ -217,11 +222,12 @@ const server = app.listen(port, "0.0.0.0", () => {
 
 function shutdown(): void {
   for (const client of listeners) client.end();
-  server.close(() => {
-    closeDatabase();
+  server.close(async () => {
+    (await closeDatabase());
     process.exit(0);
   });
 }
 
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
+}

@@ -1,4 +1,4 @@
-import type Database from "better-sqlite3";
+import type { DataStore } from "../database-driver.js";
 import { z } from "zod";
 import { difficulties, seedCases } from "./cases.js";
 const profile = z.object({ seconds: z.number().int().min(60).max(3600), records: z.number().int().min(10).max(100) });
@@ -6,8 +6,8 @@ export const configSchema = z.object({ solo: z.boolean(), teams: z.boolean(), te
 export type Config = z.infer<typeof configSchema>;
 export const defaultConfig: Config = { solo: true, teams: true, teamMin: 2, teamMax: 6, hints: true, hintPenalty: 25, speedBonus: 200, maxAttempts: 0, leaderboardVisible: true, profiles: { beginner: { seconds: 720, records: 12 }, intermediate: { seconds: 600, records: 24 }, advanced: { seconds: 480, records: 48 }, expert: { seconds: 600, records: 72 } } };
 export const competitionSchema = z.object({ title: z.string().trim().min(3).max(100), status: z.enum(["draft", "open", "closed"]), caseId: z.string().min(1).max(80), version: z.number().int().positive(), difficulty: z.enum(difficulties), seed: z.string().min(1).max(80), startAt: z.number().int().nonnegative(), endAt: z.number().int().positive(), participation: z.enum(["both", "solo", "team"]), revealAfterClose: z.boolean() }).strict().refine(c => c.endAt > c.startAt, "End must follow start.");
-export function initializeDetective(db: Database.Database) {
-  db.exec(`
+export async function initializeDetective(db: DataStore) {
+  (await db.exec(`
     CREATE TABLE IF NOT EXISTS dd_cases (id TEXT PRIMARY KEY, current_version INTEGER NOT NULL, status TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS dd_versions (case_id TEXT NOT NULL REFERENCES dd_cases(id), version INTEGER NOT NULL, content TEXT NOT NULL, created_at INTEGER NOT NULL, PRIMARY KEY(case_id, version));
     CREATE TABLE IF NOT EXISTS dd_config (id INTEGER PRIMARY KEY AUTOINCREMENT, content TEXT NOT NULL, created_at INTEGER NOT NULL);
@@ -23,22 +23,22 @@ export function initializeDetective(db: Database.Database) {
     );
     CREATE INDEX IF NOT EXISTS dd_owner_idx ON dd_attempts(owner);
     CREATE INDEX IF NOT EXISTS dd_board_idx ON dd_attempts(board_key, status);
-  `);
-  if (!db.prepare("SELECT id FROM dd_config LIMIT 1").get()) db.prepare("INSERT INTO dd_config(content, created_at) VALUES (?, ?)").run(JSON.stringify(defaultConfig), Date.now());
-  db.transaction(() => { for (const c of seedCases()) { if (db.prepare("SELECT id FROM dd_cases WHERE id = ?").get(c.id)) continue; db.prepare("INSERT INTO dd_cases VALUES (?, 1, 'published')").run(c.id); db.prepare("INSERT INTO dd_versions VALUES (?, 1, ?, ?)").run(c.id, JSON.stringify(c.content), Date.now()); } })();
+  `));
+  if (!(await db.prepare("SELECT id FROM dd_config LIMIT 1").get())) (await db.prepare("INSERT INTO dd_config(content, created_at) VALUES (?, ?)").run(JSON.stringify(defaultConfig), Date.now()));
+  (await db.transaction(async () => { for (const c of seedCases()) { if ((await db.prepare("SELECT id FROM dd_cases WHERE id = ?").get(c.id))) continue; (await db.prepare("INSERT INTO dd_cases VALUES (?, 1, 'published')").run(c.id)); (await db.prepare("INSERT INTO dd_versions VALUES (?, 1, ?, ?)").run(c.id, JSON.stringify(c.content), Date.now())); } })());
   // Upgrade only untouched original seed dossiers. Attempts/competitions pinned
   // to v1 retain their original hints; authored cases are never overwritten.
-  db.transaction(() => {
+  (await db.transaction(async () => {
     const originals = seedCases(true);
     for (const c of seedCases()) {
-      const row = db.prepare("SELECT c.current_version,v.content FROM dd_cases c JOIN dd_versions v ON v.case_id=c.id AND v.version=c.current_version WHERE c.id=?").get(c.id) as { current_version: number; content: string };
+      const row = (await db.prepare("SELECT c.current_version,v.content FROM dd_cases c JOIN dd_versions v ON v.case_id=c.id AND v.version=c.current_version WHERE c.id=?").get(c.id)) as { current_version: number; content: string };
       if (row.current_version !== 1 || row.content !== JSON.stringify(originals.find(o => o.id === c.id)!.content)) continue;
-      db.prepare("INSERT INTO dd_versions VALUES (?,2,?,?)").run(c.id, JSON.stringify(c.content), Date.now());
-      db.prepare("UPDATE dd_cases SET current_version=2 WHERE id=?").run(c.id);
+      (await db.prepare("INSERT INTO dd_versions VALUES (?,2,?,?)").run(c.id, JSON.stringify(c.content), Date.now()));
+      (await db.prepare("UPDATE dd_cases SET current_version=2 WHERE id=?").run(c.id));
     }
-  })();
+  })());
 }
-export function configuration(db: Database.Database): { id: number; content: Config } {
-  const row = db.prepare("SELECT * FROM dd_config ORDER BY id DESC LIMIT 1").get() as { id: number; content: string };
+export async function configuration(db: DataStore): Promise<{ id: number; content: Config }> {
+  const row = (await db.prepare("SELECT * FROM dd_config ORDER BY id DESC LIMIT 1").get()) as { id: number; content: string };
   return { id: row.id, content: JSON.parse(row.content) };
 }

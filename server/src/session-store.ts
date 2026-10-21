@@ -13,15 +13,15 @@ export class SQLiteSessionStore extends session.Store {
   private readonly deleteStatement = database.prepare("DELETE FROM sessions WHERE sid = ?");
   private readonly pruneStatement = database.prepare("DELETE FROM sessions WHERE expires_at <= ?");
 
-  get(sid: string, callback: SessionCallback): void {
+  async get(sid: string, callback: SessionCallback): Promise<void> {
     try {
-      const row = this.readStatement.get(sid) as { data: string; expires_at: number } | undefined;
+      const row = (await this.readStatement.get(sid)) as { data: string; expires_at: number } | undefined;
       if (!row) {
         callback(null, null);
         return;
       }
       if (row.expires_at <= Date.now()) {
-        this.deleteStatement.run(sid);
+        (await this.deleteStatement.run(sid));
         callback(null, null);
         return;
       }
@@ -31,10 +31,10 @@ export class SQLiteSessionStore extends session.Store {
     }
   }
 
-  set(sid: string, value: SessionData, callback?: (error?: unknown) => void): void {
+  async set(sid: string, value: SessionData, callback?: (error?: unknown) => void): Promise<void> {
     try {
-      this.writeStatement.run(sid, JSON.stringify(value), this.getExpiry(value));
-      this.pruneStatement.run(Date.now());
+      (await this.writeStatement.run(sid, JSON.stringify(value), this.getExpiry(value)));
+      (await this.pruneStatement.run(Date.now()));
       callback?.();
     } catch (error) {
       callback?.(error);
@@ -42,21 +42,22 @@ export class SQLiteSessionStore extends session.Store {
     }
   }
 
-  destroy(sid: string, callback?: (error?: unknown) => void): void {
+  async destroy(sid: string, callback?: (error?: unknown) => void): Promise<void> {
     try {
-      this.deleteStatement.run(sid);
+      (await this.deleteStatement.run(sid));
       callback?.();
     } catch (error) {
       callback?.(error);
     }
   }
 
-  touch(sid: string, value: SessionData, callback?: () => void): void {
+  async touch(sid: string, value: SessionData, callback?: (error?: unknown) => void): Promise<void> {
     try {
-      database.prepare("UPDATE sessions SET expires_at = ? WHERE sid = ?").run(this.getExpiry(value), sid);
+      (await database.prepare("UPDATE sessions SET expires_at = ? WHERE sid = ?").run(this.getExpiry(value), sid));
       callback?.();
     } catch (error) {
-      this.emit("disconnect", error);
+      if (callback) callback(error);
+      else this.emit("disconnect", error);
     }
   }
 

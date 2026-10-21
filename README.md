@@ -234,7 +234,7 @@ Rules changes create a new configuration version so completed rankings remain as
 
 ## Production deployment
 
-The repository contains a Node/Express API and a Vite frontend; it does not currently include a configured cloud-host deployment workflow. GitHub stores the source code but does not run the API. **GitHub Pages alone is not a supported full-app deployment**, because the site needs the API and a persistent SQLite database.
+The repository contains a Node/Express API and a Vite frontend. It supports Vercel with PostgreSQL through `DATABASE_URL`; see [Vercel deployment](docs/VERCEL.md). Without `DATABASE_URL`, it retains the local SQLite installation described below. **GitHub Pages alone is not a supported full-app deployment**, because the site needs the API and a persistent database.
 
 For a production deployment, use a Node.js host or server that provides:
 

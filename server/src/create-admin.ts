@@ -11,17 +11,17 @@ if (!username || !password) {
   console.error("Username must be 3–64 characters and password must be 12–256 characters.");
   process.exitCode = 1;
 } else {
-  const exists = database.prepare("SELECT 1 FROM admin_users WHERE username = ? COLLATE NOCASE").get(username);
+  const exists = (await database.prepare("SELECT 1 FROM admin_users WHERE username = ? COLLATE NOCASE").get(username));
   if (exists) {
     console.error("That administrator username already exists.");
     process.exitCode = 1;
   } else {
     const passwordHash = await hashPassword(password);
-    database
+    (await database
       .prepare("INSERT INTO admin_users (username, password_hash, role) VALUES (?, ?, 'super_admin')")
-      .run(username, passwordHash);
+      .run(username, passwordHash));
     console.log(`Administrator "${username}" created.`);
   }
 }
 
-database.close();
+(await database.close());

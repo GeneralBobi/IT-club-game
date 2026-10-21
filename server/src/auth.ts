@@ -47,8 +47,8 @@ export function requireAdmin(req: Request, res: Response, next: NextFunction): v
   next();
 }
 
-export function writeAuditLog(adminUserId: number, action: string, details: object = {}): void {
-  database
+export async function writeAuditLog(adminUserId: number, action: string, details: object = {}): Promise<void> {
+  (await database
     .prepare("INSERT INTO audit_log (admin_user_id, action, details) VALUES (?, ?, ?)")
-    .run(adminUserId, action, JSON.stringify(details));
+    .run(adminUserId, action, JSON.stringify(details)));
 }
