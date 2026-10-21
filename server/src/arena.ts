@@ -59,7 +59,7 @@ export function createArena(db: DataStore) {
           ROW_NUMBER() OVER (PARTITION BY a.identity ORDER BY a.score DESC, a.total_response_ms ASC, a.finished_at ASC) AS attempt
           FROM mf_attempts a JOIN game_sessions g ON g.id = a.id
           WHERE a.status = 'completed' AND a.mode = 'classic' AND a.team_id IS NULL AND a.config_id = ? AND a.config = ?
-        ) SELECT id, challenger, score, completedAt FROM best WHERE attempt = 1 ORDER BY score DESC, completedAt ASC LIMIT 50`).all(current.id, current.config));
+        ) SELECT id, challenger, score, "completedAt" FROM best WHERE attempt = 1 ORDER BY score DESC, "completedAt" ASC LIMIT 50`).all(current.id, current.config));
         return { game, entries: current.visible ? entries.map((entry, index) => ({ ...(entry as object), rank: index + 1 })) : [], updatedAt: new Date().toISOString() };
       }
       // Keep each participant's best attempt; ties go to the earlier completed run.

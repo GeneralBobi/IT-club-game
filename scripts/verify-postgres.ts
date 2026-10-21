@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { database, closeDatabase } from "../server/src/database.js";
-import { createArena } from "../server/src/arena.js";
+import { createArena, gameIds } from "../server/src/arena.js";
 import { createDetective } from "../server/src/digital-detective/service.js";
 import { createMythService } from "../server/src/myth-fact/service.js";
 
@@ -14,6 +14,7 @@ try {
     const id = await arena.start(participant, "zero-point", "Deployment verification");
     assert.equal(await arena.finish(id, 123), "saved");
     assert.equal(await arena.finish(id, 456), "conflict");
+    for (const game of gameIds) await arena.rankings(game);
     const entries = (await arena.rankings("zero-point")).entries as { id: string; completedAt: number }[];
     const saved = entries.find(entry => entry.id === id)!;
     assert.ok(saved.completedAt > 1_700_000_000_000, "Millisecond timestamps and camelCase aliases survive PostgreSQL");
