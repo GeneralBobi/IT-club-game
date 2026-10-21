@@ -1,10 +1,10 @@
 import { randomUUID } from "node:crypto";
 import { atomicService, type DataStore } from "./database-driver.js";
 
-export const gameIds = ["zero-point", "target-rush", "perfect-align", "brain-firewall", "snake", "myth-fact", "digital-detective"] as const;
+export const gameIds = ["zero-point", "target-rush", "perfect-align", "brain-firewall", "snake", "myth-fact", "digital-detective", "color-cascade"] as const;
 export type GameId = typeof gameIds[number];
 export const scoreLimits: Record<GameId, number> = {
-  "zero-point": 80_000, "target-rush": 10_000_000, "perfect-align": 100_000, "brain-firewall": 1_000_000, "snake": 10_000_000, "myth-fact": 1_000_000, "digital-detective": 1200
+  "zero-point": 80_000, "target-rush": 10_000_000, "perfect-align": 100_000, "brain-firewall": 1_000_000, "snake": 10_000_000, "myth-fact": 1_000_000, "digital-detective": 1200, "color-cascade": 10_000_000
 };
 const activeWindowMs = 90_000;
 

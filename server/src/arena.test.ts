@@ -127,16 +127,16 @@ describe("connected arena API", () => {
       .toMatchObject({ participants: 2, gamesPlayed: 3, activeSessions: 0 });
   });
 
-  it("separates all seven boards and supports anonymous zero-point scores", async () => {
-    for (const game of ["target-rush", "perfect-align", "brain-firewall", "snake"]) {
+  it("separates all eight boards and supports anonymous scores", async () => {
+    for (const game of ["target-rush", "perfect-align", "brain-firewall", "snake", "color-cascade"]) {
       const id = await start(game, "");
       await api(`/api/play/${id}/complete`, "POST", { score: 0 });
       const result = await (await api(`/api/leaderboard/${game}`)).json();
       expect(result.entries).toHaveLength(1);
       expect(result.entries[0]).toMatchObject({ rank: 1, challenger: "Anonymous Challenger", score: 0 });
     }
-    expect(Object.keys(await (await api("/api/leaderboards")).json())).toHaveLength(7);
-    expect(await (await api("/api/admin/overview", "GET", undefined, true)).json()).toMatchObject({ configuredGames: 7 });
+    expect(Object.keys(await (await api("/api/leaderboards")).json())).toHaveLength(8);
+    expect(await (await api("/api/admin/overview", "GET", undefined, true)).json()).toMatchObject({ configuredGames: 8 });
   });
 
   it("saves and ranks Snake runs, rejects invalid scores, and treats retries as one completed run", async () => {
@@ -194,7 +194,7 @@ describe("connected arena API", () => {
     const historical=await(await api("/api/leaderboard/zero-point?rules=1")).json();
     expect(historical.entries.some((entry:{id:string})=>entry.id===id)).toBe(false);
     expect(historical.entries[0]).toMatchObject({challenger:"Grace",score:8000});
-    expect((await api("/api/play","POST",{participantId:randomUUID(),game:"zero-point",challenger:"Invalid",rulesVersion:3})).status).toBe(400);
+    expect((await api("/api/play","POST",{participantId:randomUUID(),game:"zero-point",challenger:"Invalid",rulesVersion:4})).status).toBe(400);
   });
 
   it("owns bilingual stand cases, rejects replay, preserves saved scores and staff login on next-player reset",async()=>{

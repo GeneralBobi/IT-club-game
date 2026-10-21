@@ -8,6 +8,7 @@ import {
   ShieldQuestion,
   CornerDownLeft,
   MousePointer2,
+  Palette,
 } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useLanguage } from "./i18n";
@@ -33,6 +34,13 @@ export const gameList = [
     tr: "Tam çizgide dur.",
     en: "Stop in the zone.",
     control: "space",
+  },
+  {
+    id: "color-cascade",
+    name: "Color Cascade",
+    tr: "Renkleri sırayla yakala.",
+    en: "Catch the colors in order.",
+    control: "mouse",
   },
   {
     id: "snake",
@@ -115,6 +123,18 @@ export function GamePreview({ id }: { id: StandGameId }) {
           <b />
         </div>
       )}
+      {id === "color-cascade" && (
+        <>
+          {[0, 1, 2].map((color) => (
+            <span
+              key={color}
+              style={{ background: ["#ff5252", "#448aff", "#4caf50"][color] }}
+            >
+              {color + 1}
+            </span>
+          ))}
+        </>
+      )}
       {id === "brain-firewall" && (
         <>
           <strong className="preview-question">
@@ -195,6 +215,7 @@ export function ControlHint({
   );
 }
 const extraIcons = {
+  "color-cascade": Palette,
   snake: Move,
   "brain-firewall": HelpCircle,
   "myth-fact": ShieldQuestion,

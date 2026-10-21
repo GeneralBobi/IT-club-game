@@ -42,6 +42,23 @@ typography:
     fontSize: "14px"
     fontWeight: 800
     lineHeight: 1.5
+  laptop-headline:
+    fontFamily: "Big Shoulders Display, sans-serif"
+    fontSize: "clamp(36px, 6.7svh, 66px)"
+    fontWeight: 900
+    lineHeight: 1.05
+    letterSpacing: "-0.025em"
+  laptop-title:
+    fontFamily: "Big Shoulders Display, sans-serif"
+    fontSize: "clamp(24px, 4svh, 40px)"
+    fontWeight: 900
+    lineHeight: 1.1
+    letterSpacing: "-0.025em"
+  laptop-control:
+    fontFamily: "Bricolage, Arial, sans-serif"
+    fontSize: "clamp(12px, 1.7svh, 16px)"
+    fontWeight: 400
+    lineHeight: 1.5
   case-time:
     fontFamily: "Courier Prime, monospace"
     fontSize: "22px"
@@ -83,6 +100,12 @@ components:
     rounded: "{rounded.action}"
     padding: "18px 20px"
     height: "68px"
+  button-festival-laptop:
+    backgroundColor: "{colors.amber}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.action}"
+    padding: "10px 12px"
+    height: "clamp(44px, 7.5svh, 64px)"
   button-quiet:
     textColor: "{colors.ink}"
     rounded: "{rounded.field}"
@@ -163,6 +186,7 @@ Amber and coral carry the festival print; neutral paper and ink carry reading an
 - **Title:** featured game names use the title role. Classic uses smaller condensed names (30px); Lobby uses a larger fluid title (38–66px).
 - **Body:** the base body role is used for instructions and prose, with paragraph measure capped (72ch). Featured game summaries scale (17–23px) with a tighter line-height (1.3).
 - **Label:** language buttons and utility navigation are compact (14px). Primary Festival actions are Bricolage bold (28px / 1.1); case choice labels are extra bold (30px).
+- **Laptop density:** the laptop headline, title and control roles override the default Festival sizes at the height-aware desktop breakpoint. Game summaries use a smaller fluid size (14–20px); at heights up to 640px they are omitted while names, controls and actions remain visible. The poster wordmark scales against both container width and height, rather than page zoom.
 
 ### Named Rules
 **The Role Separation Rule.** Use Big Shoulders Display for headlines, Bricolage for instructions and controls, and Courier Prime for actual case timestamps. The Georgia club name is confined to the identity area.
@@ -173,7 +197,9 @@ The shared header, menu and footer are centered within a maximum canvas (1505px)
 
 Festival uses an asymmetrical poster/programme split (39.35% / 60.65%). Its programme has inset padding (28px 34px 36px); featured rows arrange preview, copy/control and action in three columns (37% / remaining / 22%), with a minimum height (188px). At intermediate widths (801–1200px), the split shifts (36% / 64%). At 800px and below the poster stacks above the programme. At 540px and below rows become two columns with a full-width action beneath; secondary games remain a two-column group.
 
-Lobby uses three dominant game cards with a quieter four-choice group. Classic uses a centered intro and a four-column game library on desktop. Both retain their own responsive grids; the Festival poster split is a composition, not a requirement for future surfaces. Game pages use a narrower centered reading/play area (1120px maximum). Organizer artwork sits below the utility footer, inside a centered maximum width (1000px).
+At widths of at least 1000px and heights of at least 560px, Festival uses a viewport-height flex shell. The responsive header, flexible menu and complete footer share the available height. The poster/programme split remains 39.35% / 60.65%; three equal flexible rows use preview/copy/action columns (34% / remaining / 20%), compact row padding (6px) and height-aware gaps (8–16px). Five secondary choices form a three-column group. The full launcher, all eight games and institutional footer fit from 1024×600; no page scaling or clipped controls provides that fit. Utility actions and the unmodified organizer strip share the footer horizontally. Phones retain natural document scrolling and the existing stacked composition.
+
+Lobby uses three dominant game cards with a quieter five-choice group. Classic uses a centered intro and a four-column game library on desktop. Both retain their own responsive grids; the Festival poster split is a composition, not a requirement for future surfaces. Game pages use a narrower centered reading/play area (1120px maximum). Outside the laptop breakpoint, organizer artwork follows the utility footer inside a centered maximum width (1000px).
 
 ## Elevation & Depth
 
@@ -197,6 +223,8 @@ Featured Festival rows use a fine ink border (1.5px); general cards use a lighte
 ### Buttons
 Broad, confident actions with an amber fill and ink label. Base actions have a minimum height (49px); Festival actions are taller (68px desktop, 48px compact). Hover shifts the fill to lighter amber. Press scales the action (0.97); the Festival arrow moves right on hover or focus (4px). Shared keyboard focus uses a blue outline (3px) outside the edge (5px offset). Quiet actions are transparent with an ink border and a minimum height (44px). Disabled buttons reduce opacity (0.55).
 
+The height-aware laptop Festival action uses its frontmatter variant with a minimum height (44px) and fluid Bricolage label (20–27px), keeping the same amber, ink, curve and interaction states.
+
 ### Cards / Containers
 Game cards use paper or transparent surfaces, an ink outline and the shared game radius. Festival rows use a translucent light-paper fill, compact padding and a three-column arrangement; Lobby cards use more internal space, while Classic cards keep the library dense. Previews are clipped within their own rounded scene. Results and dialogs use the larger container radius.
 
@@ -210,9 +238,14 @@ The identity area leads the shared header. Language controls are text buttons wi
 Real key labels sit in small light keycaps beside concise instructions; mouse and arrow controls use line SVGs. Festival keycaps use an ink outline (1.5px), medium body weight and a compact curve. The hint communicates the actual control before play.
 
 ### Game Previews and Motion
-Previews show miniature mechanics: timer, target field, alignment zone, snake, quiz answers or case records. Dark scene surfaces keep pale text and coral/amber marks distinct; the source planet forms a foreground horizon. Treat previews as illustrations of gameplay rather than additional controls.
+Previews show miniature mechanics: timer, target field, alignment zone, falling color tiles, snake, quiz answers or case records. Dark scene surfaces keep pale text and coral/amber marks distinct; the source planet forms a foreground horizon. Treat previews as illustrations of gameplay rather than additional controls.
 
 Poster headline and underline arrive once (650ms). Hover and keyboard focus trigger short one-shot demonstrations (750–1100ms). The source rocket floats gently (6s); home animations pause when the page is hidden or the home surface is offscreen. Native route view transitions use a short exit (160ms) and entry (300ms), with a game-page arrival (450ms). Reduced-motion preference disables animations and transitions.
+
+### Game State Presentation
+Zero Point keeps its running clock visible throughout its single attempt. Perfect Align keeps the marker, target zone and streak feedback visible as successful hits advance automatically until a miss.
+
+Color Cascade retains its imported game's four fixed colors as gameplay data, paired with consistent numeric labels on both the sequence and falling tiles; they do not expand the shared festival palette. Its dark board grows from three to four to five lanes, with lane numbers at the bottom. The current sequence item has an ink outline and completed items fade. Score, combo, three heart outlines/fills and a pause action sit above the board; pause covers the board with a dark overlay and a direct resume action. The board and tile curves reuse the existing choice and action radii. The source game's colors and its small preview tile corners are local game illustration details, not general interface tokens.
 
 ## Do's and Don'ts
 

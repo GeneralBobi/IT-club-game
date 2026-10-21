@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Cascade</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="header">
+            <div id="stats-container">
+                <div id="score-container">
+                    Score: <span id="score">0</span>
+                </div>
+                <div id="combo-container">
+                    Combo: <span id="combo">1x</span>
+                </div>
+                <div id="lives-container">
+                    <span class="heart">❤️</span>
+                    <span class="heart">❤️</span>
+                    <span class="heart">❤️</span>
+                </div>
+            </div>
+            <div id="sequence-container">
+                <p>Match Sequence:</p>
+                <div id="sequence-display"></div>
+            </div>
+        </div>
+        <div id="game-board">
+            <div class="column" id="column-0"></div>
+            <div class="column" id="column-1"></div>
+            <div class="column" id="column-2"></div>
+            <div class="column" id="column-3"></div>
+        </div>
+        <div id="game-over-screen" class="hidden">
+            <h1>Game Over</h1>
+            <p>Your Score: <span id="final-score">0</span></p>
+            <button id="restart-button">Restart</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

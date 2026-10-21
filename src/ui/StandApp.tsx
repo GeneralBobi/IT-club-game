@@ -18,8 +18,12 @@ import { useLiveData, type Rankings } from "./arena-data";
 import { setSoundMuted, soundIsMuted } from "./sound";
 import StandGames from "./StandGames";
 import StandCases from "./StandCases";
+import ColorCascade from "./ColorCascade";
+import { currentStandRules } from "../games/stand-rules";
 import "./stand.css";
 import "./festival.css";
+import "./cascade.css";
+import "./stand-fit.css";
 const StaffApp = lazy(() => import("./App"));
 type Screen = StandGameId | "home" | "scores";
 const validScreens = new Set<string>([...gameList.map((g) => g.id), "scores"]);
@@ -126,7 +130,9 @@ function Stand() {
     }
   };
   return (
-    <div className={`stand-root design-${route.design}`}>
+    <div
+      className={`stand-root design-${route.design}${route.screen === "home" ? " is-home" : ""}`}
+    >
       <header className="stand-header">
         <a
           className="stand-identity"
@@ -180,11 +186,13 @@ function Stand() {
           </button>
         </nav>
       )}
-      <div key={epoch}>
+      <div key={epoch} className="stand-content">
         {route.screen === "home" ? (
           <StandHome design={route.design} onPlay={go} />
         ) : route.screen === "scores" ? (
           <StandScores />
+        ) : route.screen === "color-cascade" ? (
+          <ColorCascade />
         ) : route.screen === "myth-fact" ||
           route.screen === "digital-detective" ? (
           <StandCases key={route.screen} game={route.screen} />
@@ -192,56 +200,58 @@ function Stand() {
           <StandGames key={route.screen} game={route.screen} />
         )}
       </div>
-      <footer className="stand-footer">
-        <span>
-          {copy(
-            "EMUCON 2026 · 24 Ekim · DAÜ Stadyumu",
-            "EMUCON 2026 · 24 October · EMU Stadium",
-          )}
-        </span>
-        <div>
-          <button onClick={() => go("scores")}>
-            <Trophy size={17} />
-            {copy("Skorlar", "Scores")}
-          </button>
-          {route.screen === "home" && (
-            <button onClick={() => setResetOpen(true)}>
-              <UserRoundPlus size={17} />
-              {copy("Yeni oyuncu", "Next player")}
+      <div className="stand-bottom">
+        <footer className="stand-footer">
+          <span>
+            {copy(
+              "EMUCON 2026 · 24 Ekim · DAÜ Stadyumu",
+              "EMUCON 2026 · 24 October · EMU Stadium",
+            )}
+          </span>
+          <div>
+            <button onClick={() => go("scores")}>
+              <Trophy size={17} />
+              {copy("Skorlar", "Scores")}
             </button>
+            {route.screen === "home" && (
+              <button onClick={() => setResetOpen(true)}>
+                <UserRoundPlus size={17} />
+                {copy("Yeni oyuncu", "Next player")}
+              </button>
+            )}
+            <button
+              aria-label={
+                muted
+                  ? copy("Sesi aç", "Enable sound")
+                  : copy("Sesi kapat", "Mute sound")
+              }
+              aria-pressed={!muted}
+              onClick={() => {
+                setSoundMuted(!muted);
+                setMuted(!muted);
+              }}
+            >
+              {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+            </button>
+          </div>
+          {route.design === "lobby" && (
+            <img
+              src="/event/planet-rocket.png"
+              alt=""
+              className="footer-planet"
+            />
           )}
-          <button
-            aria-label={
-              muted
-                ? copy("Sesi aç", "Enable sound")
-                : copy("Sesi kapat", "Mute sound")
-            }
-            aria-pressed={!muted}
-            onClick={() => {
-              setSoundMuted(!muted);
-              setMuted(!muted);
-            }}
-          >
-            {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-          </button>
-        </div>
-        {route.design === "lobby" && (
+        </footer>
+        <div className="event-signatures">
           <img
-            src="/event/planet-rocket.png"
-            alt=""
-            className="footer-planet"
+            src={`/brand/footer-${language}-light.png`}
+            alt={copy(
+              "EMURPG · Doğu Akdeniz Üniversitesi · Öğrenci Gelişim, Etkinlikler ve Spor İşleri Müdürlüğü",
+              "EMURPG · Eastern Mediterranean University · Student Development, Events and Sports Affairs Directorate",
+            )}
+            loading="lazy"
           />
-        )}
-      </footer>
-      <div className="event-signatures">
-        <img
-          src={`/brand/footer-${language}-light.png`}
-          alt={copy(
-            "EMURPG · Doğu Akdeniz Üniversitesi · Öğrenci Gelişim, Etkinlikler ve Spor İşleri Müdürlüğü",
-            "EMURPG · Eastern Mediterranean University · Student Development, Events and Sports Affairs Directorate",
-          )}
-          loading="lazy"
-        />
+        </div>
       </div>
       {resetOpen && (
         <div className="stand-dialog-backdrop">
@@ -290,9 +300,9 @@ function Stand() {
 function StandScores() {
   const { copy } = useLanguage();
   const [game, setGame] = useState<string>("zero-point"),
-    [version, setVersion] = useState("2");
+    [version, setVersion] = useState("current");
   const { data, error } = useLiveData<Rankings>(
-    `/api/leaderboard/${game}?rules=${version}`,
+    `/api/leaderboard/${game}?rules=${version === "current" ? currentStandRules(game) : version}`,
   );
   return (
     <main className="stand-scores">
@@ -306,7 +316,13 @@ function StandScores() {
       <div className="score-filters">
         <label>
           {copy("Oyun", "Game")}
-          <select value={game} onChange={(e) => setGame(e.target.value)}>
+          <select
+            value={game}
+            onChange={(e) => {
+              setGame(e.target.value);
+              setVersion("current");
+            }}
+          >
             {gameList.map((g) => (
               <option key={g.id} value={g.id}>
                 {g.name}
@@ -317,8 +333,17 @@ function StandScores() {
         <label>
           {copy("Sürüm", "Rules")}
           <select value={version} onChange={(e) => setVersion(e.target.value)}>
-            <option value="2">{copy("Stant turları", "Stand rounds")}</option>
-            <option value="1">{copy("Önceki sürüm", "Earlier version")}</option>
+            <option value="current">
+              {copy("Güncel oyun", "Current game")}
+            </option>
+            {currentStandRules(game) === 3 && game !== "color-cascade" && (
+              <option value="2">
+                {copy("Önceki stant turları", "Earlier stand rounds")}
+              </option>
+            )}
+            {game !== "color-cascade" && (
+              <option value="1">{copy("İlk sürüm", "Original version")}</option>
+            )}
           </select>
         </label>
       </div>

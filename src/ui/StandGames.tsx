@@ -18,16 +18,20 @@ import { useLanguage } from "./i18n";
 import { gameList, GamePreview, type StandGameId } from "./StandHome";
 import {
   markerPositionAt,
-  createAlignStage,
   evaluateAlignment,
-  alignmentPoints,
   type AlignStage,
 } from "../games/perfect-align/engine";
 import { playSound } from "./sound";
+import {
+  ZERO_TARGET_MS,
+  visibleClockScore,
+  continuousAlignStage,
+  currentStandRules,
+} from "../games/stand-rules";
 type ShortGame = Exclude<StandGameId, "myth-fact" | "digital-detective">;
 type Phase = "intro" | "ready" | "running" | "result" | "complete" | "paused";
 function useRun(game: ShortGame, phase: Phase, score: number) {
-  return useGameSession(game, phase, score, 2);
+  return useGameSession(game, phase, score, currentStandRules(game));
 }
 function useStopKey(active: boolean, action: () => void) {
   const ref = useRef(action);
@@ -174,34 +178,11 @@ function Final({
 function Zero() {
   const { copy } = useLanguage();
   const [phase, setPhase] = useState<Phase>("intro"),
-    [round, setRound] = useState(0),
-    [targets, setTargets] = useState<number[]>([]),
     [elapsed, setElapsed] = useState(0),
-    [results, setResults] = useState<
-      {
-        error: number;
-        elapsed: number;
-        score: number;
-      }[]
-    >([]);
+    [error, setError] = useState(0);
   const started = useRef<number | null>(null);
-  const score = results.reduce((sum, r) => sum + r.score, 0);
+  const score = phase === "complete" ? visibleClockScore(error) : 0;
   const tracking = useRun("zero-point", phase, score);
-  const begin = () => {
-    setTargets([
-      2500 + Math.round(Math.random() * 500),
-      4000 + Math.round(Math.random() * 500),
-      6000 + Math.round(Math.random() * 500),
-    ]);
-    setResults([]);
-    setRound(0);
-    setElapsed(0);
-    setPhase("ready");
-  };
-  useReady(phase, () => {
-    started.current = performance.now();
-    setPhase("running");
-  });
   useEffect(() => {
     if (phase !== "running") return;
     let frame = 0;
@@ -216,15 +197,9 @@ function Zero() {
     if (phase !== "running" || started.current === null) return;
     const actual = performance.now() - started.current;
     started.current = null;
-    const error = Math.abs(actual - targets[round]);
-    const result = {
-      error,
-      elapsed: actual,
-      score: Math.round(10000 / (1 + error / 25)),
-    };
     setElapsed(actual);
-    setResults((prev) => [...prev, result]);
-    setPhase(round === 2 ? "complete" : "result");
+    setError(Math.abs(actual - ZERO_TARGET_MS));
+    setPhase("complete");
     playSound("tap");
   };
   useStopKey(phase === "running", stop);
@@ -234,11 +209,16 @@ function Zero() {
         <Setup
           game="zero-point"
           tracking={tracking}
-          onStart={begin}
           control="space"
+          onStart={() => {
+            setElapsed(0);
+            setError(0);
+            started.current = performance.now();
+            setPhase("running");
+          }}
           description={copy(
-            "Hedef süreyi aklında tut. Saat kaybolunca saymaya devam et; Boşluk ile durdur. Toplam 3 tur.",
-            "Remember the target time. Keep counting when the clock disappears, then press Space to stop. Three rounds.",
+            "Saati izle ve 5.00 saniyede durdur. Tek deneme, 1000 üzerinden puan. Saat hep görünür.",
+            "Watch the clock and stop at 5.00 seconds. One attempt, up to 1000 points. The clock stays visible.",
           )}
         />
       ) : phase === "complete" ? (
@@ -249,89 +229,42 @@ function Zero() {
         >
           <div className="result-stats">
             <div>
-              <strong>
-                {Math.round(Math.min(...results.map((r) => r.error)))} ms
-              </strong>
-              <span>{copy("en küçük fark", "best timing error")}</span>
+              <strong>{(elapsed / 1000).toFixed(2)} s</strong>
+              <span>{copy("senin süren", "your time")}</span>
+            </div>
+            <div>
+              <strong>{Math.round(error)} ms</strong>
+              <span>{copy("hedefe fark", "off target")}</span>
             </div>
           </div>
         </Final>
       ) : (
         <section className="game-stage">
           <div className="stage-meta">
-            <span>
-              {copy("Tur", "Round")} {round + 1}/3
-            </span>
-            <strong>
-              {copy("Hedef", "Target")}: {(targets[round] / 1000).toFixed(2)} s
-            </strong>
-            <span>
-              {score.toLocaleString()} {copy("puan", "points")}
-            </span>
+            <strong>{copy("Hedef", "Target")}: 5.00 s</strong>
+            <span>{copy("En fazla 1000 puan", "Up to 1000 points")}</span>
           </div>
-          {phase === "result" ? (
-            <div className="stand-result">
-              <h2>{copy("ZAMAN KONTROLÜ.", "TIME CHECK.")}</h2>
-              <div className="result-stats">
-                <div>
-                  <strong>{(elapsed / 1000).toFixed(3)} s</strong>
-                  <span>{copy("senin süren", "your time")}</span>
-                </div>
-                <div>
-                  <strong>{Math.round(results.at(-1)!.error)} ms</strong>
-                  <span>{copy("hedefe fark", "off target")}</span>
-                </div>
-                <div>
-                  <strong>+{results.at(-1)!.score}</strong>
-                  <span>{copy("puan", "points")}</span>
-                </div>
-              </div>
-              <button
-                className="play-link"
-                onClick={() => {
-                  setRound((r) => r + 1);
-                  setElapsed(0);
-                  setPhase("ready");
-                }}
-              >
-                {copy("Sonraki tur", "Next round")}
-                <ArrowRight size={20} />
-              </button>
-            </div>
-          ) : (
-            <>
-              <div className="stage-clock">
-                <span>
-                  {phase === "ready"
-                    ? copy("Hazır ol", "Get ready")
-                    : elapsed < 1200
-                      ? copy("Süre başladı", "The clock is running")
-                      : copy("Saymaya devam et", "Keep counting")}{" "}
-                </span>
-                <strong>
-                  {phase === "ready"
-                    ? "1"
-                    : elapsed < 1200
-                      ? (elapsed / 1000).toFixed(2)
-                      : "— —"}
-                </strong>
-                <small>
-                  {copy(
-                    "Hedef süre dolduğunda Boşluk ile durdur.",
-                    "Press Space when you reach the target time.",
-                  )}
-                </small>
-              </div>
-              <button
-                className="big-stop"
-                onClick={stop}
-                disabled={phase !== "running"}
-              >
-                {copy("DURDUR", "STOP")}
-                <small>{copy("Boşluk veya Enter", "Space or Enter")}</small>
-              </button>
-            </>
-          )}
+          <div className="stage-clock">
+            <span>
+              {copy(
+                "Saati izle. Doğru anda durdur.",
+                "Watch the clock. Stop at the right moment.",
+              )}
+            </span>
+            <strong className="visible-clock">
+              {(elapsed / 1000).toFixed(2)}
+            </strong>
+            <small>
+              {copy(
+                "Hedefe yaklaştıkça daha çok puan kazanırsın.",
+                "The closer you stop, the more points you earn.",
+              )}
+            </small>
+          </div>
+          <button className="big-stop" onClick={stop}>
+            {copy("DURDUR", "STOP")}
+            <small>{copy("Boşluk veya Enter", "Space or Enter")}</small>
+          </button>
         </section>
       )}
     </Frame>
@@ -340,31 +273,20 @@ function Zero() {
 function Align() {
   const { copy } = useLanguage();
   const [phase, setPhase] = useState<Phase>("intro"),
-    [round, setRound] = useState(0),
+    [hits, setHits] = useState(0),
     [stage, setStage] = useState<AlignStage | null>(null),
-    [elapsed, setElapsed] = useState(0),
-    [scores, setScores] = useState<number[]>([]),
-    [last, setLast] = useState<{
-      error: number;
-      hit: boolean;
-    } | null>(null);
+    [elapsed, setElapsed] = useState(0);
   const started = useRef<number | null>(null);
-  const score = scores.reduce((a, b) => a + b, 0);
+  const score = hits * 100;
   const tracking = useRun("perfect-align", phase, score);
-  const prepare = (r: number) => {
-    setRound(r);
-    const base = createAlignStage(Math.min(r, 2), 1, 1);
-    setStage({
-      ...base,
-      markerPhase: 0,
-      level: {
-        ...base.level,
-        targetWidth: [0.2, 0.14, 0.1][r],
-        speed: [0.32, 0.4, 0.48][r],
-      },
-    });
+  const prepare = (count: number, first = false) => {
+    setStage(continuousAlignStage(count));
     setElapsed(0);
-    setPhase("ready");
+    if (first) setPhase("ready");
+    else {
+      started.current = performance.now();
+      setPhase("running");
+    }
   };
   useReady(phase, () => {
     started.current = performance.now();
@@ -380,15 +302,21 @@ function Align() {
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
   }, [phase]);
+  useEffect(() => {
+    if (phase !== "result") return;
+    const timer = setTimeout(() => prepare(hits), 450);
+    return () => clearTimeout(timer);
+  }, [phase, hits]);
   const stop = () => {
     if (phase !== "running" || !stage || started.current === null) return;
     const actual = performance.now() - started.current;
     started.current = null;
     const result = evaluateAlignment(stage, actual, 1);
     setElapsed(actual);
-    setLast({ error: result.errorPercent, hit: result.withinTarget });
-    setScores((prev) => [...prev, alignmentPoints(result)]);
-    setPhase(round === 2 ? "complete" : "result");
+    if (result.withinTarget) {
+      setHits((value) => value + 1);
+      setPhase("result");
+    } else setPhase("complete");
     playSound("tap");
   };
   useStopKey(phase === "running", stop);
@@ -399,13 +327,13 @@ function Align() {
           game="perfect-align"
           tracking={tracking}
           onStart={() => {
-            setScores([]);
-            prepare(0);
+            setHits(0);
+            prepare(0, true);
           }}
           control="space"
           description={copy(
-            "Çizgi yeşil bölgeye geldiğinde Boşluk ile durdur. Üç deneme; her tur biraz hızlanır.",
-            "Press Space when the marker enters the green zone. Three attempts, a little faster each round.",
+            "Çizgiyi yeşil alanın içinde durdur. Her isabet 100 puan; yeni hedef otomatik gelir, alan daralır ve çizgi hızlanır. Kaçırınca oyun biter.",
+            "Stop the marker inside the green zone. Each hit earns 100 points; the next target arrives automatically, narrows and speeds up. A miss ends the game.",
           )}
         />
       ) : phase === "complete" ? (
@@ -413,65 +341,73 @@ function Align() {
           score={score}
           tracking={tracking}
           onAgain={() => setPhase("intro")}
-        />
+        >
+          <div className="result-stats">
+            <div>
+              <strong>{hits}</strong>
+              <span>{copy("ardışık isabet", "consecutive hits")}</span>
+            </div>
+          </div>
+        </Final>
       ) : (
-        <section className="game-stage">
+        <section className="game-stage align-streak-stage">
           <div className="stage-meta">
             <span>
-              {copy("Deneme", "Attempt")} {round + 1}/3
+              {copy("Seviye", "Level")} {hits + (phase === "result" ? 0 : 1)}
             </span>
             <strong>
-              {score} {copy("puan", "points")}
+              {hits} {copy("isabet", "hits")} · {score} {copy("puan", "points")}
             </strong>
           </div>
-          {phase === "result" ? (
-            <section className="stand-result">
-              <h2>
-                {last?.hit
-                  ? copy("TAM YERİNDE.", "RIGHT ON.")
-                  : copy("BİR DAHA DENE.", "TRY THE NEXT ONE.")}
-              </h2>
-              <p>
-                {copy("Merkeze uzaklık", "Distance from centre")}:{" "}
-                {last?.error.toFixed(1)}%
-              </p>
-              <button className="play-link" onClick={() => prepare(round + 1)}>
-                {copy("Sonraki deneme", "Next attempt")}
-                <ArrowRight size={20} />
-              </button>
-            </section>
-          ) : phase === "ready" ? (
-            <div className="align-countdown-number">1</div>
-          ) : (
-            <>
-              <div
-                className="align-game-track"
-                role="img"
-                aria-label={copy(
-                  "Hareketli çizgi ve yeşil hedef bölgesi",
-                  "Moving marker and green target zone",
-                )}
-              >
-                <span
-                  className="align-game-zone"
-                  style={{
-                    left: `${(stage!.targetCenter - stage!.level.targetWidth / 2) * 100}%`,
-                    width: `${stage!.level.targetWidth * 100}%`,
-                  }}
-                />
-                <i
-                  className="align-game-marker"
-                  style={{
-                    left: `${markerPositionAt(stage!, elapsed) * 100}%`,
-                  }}
-                />
-              </div>
-              <button className="big-stop" onClick={stop}>
-                {copy("DURDUR", "STOP")}
-                <small>{copy("Boşluk veya Enter", "Space or Enter")}</small>
-              </button>
-            </>
-          )}
+          <p className="align-streak-feedback" role="status">
+            {phase === "result"
+              ? copy("İsabet! +100 · Devam ediyor…", "Hit! +100 · Keep going…")
+              : phase === "ready"
+                ? copy("Hazır ol…", "Get ready…")
+                : copy("Yeşil alanda durdur.", "Stop inside the green zone.")}
+          </p>
+          <div
+            className="align-game-track"
+            role="img"
+            aria-label={copy(
+              "Hareketli çizgi ve yeşil hedef bölgesi",
+              "Moving marker and green target zone",
+            )}
+          >
+            <span
+              className="align-game-zone"
+              style={{
+                left: `${(stage!.targetCenter - stage!.level.targetWidth / 2) * 100}%`,
+                width: `${stage!.level.targetWidth * 100}%`,
+              }}
+            />
+            <i
+              className="align-game-marker"
+              style={{ left: `${markerPositionAt(stage!, elapsed) * 100}%` }}
+            />
+          </div>
+          <button
+            className="big-stop"
+            onClick={stop}
+            disabled={phase !== "running"}
+          >
+            {phase === "result"
+              ? copy("İSABET!", "HIT!")
+              : phase === "ready"
+                ? "1"
+                : copy("DURDUR", "STOP")}
+            <small>{copy("Boşluk veya Enter", "Space or Enter")}</small>
+          </button>
+          <button
+            className="quiet-button align-finish"
+            disabled={phase === "ready"}
+            onClick={() => {
+              started.current = null;
+              setPhase("complete");
+            }}
+          >
+            {copy("Bitir ve skoru kaydet", "Finish and save score")}
+          </button>
         </section>
       )}
     </Frame>
@@ -1240,3 +1176,11 @@ export default function StandGames({ game }: { game: ShortGame }) {
     <Quiz />
   );
 }
+
+export {
+  Frame as GameFrame,
+  Setup as GameSetup,
+  Final as GameFinal,
+  useRun as useStandRun,
+};
+export type { Phase };

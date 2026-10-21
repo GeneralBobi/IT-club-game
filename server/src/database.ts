@@ -4,6 +4,7 @@ import { dirname, resolve } from "node:path";
 import { initializeMythFact } from "./myth-fact/model.js";
 import { initializeDetective } from "./digital-detective/model.js";
 import { openPostgres, wrapSqlite } from "./database-driver.js";
+import { initializeColorCascade } from "./stand-schema.js";
 
 const databasePath = resolve(process.env.DATABASE_PATH ?? "./data/emucon.sqlite");
 if (!process.env.DATABASE_URL) mkdirSync(dirname(databasePath), { recursive: true });
@@ -45,7 +46,7 @@ async function initialize() {
   CREATE TABLE IF NOT EXISTS game_sessions (
     id TEXT PRIMARY KEY,
     participant_id TEXT NOT NULL REFERENCES participants(id),
-    game TEXT NOT NULL CHECK (game IN ('zero-point', 'target-rush', 'perfect-align', 'brain-firewall', 'snake', 'myth-fact', 'digital-detective')),
+    game TEXT NOT NULL CHECK (game IN ('zero-point', 'target-rush', 'perfect-align', 'brain-firewall', 'snake', 'myth-fact', 'digital-detective', 'color-cascade')),
     challenger TEXT NOT NULL,
     started_at INTEGER NOT NULL,
     last_seen_at INTEGER NOT NULL,
@@ -125,6 +126,15 @@ if(database.dialect==="postgres"){
     }
   })();
 }else await initializeStandAttempts();
+
+if (database.dialect === "postgres") {
+  await database.transaction(async () => {
+    if (!await database.prepare("SELECT version FROM arena_schema_version WHERE version=4").get()) {
+      await initializeColorCascade(database);
+      await database.exec("INSERT INTO arena_schema_version VALUES(4)");
+    }
+  })();
+} else await initializeColorCascade(database);
 
 export async function closeDatabase(): Promise<void> {
   (await database.close());

@@ -1,6 +1,6 @@
 # EMUCON · IT Club Games
 
-Seven short browser games for the EMU Information Technology Club stand on 24 October 2026. Designed for the stand's laptops, with Turkish and English instructions, keyboard/mouse controls, optional nicknames and saved scores.
+Eight browser games for the EMU Information Technology Club stand on 24 October 2026. Designed for the stand's laptops, with Turkish and English instructions, keyboard/mouse controls, optional nicknames and saved scores.
 
 [Play the games](https://emu-it-club-game.vercel.app/)
 
@@ -10,9 +10,10 @@ Choose a language, select a game, read its short instruction and press **Start**
 
 | Game | Round | Control |
 | --- | --- | --- |
-| Zero Point | Feel the requested time in three rounds | Space / Enter |
+| Zero Point | Stop the visible clock at 5.00 seconds; one attempt, up to 1,000 points | Space / Enter |
 | Target Rush | Hit targets for 30 seconds | Mouse; Tab / Enter also works |
-| Perfect Align | Stop one moving marker in three narrowing zones | Space / Enter |
+| Perfect Align | Consecutive hits advance automatically; zones shrink and the marker speeds up | Space / Enter |
+| Color Cascade | Follow the falling color sequence; three lives and progressively more lanes | Mouse or lane keys 1-5; Space pauses |
 | Snake | Collect food and avoid walls and your tail | Arrow keys; Space pauses |
 | Brain Firewall | Five questions with feedback after each answer | Mouse or keys 1–4 |
 | Myth or Fact | Five claims within 90 seconds | Choose Myth or Fact |

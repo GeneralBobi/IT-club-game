@@ -44,7 +44,7 @@
     "vite": "^7.1.10",
     "vitest": "^5.0.5"
   },
-  "description": "Bilingual laptop game station for the EMU IT Club at EMUCON 2026. Seven short games, persistent scores, next-player reset and staff tools.",
+  "description": "Bilingual laptop game station for the EMU IT Club at EMUCON 2026. Eight games, persistent scores, next-player reset and staff tools.",
   "main": "index.js",
   "directories": {
     "doc": "docs"

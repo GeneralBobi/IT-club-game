@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-21T16:35:17.721074+00:00",
+  "generatedAt": "2026-10-21T19:23:28.7478169Z",
   "title": "Design System: EMU IT Club — EMUCON Games",
   "extensions": {
     "colorMeta": {
@@ -187,6 +187,18 @@
       "club-name": {
         "displayName": "Club Name",
         "purpose": "Header identity text only."
+      },
+      "laptop-headline": {
+        "displayName": "Laptop Headline",
+        "purpose": "Height-aware Festival programme invitation at the laptop breakpoint."
+      },
+      "laptop-title": {
+        "displayName": "Laptop Title",
+        "purpose": "Featured Festival game names at the laptop breakpoint."
+      },
+      "laptop-control": {
+        "displayName": "Laptop Control",
+        "purpose": "Visible Festival control instructions at the laptop breakpoint."
       }
     },
     "shadows": [
@@ -245,6 +257,14 @@
       {
         "name": "compact",
         "value": "540px"
+      },
+      {
+        "name": "festival-laptop-fit",
+        "value": "(min-width: 1000px) and (min-height: 560px)"
+      },
+      {
+        "name": "festival-short-laptop",
+        "value": "(min-width: 1000px) and (min-height: 560px) and (max-height: 640px)"
       }
     ]
   },
@@ -311,6 +331,14 @@
       "description": "Large answer control in Myth or Fact.",
       "html": "<button class=\"ds-fact\">Gerçek</button>",
       "css": ".ds-fact{font:800 30px/1.5 Bricolage,Arial,sans-serif;background:var(--fact,#285b42);color:#f3efe6;border:1px solid transparent;border-radius:12px;min-height:100px;padding:12px 30px}.ds-fact:hover{filter:brightness(1.15)}.ds-fact:focus-visible{outline:3px solid #154b87;outline-offset:5px}"
+    },
+    {
+      "name": "Laptop Festival Action",
+      "kind": "button",
+      "refersTo": "button-festival-laptop",
+      "description": "Height-aware Festival play action; minimum height 44px.",
+      "html": "<button class=\"ds-laptop-play\">Oyna <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M5 12h14m-6-6 6 6-6 6\"/></svg></button>",
+      "css": ".ds-laptop-play{display:flex;align-items:center;justify-content:center;gap:10px;font:800 clamp(20px,3svh,27px)/1.1 Bricolage,Arial,sans-serif;background:var(--amber,#de9e36);color:var(--ink,#121a2c);border:1px solid transparent;border-radius:10px;padding:10px 12px;min-height:44px;height:clamp(44px,7.5svh,64px);transition:background 160ms,transform 200ms cubic-bezier(.16,1,.3,1)}.ds-laptop-play svg{width:21px;height:21px;transition:transform 200ms cubic-bezier(.16,1,.3,1)}.ds-laptop-play:hover{background:var(--amber-hover,#efb654)}.ds-laptop-play:active{transform:scale(.97)}.ds-laptop-play:focus-visible{outline:3px solid #154b87;outline-offset:5px}.ds-laptop-play:is(:hover,:focus-visible) svg{transform:translateX(4px)}@media(prefers-reduced-motion:reduce){.ds-laptop-play,.ds-laptop-play svg{transition:none}}"
     }
   ],
   "narrative": {

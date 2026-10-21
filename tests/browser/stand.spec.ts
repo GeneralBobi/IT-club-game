@@ -1,7 +1,7 @@
 import { test,expect } from "@playwright/test";
 test.use({channel:"chrome"});
 for(const design of ["lobby","festival","classic"]){
- test(`${design}: seven games, original complete identities, selectable persistent language and deep links`,async({page})=>{
+ test(`${design}: eight games, original complete identities, selectable persistent language and deep links`,async({page})=>{
   await page.goto(`/${design}`);
   await expect(page.locator(".stand-home")).toBeVisible();
   await expect(page.locator(".stand-header .university-identity img")).toHaveAttribute("src","/brand/dau-signature.png");
@@ -16,15 +16,22 @@ for(const design of ["lobby","festival","classic"]){
   for(const width of [1280,1440,559,390]){await page.setViewportSize({width,height:900});await page.goto(`/${design}`);await page.evaluate(()=>document.fonts.ready);expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);}
  });
 }
-test("Zero Point accepts the first running keypress and saves three rounds once",async({page})=>{
- await page.goto("/lobby/zero-point");await page.clock.install();await page.getByRole("button",{name:"Başla",exact:true}).click();
- for(let round=0;round<3;round++){await page.clock.runFor(1050);await expect(page.locator(".big-stop")).toBeEnabled();await page.keyboard.press("Space");if(round<2)await page.getByRole("button",{name:"Sonraki tur",exact:true}).click();}
- await expect(page.getByRole("heading",{name:"GÜZEL TURDU.",exact:true})).toBeVisible();await expect(page.getByRole("status")).toContainText("Skorun kaydedildi");
+test("Zero Point keeps the clock visible, ends after one attempt and saves a forgiving score",async({page})=>{
+ await page.goto("/festival/zero-point");await page.clock.install();await page.clock.pauseAt(new Date(Date.now()+1000));await page.getByRole("button",{name:"Başla",exact:true}).click();
+ await page.clock.runFor(2500);expect(Number(await page.locator(".visible-clock").innerText())).toBeGreaterThanOrEqual(2.48);expect(Number(await page.locator(".visible-clock").innerText())).toBeLessThanOrEqual(2.51);await page.clock.runFor(2500);await page.locator(".big-stop").focus();await page.keyboard.press("Space");
+ await expect(page.locator(".stand-result-score")).toHaveText("1,000");await expect(page.getByRole("status")).toContainText("Skorun kaydedildi");await expect(page.getByRole("button",{name:"Sonraki tur",exact:true})).toHaveCount(0);
 });
-test("Perfect Align responds to keyboard when the stop button itself has focus",async({page})=>{
- await page.goto("/festival/perfect-align");await page.clock.install();await page.getByRole("button",{name:"Başla",exact:true}).click();
- for(let attempt=0;attempt<3;attempt++){await page.clock.runFor(1600);await page.locator(".big-stop").focus();await page.keyboard.down("Space");await expect(page.locator(".big-stop")).toHaveCount(0);await page.keyboard.up("Space");if(attempt<2)await page.getByRole("button",{name:"Sonraki deneme",exact:true}).click();}
- await expect(page.getByRole("heading",{name:"GÜZEL TURDU.",exact:true})).toBeVisible();
+test("Perfect Align advances automatically past three hits and becomes harder in the same scored run",async({page})=>{
+ await page.addInitScript(()=>{Math.random=()=>.5;});await page.goto("/festival/perfect-align");await page.clock.install();let starts=0;page.on('request',request=>{if(request.method()==='POST'&&request.url().endsWith('/api/play'))starts++;});await page.getByRole("button",{name:"Başla",exact:true}).click();await page.clock.runFor(1000);
+ const widths=[];
+ for(let hit=0;hit<5;hit++){await expect(page.locator('.big-stop')).toBeEnabled();widths.push(Number((await page.locator('.align-game-zone').evaluate(e=>(e as HTMLElement).style.width)).replace('%','')));await page.clock.runFor(Math.round(500/(.24+hit*.025)));await page.locator('.big-stop').focus();await page.keyboard.press('Space');await expect(page.locator('.align-streak-feedback')).toContainText('İsabet');await page.clock.runFor(450);}
+ expect(widths.at(-1)).toBeLessThan(widths[0]);await expect(page.locator('.stage-meta')).toContainText('500 puan');expect(starts).toBe(1);await page.keyboard.press('Space');await expect(page.locator('.stand-result-score')).toHaveText('500');await expect(page.getByRole('status')).toContainText('Skorun kaydedildi');
+});
+test("Festival fits the laptop height with all eight choices and the complete institutional footer",async({page})=>{
+ for(const [width,height] of [[1536,736],[1908,920],[1366,768],[1280,720],[1024,600]]){await page.setViewportSize({width,height});await page.goto('/festival');await page.evaluate(()=>document.fonts.ready);await page.locator('.event-signatures img').evaluate(image=>(image as HTMLImageElement).decode());expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);expect(await page.evaluate(()=>document.documentElement.scrollHeight)).toBeLessThanOrEqual(height+1);const bottom=await page.locator('.stand-bottom').boundingBox();const choices=page.locator('.stand-game .play-link,.other-games button');await expect(choices).toHaveCount(8);for(const choice of await choices.all()){const box=await choice.boundingBox();expect(box!.y).toBeGreaterThanOrEqual(0);expect(box!.y+box!.height).toBeLessThanOrEqual(bottom!.y+1);}}
+});
+test("Color Cascade plays Boran's falling sequence, accepts mouse and lane keys, pauses and saves",async({page})=>{
+ await page.addInitScript(()=>{Math.random=()=>.5;});await page.goto('/festival/color-cascade');await page.clock.install();await page.getByRole('button',{name:'Başla',exact:true}).click();await page.clock.runFor(800);await page.getByRole('button',{name:'Yeşil · sütun 2',exact:true}).click();await expect(page.locator('.cascade-meta')).toContainText('10 puan');await page.clock.runFor(800);await page.locator('.cascade-board').focus();await page.keyboard.press('2');await expect(page.locator('.cascade-meta')).toContainText('30 puan');await page.keyboard.press('Space');await expect(page.getByText('DURAKLATILDI',{exact:true})).toBeVisible();const frozen=await page.locator('.cascade-tile').first().getAttribute('style');await page.clock.runFor(1000);expect(await page.locator('.cascade-tile').first().getAttribute('style')).toBe(frozen);await page.getByRole('button',{name:'Devam et',exact:true}).last().click();await page.clock.runFor(20000);await expect(page.getByRole('heading',{name:'GÜZEL TURDU.',exact:true})).toBeVisible();await expect(page.getByRole('status')).toContainText('Skorun kaydedildi');
 });
 test("Target Rush pointer hits score, targets stay inside bounds, countdown completes",async({page})=>{
  await page.goto("/classic/target-rush");await page.clock.install();await page.getByRole("button",{name:"Başla",exact:true}).click();await page.clock.runFor(1200);await page.clock.runFor(500);
