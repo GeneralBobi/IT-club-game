@@ -100,7 +100,7 @@ app.get("/api/events", (req, res) => {
 app.get("/api/leaderboard/:game", async (req, res) => {
   const game = z.enum(gameIds).safeParse(req.params.game);
   if (!game.success) { res.status(400).json({ error: "Unknown game." }); return; }
-  const rules = req.query.rules === "3" ? 3 : req.query.rules === "2" ? 2 : 1;
+  const rules = req.query.rules === "4" ? 4 : req.query.rules === "3" ? 3 : req.query.rules === "2" ? 2 : 1;
   res.json((await arena.rankings(game.data, rules)));
 });
 app.get("/api/leaderboards", async (_req, res) => {
@@ -109,7 +109,7 @@ app.get("/api/leaderboards", async (_req, res) => {
 const playLimiter = rateLimit({ windowMs: 60_000, limit: 120, standardHeaders: "draft-8", legacyHeaders: false });
 app.use("/api/play", playLimiter);
 app.post("/api/play", async (req, res) => {
-  const input = z.object({ participantId: z.uuid(), game: z.enum(gameIds), challenger: z.string().trim().max(24), rulesVersion:z.union([z.literal(1),z.literal(2),z.literal(3)]).default(1) }).safeParse(req.body);
+  const input = z.object({ participantId: z.uuid(), game: z.enum(gameIds), challenger: z.string().trim().max(24), rulesVersion:z.union([z.literal(1),z.literal(2),z.literal(3),z.literal(4)]).default(1) }).safeParse(req.body);
   if (!input.success) { res.status(400).json({ error: "Enter a valid challenger name and game." }); return; }
   if (input.data.game === "digital-detective") { res.status(400).json({ error: "Start Digital Detective through its investigation flow." }); return; }
   if (input.data.game === "myth-fact") { res.status(400).json({ error: "Start Myth or Fact through its server-controlled game flow." }); return; }

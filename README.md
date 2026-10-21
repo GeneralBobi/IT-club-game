@@ -10,10 +10,10 @@ Choose a language, select a game, read its short instruction and press **Start**
 
 | Game | Round | Control |
 | --- | --- | --- |
-| Zero Point | Stop the visible clock at 5.00 seconds; one attempt, up to 1,000 points | Space / Enter |
-| Target Rush | Hit targets for 30 seconds | Mouse; Tab / Enter also works |
-| Perfect Align | Consecutive hits advance automatically; zones shrink and the marker speeds up | Space / Enter |
-| Color Cascade | Follow the falling color sequence; three lives and progressively more lanes | Mouse or lane keys 1-5; Space pauses |
+| Zero Point | Varied 1.5-7 second targets; Space starts the next round immediately | Space / Enter |
+| Target Rush | 20-second sprint; immediate targets, streak multipliers and triple-value gold targets | Mouse; Tab / Enter also works |
+| Perfect Align | Immediate brisk start; consecutive hits advance into faster, narrower zones | Space / Enter |
+| Color Cascade | Follow the falling color sequence; three lives and progressively more lanes | Mouse; original Restart and optional fullscreen |
 | Snake | Collect food and avoid walls and your tail | Arrow keys; Space pauses |
 | Brain Firewall | Five questions with feedback after each answer | Mouse or keys 1–4 |
 | Myth or Fact | Five claims within 90 seconds | Choose Myth or Fact |

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-21T19:23:28.7478169Z",
+  "generatedAt": "2026-10-21T20:32:07.265135Z",
   "title": "Design System: EMU IT Club — EMUCON Games",
   "extensions": {
     "colorMeta": {
@@ -243,6 +243,26 @@
         "name": "route-entry",
         "value": "300ms cubic-bezier(0.16, 1, 0.3, 1)",
         "purpose": "Native view transition entry."
+      },
+      {
+        "name": "align-hit-feedback",
+        "value": "220ms",
+        "purpose": "Successful hit feedback before automatic next stage."
+      },
+      {
+        "name": "rush-arrival",
+        "value": "140ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Immediate replacement target arrival; disabled for reduced motion."
+      },
+      {
+        "name": "rush-score",
+        "value": "550ms ease-out",
+        "purpose": "Floating earned-point feedback; disabled for reduced motion."
+      },
+      {
+        "name": "rush-time-track",
+        "value": "80ms linear",
+        "purpose": "Transform-based remaining-time track; disabled for reduced motion."
       }
     ],
     "breakpoints": [
@@ -261,10 +281,6 @@
       {
         "name": "festival-laptop-fit",
         "value": "(min-width: 1000px) and (min-height: 560px)"
-      },
-      {
-        "name": "festival-short-laptop",
-        "value": "(min-width: 1000px) and (min-height: 560px) and (max-height: 640px)"
       }
     ]
   },
@@ -343,7 +359,7 @@
   ],
   "narrative": {
     "northStar": "Supplied Festival Print",
-    "overview": "The supplied festival poster kit sets the world: neutral paper, dense dark ink, amber fields, coral registration, grain and halftone. Condensed headlines carry the invitation; rounded game surfaces keep the controls approachable. The source rocket, planet, stars and year stamp retain the event’s drawn and printed character.\n\nThe shared shell gives original institutional identities quiet space above and below the games. Festival is the default composition; Lobby and Classic are valid expressions of the same palette, typography, controls and source artwork. Turkish and English use the same hierarchy and complete identity strips.",
+    "overview": "The supplied festival poster kit sets the world: neutral paper, dense dark ink, amber fields, coral registration, grain and halftone. Condensed headlines carry the invitation; rounded game surfaces keep the controls approachable. The source rocket, planet, stars and year stamp retain the event’s drawn and printed character.\n\nThe shared shell gives original institutional identities quiet space above and below the games. Festival is the default composition; Lobby and Classic are valid expressions of the same palette, typography, controls and source artwork. Turkish and English use the same hierarchy and complete identity strips. Color Cascade is a source-preserved exception inside its original iframe: its native colors, font, hearts, effects, controls and internal English text remain unchanged; the surrounding station retains this festival system and bilingual instructions.",
     "keyCharacteristics": [
       "Printed source material with neutral paper and dark ink.",
       "Condensed headlines paired with readable Bricolage instructions.",
@@ -358,7 +374,7 @@
       },
       {
         "name": "The Role Separation Rule",
-        "body": "Use Big Shoulders Display for headlines, Bricolage for instructions and controls, and Courier Prime for actual case timestamps. The Georgia club name is confined to the identity area.",
+        "body": "Use Big Shoulders Display for station headlines, Bricolage for station instructions and controls, and Courier Prime for actual case timestamps. The Georgia club name is confined to the identity area. The original Color Cascade iframe retains its source typography.",
         "section": "typography"
       },
       {
@@ -372,13 +388,16 @@
       "Do preserve original event illustrations, grain, halftone and complete institutional artwork.",
       "Do keep both language states legible and use the corresponding supplied organizer strip.",
       "Do show the control hint beside each game and keep the primary action broad.",
-      "Do honor reduced motion and pause home animation when hidden or offscreen."
+      "Do honor reduced motion and pause home animation when hidden or offscreen.",
+      "Do keep the laptop menu in the first viewport and the intact institutional footer below the fold.",
+      "Do preserve Color Cascade’s original source and presentation inside its iframe; apply station styling and bilingual instructions around it."
     ],
     "donts": [
       "Don't redraw, distort, recolor, rotate or animate institutional identities.",
       "Don't carry the rejected neon command-center or sci-fi HUD treatment into new surfaces.",
       "Don't turn poster registration into hard offset shadows on controls or containers.",
-      "Don't run repeating game demonstrations across the menu; demonstrations are one-shot responses to hover or keyboard focus."
+      "Don't run repeating game demonstrations across the menu; demonstrations are one-shot responses to hover or keyboard focus.",
+      "Don't add numeric labels, lane keys, pause controls or a replacement engine to the original Color Cascade."
     ]
   }
 }

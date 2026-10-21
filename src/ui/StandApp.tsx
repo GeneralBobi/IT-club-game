@@ -24,6 +24,7 @@ import "./stand.css";
 import "./festival.css";
 import "./cascade.css";
 import "./stand-fit.css";
+import "./game-flow.css";
 const StaffApp = lazy(() => import("./App"));
 type Screen = StandGameId | "home" | "scores";
 const validScreens = new Set<string>([...gameList.map((g) => g.id), "scores"]);
@@ -336,7 +337,10 @@ function StandScores() {
             <option value="current">
               {copy("Güncel oyun", "Current game")}
             </option>
-            {currentStandRules(game) === 3 && game !== "color-cascade" && (
+            {currentStandRules(game) === 4 && (
+              <option value="3">{copy("Önceki oyun", "Previous game")}</option>
+            )}
+            {game !== "color-cascade" && (
               <option value="2">
                 {copy("Önceki stant turları", "Earlier stand rounds")}
               </option>

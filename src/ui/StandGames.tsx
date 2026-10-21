@@ -23,7 +23,7 @@ import {
 } from "../games/perfect-align/engine";
 import { playSound } from "./sound";
 import {
-  ZERO_TARGET_MS,
+  nextZeroTarget,
   visibleClockScore,
   continuousAlignStage,
   currentStandRules,
@@ -177,98 +177,39 @@ function Final({
 }
 function Zero() {
   const { copy } = useLanguage();
-  const [phase, setPhase] = useState<Phase>("intro"),
-    [elapsed, setElapsed] = useState(0),
-    [error, setError] = useState(0);
+  const [phase, setPhase] = useState<Phase>("intro"), [elapsed, setElapsed] = useState(0), [error, setError] = useState(0), [target, setTarget] = useState<number | null>(null), [round, setRound] = useState(0);
   const started = useRef<number | null>(null);
   const score = phase === "complete" ? visibleClockScore(error) : 0;
   const tracking = useRun("zero-point", phase, score);
+  const start = () => {
+    setTarget(nextZeroTarget(target)); setElapsed(0); setError(0); setRound(value => value + 1);
+    started.current = performance.now(); setPhase("running");
+  };
   useEffect(() => {
     if (phase !== "running") return;
     let frame = 0;
-    const tick = () => {
-      setElapsed(performance.now() - started.current!);
-      frame = requestAnimationFrame(tick);
-    };
+    const tick = () => { setElapsed(performance.now() - started.current!); frame = requestAnimationFrame(tick); };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
   }, [phase]);
   const stop = () => {
-    if (phase !== "running" || started.current === null) return;
-    const actual = performance.now() - started.current;
-    started.current = null;
-    setElapsed(actual);
-    setError(Math.abs(actual - ZERO_TARGET_MS));
-    setPhase("complete");
-    playSound("tap");
+    if (phase !== "running" || started.current === null || target === null) return;
+    const actual = performance.now() - started.current; started.current = null;
+    setElapsed(actual); setError(Math.abs(actual - target)); setPhase("complete"); playSound("tap");
   };
-  useStopKey(phase === "running", stop);
-  return (
-    <Frame game="zero-point">
-      {phase === "intro" ? (
-        <Setup
-          game="zero-point"
-          tracking={tracking}
-          control="space"
-          onStart={() => {
-            setElapsed(0);
-            setError(0);
-            started.current = performance.now();
-            setPhase("running");
-          }}
-          description={copy(
-            "Saati izle ve 5.00 saniyede durdur. Tek deneme, 1000 üzerinden puan. Saat hep görünür.",
-            "Watch the clock and stop at 5.00 seconds. One attempt, up to 1000 points. The clock stays visible.",
-          )}
-        />
-      ) : phase === "complete" ? (
-        <Final
-          score={score}
-          tracking={tracking}
-          onAgain={() => setPhase("intro")}
-        >
-          <div className="result-stats">
-            <div>
-              <strong>{(elapsed / 1000).toFixed(2)} s</strong>
-              <span>{copy("senin süren", "your time")}</span>
-            </div>
-            <div>
-              <strong>{Math.round(error)} ms</strong>
-              <span>{copy("hedefe fark", "off target")}</span>
-            </div>
-          </div>
-        </Final>
-      ) : (
-        <section className="game-stage">
-          <div className="stage-meta">
-            <strong>{copy("Hedef", "Target")}: 5.00 s</strong>
-            <span>{copy("En fazla 1000 puan", "Up to 1000 points")}</span>
-          </div>
-          <div className="stage-clock">
-            <span>
-              {copy(
-                "Saati izle. Doğru anda durdur.",
-                "Watch the clock. Stop at the right moment.",
-              )}
-            </span>
-            <strong className="visible-clock">
-              {(elapsed / 1000).toFixed(2)}
-            </strong>
-            <small>
-              {copy(
-                "Hedefe yaklaştıkça daha çok puan kazanırsın.",
-                "The closer you stop, the more points you earn.",
-              )}
-            </small>
-          </div>
-          <button className="big-stop" onClick={stop}>
-            {copy("DURDUR", "STOP")}
-            <small>{copy("Boşluk veya Enter", "Space or Enter")}</small>
-          </button>
-        </section>
-      )}
-    </Frame>
-  );
+  useStopKey(phase === "running" || phase === "complete", () => phase === "complete" ? start() : stop());
+  return <Frame game="zero-point">
+    {phase === "intro" ? <Setup game="zero-point" tracking={tracking} control="space" onStart={start}
+      description={copy("Her raund farklı bir hedef süre gelir. Saati izle, hedefte durdur. Sonuçtan sonra Boşluk ile hemen yeni hedefe geç. Saat hep görünür.", "Each round gives you a different target time. Watch the clock and stop on target. Press Space after the result to start the next target immediately. The clock stays visible.")} /> :
+    <section className="game-stage quick-zero">
+      <div className="stage-meta"><span>{copy("Raund", "Round")} {round}</span><span>{copy("En fazla 1000 puan", "Up to 1000 points")}</span></div>
+      <strong className="zero-target">{copy("Hedef", "Target")}: <span data-testid="zero-target">{((target ?? 0)/1000).toFixed(2)}</span> s</strong>
+      <div className="stage-clock"><strong className="visible-clock">{(elapsed/1000).toFixed(2)}</strong></div>
+      <div className="zero-feedback" aria-live="polite">{phase === "complete" ? <><span><strong className="zero-points">{score}</strong> {copy("puan", "points")}</span><span>{Math.round(error)} ms {copy("fark", "off target")}</span></> : <span>{copy("Saati izle. Hedefte durdur.", "Watch the clock. Stop on target.")}</span>}</div>
+      <button className="big-stop" onClick={phase === "complete" ? start : stop}>{phase === "complete" ? copy("SONRAKİ HEDEF", "NEXT TARGET") : copy("DURDUR", "STOP")}<small>{copy("Boşluk veya Enter", "Space or Enter")}</small></button>
+      {phase === "complete" && <ScoreStatus {...tracking}/>}
+    </section>}
+  </Frame>;
 }
 function Align() {
   const { copy } = useLanguage();
@@ -279,19 +220,12 @@ function Align() {
   const started = useRef<number | null>(null);
   const score = hits * 100;
   const tracking = useRun("perfect-align", phase, score);
-  const prepare = (count: number, first = false) => {
+  const prepare = (count: number) => {
     setStage(continuousAlignStage(count));
     setElapsed(0);
-    if (first) setPhase("ready");
-    else {
-      started.current = performance.now();
-      setPhase("running");
-    }
-  };
-  useReady(phase, () => {
     started.current = performance.now();
     setPhase("running");
-  });
+  };
   useEffect(() => {
     if (phase !== "running") return;
     let frame = 0;
@@ -304,7 +238,7 @@ function Align() {
   }, [phase]);
   useEffect(() => {
     if (phase !== "result") return;
-    const timer = setTimeout(() => prepare(hits), 450);
+    const timer = setTimeout(() => prepare(hits), 220);
     return () => clearTimeout(timer);
   }, [phase, hits]);
   const stop = () => {
@@ -328,7 +262,7 @@ function Align() {
           tracking={tracking}
           onStart={() => {
             setHits(0);
-            prepare(0, true);
+            prepare(0);
           }}
           control="space"
           description={copy(
@@ -340,7 +274,7 @@ function Align() {
         <Final
           score={score}
           tracking={tracking}
-          onAgain={() => setPhase("intro")}
+          onAgain={() => { setHits(0); prepare(0); }}
         >
           <div className="result-stats">
             <div>
@@ -413,171 +347,48 @@ function Align() {
     </Frame>
   );
 }
-type Target = {
-  id: number;
-  x: number;
-  y: number;
-  expires: number;
-};
+type SprintTarget = { id:number; x:number; y:number; expires:number; golden:boolean; size:number };
 function Rush() {
   const { copy } = useLanguage();
-  const [phase, setPhase] = useState<Phase>("intro"),
-    [targets, setTargets] = useState<Target[]>([]),
-    [remaining, setRemaining] = useState(30),
-    [hits, setHits] = useState(0),
-    [misses, setMisses] = useState(0);
-  const field = useRef<HTMLDivElement>(null),
-    nextId = useRef(0),
-    end = useRef(0),
-    liveTargets = useRef<Target[]>([]);
-  const score = hits * 100;
-  const tracking = useRun("target-rush", phase, score);
-  useReady(phase, () => {
-    end.current = performance.now() + 30000;
-    setPhase("running");
-  });
-  useEffect(() => {
-    if (phase !== "running") return;
-    let lastSpawn = 0;
-    const timer = setInterval(() => {
-      const now = performance.now();
-      if (now >= end.current) {
-        setTargets([]);
-        setRemaining(0);
-        setPhase("complete");
-        return;
-      }
-      setRemaining(Math.ceil((end.current - now) / 1000));
-      let next = liveTargets.current.filter((t) => t.expires > now);
-      if (now - lastSpawn > Math.max(400, 850 - hits * 12) && next.length < 4) {
-        const bounds = field.current?.getBoundingClientRect();
-        const width = bounds?.width ?? 700,
-          height = bounds?.height ?? 380;
-        const radius = 48;
-        let x = radius + Math.random() * Math.max(1, width - radius * 2),
-          y = radius + Math.random() * Math.max(1, height - radius * 2);
-        for (
-          let n = 0;
-          n < 12 && next.some((t) => Math.hypot(t.x - x, t.y - y) < 95);
-          n++
-        ) {
-          x = radius + Math.random() * Math.max(1, width - radius * 2);
-          y = radius + Math.random() * Math.max(1, height - radius * 2);
-        }
-        if (!next.some((t) => Math.hypot(t.x - x, t.y - y) < 80))
-          next = [...next, { id: ++nextId.current, x, y, expires: now + 2200 }];
-        lastSpawn = now;
-      }
-      liveTargets.current = next;
-      setTargets(next);
-    }, 50);
-    return () => clearInterval(timer);
-  }, [phase, hits]);
-  const hit = (id: number) => {
-    if (
-      phase !== "running" ||
-      !liveTargets.current.some(
-        (t) => t.id === id && t.expires > performance.now(),
-      )
-    )
-      return;
-    liveTargets.current = liveTargets.current.filter((t) => t.id !== id);
-    setTargets(liveTargets.current);
-    setHits((h) => h + 1);
-    playSound("tap");
+  const [phase, setPhase] = useState<Phase>("intro");
+  const [view, setView] = useState({hits:0,misses:0,streak:0,best:0,score:0,remaining:20});
+  const model = useRef(view), field = useRef<HTMLDivElement>(null), end = useRef(0), nextId = useRef(0), live = useRef<SprintTarget | null>(null);
+  const [target,setTarget] = useState<SprintTarget | null>(null), [pop,setPop] = useState<{id:number;x:number;y:number;points:number;golden:boolean}|null>(null);
+  const tracking = useRun("target-rush",phase,view.score);
+  const update = (next:typeof view) => {model.current=next;setView(next);};
+  const spawn = () => {
+    const previous=live.current;let x=.2+Math.random()*.6,y=.2+Math.random()*.6;
+    for(let n=0;n<10&&previous&&Math.hypot(x-previous.x,y-previous.y)<.25;n++){x=.2+Math.random()*.6;y=.2+Math.random()*.6;}
+    const next={id:++nextId.current,x,y,expires:performance.now()+Math.max(750,1700-model.current.hits*20),golden:nextId.current%7===0,size:Math.max(46,76-model.current.hits*.7)};
+    live.current=next;setTarget(next);
   };
-  return (
-    <Frame game="target-rush">
-      {phase === "intro" ? (
-        <Setup
-          game="target-rush"
-          tracking={tracking}
-          onStart={() => {
-            setHits(0);
-            setMisses(0);
-            setRemaining(30);
-            setTargets([]);
-            liveTargets.current = [];
-            setPhase("ready");
-          }}
-          control="mouse"
-          description={copy(
-            "30 saniyede beliren hedeflere tıkla. Her hedef 100 puan. Kaçırınca puan kaybetmezsin.",
-            "Click the targets that appear for 30 seconds. Each is worth 100 points. Misses do not subtract points.",
-          )}
-        />
-      ) : phase === "complete" ? (
-        <Final
-          score={score}
-          tracking={tracking}
-          onAgain={() => setPhase("intro")}
-        >
-          <div className="result-stats">
-            <div>
-              <strong>{hits}</strong>
-              <span>{copy("isabet", "hits")}</span>
-            </div>
-            <div>
-              <strong>
-                {hits + misses ? Math.round((hits / (hits + misses)) * 100) : 0}
-                %
-              </strong>
-              <span>{copy("tıklama doğruluğu", "click accuracy")}</span>
-            </div>
-          </div>
-        </Final>
-      ) : (
-        <section className="game-stage">
-          <div className="stage-meta">
-            <strong>{remaining} s</strong>
-            <span>
-              {hits} {copy("isabet", "hits")}
-            </span>
-            <strong>
-              {score} {copy("puan", "points")}
-            </strong>
-          </div>
-          <div
-            className="rush-playfield"
-            ref={field}
-            aria-label={copy("Hedef alanı", "Target area")}
-            onPointerDown={(e) => {
-              if (e.target === e.currentTarget && phase === "running")
-                setMisses((m) => m + 1);
-            }}
-          >
-            {phase === "ready" ? (
-              <div className="snake-overlay">
-                <strong>1</strong>
-              </div>
-            ) : (
-              targets.map((t) => (
-                <button
-                  className="rush-target"
-                  key={t.id}
-                  style={{ left: t.x, top: t.y }}
-                  aria-label={copy("Hedefi vur", "Hit target")}
-                  onPointerDown={(e) => {
-                    e.preventDefault();
-                    hit(t.id);
-                  }}
-                  onClick={(e) => {
-                    if (e.detail === 0) hit(t.id);
-                  }}
-                />
-              ))
-            )}
-          </div>
-          <p>
-            {copy(
-              "Hedefler belirdikçe tıkla. Klavye ile Tab ve Enter da kullanılabilir.",
-              "Click targets as they appear. You can also use Tab and Enter.",
-            )}
-          </p>
-        </section>
-      )}
-    </Frame>
-  );
+  const start=()=>{update({hits:0,misses:0,streak:0,best:0,score:0,remaining:20});nextId.current=0;end.current=performance.now()+20000;live.current=null;setPop(null);spawn();setPhase("running");};
+  useEffect(()=>{
+    if(phase!=="running")return;
+    const timer=setInterval(()=>{
+      const now=performance.now();
+      if(now>=end.current){live.current=null;setTarget(null);update({...model.current,remaining:0});setPhase("complete");return;}
+      if(live.current&&now>=live.current.expires){update({...model.current,streak:0,misses:model.current.misses+1});spawn();}
+      const remaining=Math.ceil((end.current-now)/1000);if(remaining!==model.current.remaining)update({...model.current,remaining});
+    },40);
+    return()=>clearInterval(timer);
+  },[phase]);
+  const hit=(id:number,keyboard=false)=>{
+    const t=live.current;if(phase!=="running"||!t||t.id!==id||performance.now()>=t.expires||performance.now()>=end.current)return;
+    const m=model.current,streak=m.streak+1,points=100*Math.min(5,1+Math.floor((streak-1)/4))*(t.golden?3:1);
+    update({...m,hits:m.hits+1,streak,best:Math.max(m.best,streak),score:m.score+points});setPop({id:t.id,x:t.x,y:t.y,points,golden:t.golden});spawn();playSound("tap");
+    if(keyboard)requestAnimationFrame(()=>field.current?.querySelector('button')?.focus({preventScroll:true}));
+  };
+  return <Frame game="target-rush">
+    {phase==="intro"?<Setup game="target-rush" tracking={tracking} control="mouse" onStart={start} description={copy("20 saniyelik hedef yarışı. Vurduğun anda yenisi gelir. Her dört ardışık isabet çarpanı artırır; altın hedef üç kat puan verir. Kaçırınca yalnız seri sıfırlanır.","A 20-second target sprint. Each hit immediately creates the next target. Every four consecutive hits raise your multiplier; gold targets give triple points. A miss only resets your streak.")}/>:
+    phase==="complete"?<Final score={view.score} tracking={tracking} onAgain={start}><div className="result-stats"><div><strong>{view.hits}</strong><span>{copy("isabet","hits")}</span></div><div><strong>{view.best}</strong><span>{copy("en iyi seri","best streak")}</span></div></div></Final>:
+    <section className="game-stage rush-sprint"><div className="stage-meta"><strong>{view.remaining} s</strong><strong>{view.score} {copy("puan","points")}</strong><span className="rush-combo">{view.streak} {copy("seri","streak")} · ×{Math.min(5,1+Math.floor(view.streak/4))}</span></div>
+    <div className="rush-time-track"><span style={{transform:`scaleX(${view.remaining/20})`}}/></div>
+    <div className="rush-playfield" ref={field} aria-label={copy("Hedef alanı","Target area")} onPointerDown={event=>{if(event.target===event.currentTarget)update({...model.current,streak:0,misses:model.current.misses+1});}}>
+      {target&&<button key={target.id} className={`rush-target${target.golden?' is-golden':''}`} style={{left:`${target.x*100}%`,top:`${target.y*100}%`,width:target.size,height:target.size}} aria-label={target.golden?copy("Altın hedefi vur","Hit gold target"):copy("Hedefi vur","Hit target")} onPointerDown={event=>{event.preventDefault();hit(target.id);}} onClick={event=>{if(event.detail===0)hit(target.id,true);}}/>}
+      {pop&&<span key={pop.id} aria-hidden="true" className={`rush-pop${pop.golden?' is-golden':''}`} style={{left:`${pop.x*100}%`,top:`${pop.y*100}%`}}>+{pop.points}</span>}
+    </div><div className="rush-reward"><span>{copy("Seriyi koru, çarpanı büyüt.","Keep your streak. Grow your multiplier.")}</span><span>{copy("Altın hedef: ×3","Gold target: ×3")}</span></div></section>}
+  </Frame>;
 }
 type Cell = {
   x: number;

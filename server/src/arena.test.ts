@@ -194,7 +194,17 @@ describe("connected arena API", () => {
     const historical=await(await api("/api/leaderboard/zero-point?rules=1")).json();
     expect(historical.entries.some((entry:{id:string})=>entry.id===id)).toBe(false);
     expect(historical.entries[0]).toMatchObject({challenger:"Grace",score:8000});
-    expect((await api("/api/play","POST",{participantId:randomUUID(),game:"zero-point",challenger:"Invalid",rulesVersion:4})).status).toBe(400);
+    expect((await api("/api/play","POST",{participantId:randomUUID(),game:"zero-point",challenger:"Invalid",rulesVersion:5})).status).toBe(400);
+  });
+
+  it("keeps new sprint and original-game scores separate from replaced rules", async()=>{
+    const response=await api("/api/play","POST",{participantId:randomUUID(),game:"target-rush",challenger:"Sprint player",rulesVersion:4});
+    expect(response.status).toBe(201);const {id}=await response.json();
+    expect((await api(`/api/play/${id}/complete`,"POST",{score:1800})).status).toBe(200);
+    const current=await(await api("/api/leaderboard/target-rush?rules=4")).json();
+    expect(current.entries.some((entry:{id:string})=>entry.id===id)).toBe(true);
+    const earlier=await(await api("/api/leaderboard/target-rush?rules=2")).json();
+    expect(earlier.entries.some((entry:{id:string})=>entry.id===id)).toBe(false);
   });
 
   it("owns bilingual stand cases, rejects replay, preserves saved scores and staff login on next-player reset",async()=>{

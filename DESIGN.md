@@ -50,7 +50,7 @@ typography:
     letterSpacing: "-0.025em"
   laptop-title:
     fontFamily: "Big Shoulders Display, sans-serif"
-    fontSize: "clamp(24px, 4svh, 40px)"
+    fontSize: "clamp(25px, 4.8svh, 44px)"
     fontWeight: 900
     lineHeight: 1.1
     letterSpacing: "-0.025em"
@@ -143,7 +143,7 @@ components:
 
 The supplied festival poster kit sets the world: neutral paper, dense dark ink, amber fields, coral registration, grain and halftone. Condensed headlines carry the invitation; rounded game surfaces keep the controls approachable. The source rocket, planet, stars and year stamp retain the event’s drawn and printed character.
 
-The shared shell gives original institutional identities quiet space above and below the games. Festival is the default composition; Lobby and Classic are valid expressions of the same palette, typography, controls and source artwork. Turkish and English use the same hierarchy and complete identity strips.
+The shared shell gives original institutional identities quiet space above and below the games. Festival is the default composition; Lobby and Classic are valid expressions of the same palette, typography, controls and source artwork. Turkish and English use the same hierarchy and complete identity strips. Color Cascade is a source-preserved exception inside its original iframe: its native colors, font, hearts, effects, controls and internal English text remain unchanged; the surrounding station retains this festival system and bilingual instructions.
 
 **Key Characteristics:**
 
@@ -186,10 +186,10 @@ Amber and coral carry the festival print; neutral paper and ink carry reading an
 - **Title:** featured game names use the title role. Classic uses smaller condensed names (30px); Lobby uses a larger fluid title (38–66px).
 - **Body:** the base body role is used for instructions and prose, with paragraph measure capped (72ch). Featured game summaries scale (17–23px) with a tighter line-height (1.3).
 - **Label:** language buttons and utility navigation are compact (14px). Primary Festival actions are Bricolage bold (28px / 1.1); case choice labels are extra bold (30px).
-- **Laptop density:** the laptop headline, title and control roles override the default Festival sizes at the height-aware desktop breakpoint. Game summaries use a smaller fluid size (14–20px); at heights up to 640px they are omitted while names, controls and actions remain visible. The poster wordmark scales against both container width and height, rather than page zoom.
+- **Laptop density:** the laptop headline, title and control roles override the default Festival sizes at the height-aware desktop breakpoint. Game summaries use a smaller fluid size (14–20px), alongside visible names, controls and actions. The poster wordmark scales against both container width and height, rather than page zoom.
 
 ### Named Rules
-**The Role Separation Rule.** Use Big Shoulders Display for headlines, Bricolage for instructions and controls, and Courier Prime for actual case timestamps. The Georgia club name is confined to the identity area.
+**The Role Separation Rule.** Use Big Shoulders Display for station headlines, Bricolage for station instructions and controls, and Courier Prime for actual case timestamps. The Georgia club name is confined to the identity area. The original Color Cascade iframe retains its source typography.
 
 ## Layout
 
@@ -197,7 +197,7 @@ The shared header, menu and footer are centered within a maximum canvas (1505px)
 
 Festival uses an asymmetrical poster/programme split (39.35% / 60.65%). Its programme has inset padding (28px 34px 36px); featured rows arrange preview, copy/control and action in three columns (37% / remaining / 22%), with a minimum height (188px). At intermediate widths (801–1200px), the split shifts (36% / 64%). At 800px and below the poster stacks above the programme. At 540px and below rows become two columns with a full-width action beneath; secondary games remain a two-column group.
 
-At widths of at least 1000px and heights of at least 560px, Festival uses a viewport-height flex shell. The responsive header, flexible menu and complete footer share the available height. The poster/programme split remains 39.35% / 60.65%; three equal flexible rows use preview/copy/action columns (34% / remaining / 20%), compact row padding (6px) and height-aware gaps (8–16px). Five secondary choices form a three-column group. The full launcher, all eight games and institutional footer fit from 1024×600; no page scaling or clipped controls provides that fit. Utility actions and the unmodified organizer strip share the footer horizontally. Phones retain natural document scrolling and the existing stacked composition.
+At widths of at least 1000px and heights of at least 560px, Festival gives the header and menu the first viewport. The menu fills the height remaining below the responsive header; the complete footer follows below the fold in normal document flow. The poster/programme split remains 39.35% / 60.65%; three equal flexible rows use preview/copy/action columns (34% / remaining / 20%), compact row padding (6px) and height-aware gaps (8–16px). Five secondary choices form a three-column group. The full launcher and all eight games fit from 1024×600 without page scaling or clipped controls. The menu uses the height recovered by placing the footer below the first viewport. Utility actions and the unmodified organizer strip share that footer horizontally. Phones retain natural document scrolling and the existing stacked composition.
 
 Lobby uses three dominant game cards with a quieter five-choice group. Classic uses a centered intro and a four-column game library on desktop. Both retain their own responsive grids; the Festival poster split is a composition, not a requirement for future surfaces. Game pages use a narrower centered reading/play area (1120px maximum). Outside the laptop breakpoint, organizer artwork follows the utility footer inside a centered maximum width (1000px).
 
@@ -243,9 +243,15 @@ Previews show miniature mechanics: timer, target field, alignment zone, falling 
 Poster headline and underline arrive once (650ms). Hover and keyboard focus trigger short one-shot demonstrations (750–1100ms). The source rocket floats gently (6s); home animations pause when the page is hidden or the home surface is offscreen. Native route view transitions use a short exit (160ms) and entry (300ms), with a game-page arrival (450ms). Reduced-motion preference disables animations and transitions.
 
 ### Game State Presentation
-Zero Point keeps its running clock visible throughout its single attempt. Perfect Align keeps the marker, target zone and streak feedback visible as successful hits advance automatically until a miss.
+Zero Point presents a target duration and a continuously visible clock. Targets vary from 1.5 to 7 seconds and never repeat the immediately preceding target. The result shows points and timing error beside the same clock; Space, Enter or the broad next-target action starts another round directly without setup. Forgiving scoring awards up to 1000 points, with a 100ms full-score tolerance.
 
-Color Cascade retains its imported game's four fixed colors as gameplay data, paired with consistent numeric labels on both the sequence and falling tiles; they do not expand the shared festival palette. Its dark board grows from three to four to five lanes, with lane numbers at the bottom. The current sequence item has an ink outline and completed items fade. Score, combo, three heart outlines/fills and a pause action sit above the board; pause covers the board with a dark overlay and a direct resume action. The board and tile curves reuse the existing choice and action radii. The source game's colors and its small preview tile corners are local game illustration details, not general interface tokens.
+Perfect Align starts moving immediately after the initial action. The normalized marker speed starts at 0.65 and rises by 0.045 per hit, capped at 1.25; the target zone narrows with progression. Successful hits keep the marker, zone and streak feedback visible for 220ms before the next stage begins automatically. A miss ends the run.
+
+Target Rush is a 20-second sprint. Each hit immediately replaces the target; the score, time and streak multiplier stay visible above the field. Consecutive hits increase the multiplier in four-hit steps, capped at five; gold targets award triple points. Misses and expired targets reset the streak without subtracting earned points. The result action starts a new sprint directly. Target arrival (140ms) and floating score feedback (550ms) support the action; the remaining-time track changes by transform (80ms), with reduced-motion overrides.
+
+Color Cascade runs the original HTML, CSS and JavaScript from public/games/color-cascade in an iframe, byte-identical to vendor/color-cascade. The source's dark styling, native Segoe UI font stack, four game colors, hearts, effects, internal English text and mouse controls override station rules inside the frame. Preserve the source rather than recreate or reskin it: no added numeric tile labels, lane keys, pause UI or replacement engine. The outer station provides bilingual instructions, optional player name, navigation, fullscreen and an observer that reads the original final score without modifying the source. Its frame has a responsive height (clamp(480px, 75svh, 850px)) and a rounded outer edge (12px); fullscreen removes the outer curve. These original game materials are a local source exception, not new shared tokens.
+
+All four changed games use the current rules version for their scoreboards, keeping earlier-rule scores separate.
 
 ## Do's and Don'ts
 
@@ -255,9 +261,12 @@ Color Cascade retains its imported game's four fixed colors as gameplay data, pa
 - **Do** keep both language states legible and use the corresponding supplied organizer strip.
 - **Do** show the control hint beside each game and keep the primary action broad.
 - **Do** honor reduced motion and pause home animation when hidden or offscreen.
+- **Do** keep the laptop menu in the first viewport and the intact institutional footer below the fold.
+- **Do** preserve Color Cascade’s original source and presentation inside its iframe; apply station styling and bilingual instructions around it.
 
 ### Don't:
 - **Don't** redraw, distort, recolor, rotate or animate institutional identities.
 - **Don't** carry the rejected neon command-center or sci-fi HUD treatment into new surfaces.
 - **Don't** turn poster registration into hard offset shadows on controls or containers.
 - **Don't** run repeating game demonstrations across the menu; demonstrations are one-shot responses to hover or keyboard focus.
+- **Don't** add numeric labels, lane keys, pause controls or a replacement engine to the original Color Cascade.

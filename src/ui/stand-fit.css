@@ -77,13 +77,14 @@
     flex-shrink: 0;
   }
   .is-home.design-festival {
-    height: 100svh;
-    min-height: 0;
+    height: auto;
+    min-height: 100svh;
     display: flex;
     flex-direction: column;
   }
   .is-home.design-festival > .stand-content {
-    flex: 1;
+    flex: none;
+    height: calc(100svh - var(--stand-head));
     min-height: 0;
   }
   .is-home .layout-festival {
@@ -132,7 +133,7 @@
     align-self: stretch;
   }
   .is-home .layout-festival .stand-game h2 {
-    font-size: clamp(24px, 4svh, 40px);
+    font-size: clamp(25px, 4.8svh, 44px);
   }
   .is-home .layout-festival .stand-game-copy p {
     font-size: clamp(14px, 2.15svh, 20px);
@@ -309,9 +310,4 @@
   .cascade-board {
     height: clamp(200px, 33svh, 400px);
   }
-}
-
-@media (min-width:1000px) and (min-height:560px) and (max-height:640px) {
-  .is-home .layout-festival .stand-game-copy p { display:none; }
-  .is-home .layout-festival .preview-zero-point { gap:8px; }
 }

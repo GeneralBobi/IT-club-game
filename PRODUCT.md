@@ -45,4 +45,8 @@ An A3 poster will be requested separately. When requested, apply the supplied pr
 5. Verify actual play and bilingual states in the browser, not only builds and APIs.
 
 ## Current play and screen requirements
-The festival launcher fits a laptop viewport from 1024x600, with all eight choices and the complete institutional footer visible. Keep natural scrolling on phones. Zero Point has a constantly visible clock and one forgiving attempt. Perfect Align advances automatically until a miss, progressively narrowing and accelerating. Color Cascade adapts the user-owned original feat/color-cascade-game branch: color sequences, three lives, combo scoring and three to five lanes. Earlier rules retain separate scoreboards.
+The laptop festival menu fills the first viewport from 1024x600. The institutional footer remains intact below the fold, as Boran explicitly corrected on 21 October. Phones retain natural scrolling.
+
+Color Cascade must run the original HTML, CSS and JavaScript unchanged, including its original presentation and controls. The rejected React rewrite has been removed. public/games/color-cascade is byte-identical to vendor/color-cascade. The surrounding station only observes final scores and supplies navigation, optional nickname and fullscreen. The source's internal English text is preserved; surrounding instructions remain selectable TR/EN.
+
+Zero Point uses a continuously visible clock, varied non-repeating targets from 1.5 to 7 seconds, forgiving scores and one-key next rounds without returning to setup. Perfect Align starts immediately at a brisk speed and automatically advances after 220ms of hit feedback, becoming faster and narrower. Target Rush is a 20-second sprint with immediate replacement targets, streak multipliers and triple-value gold targets; misses reset the streak without subtracting earned points. These four changed games use separate current scoreboards from all earlier rules.

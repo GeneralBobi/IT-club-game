@@ -18,9 +18,9 @@ try {
     const entries = (await arena.rankings("zero-point")).entries as { id: string; completedAt: number }[];
     const saved = entries.find(entry => entry.id === id)!;
     assert.ok(saved.completedAt > 1_700_000_000_000, "Millisecond timestamps and camelCase aliases survive PostgreSQL");
-    const colorId = await arena.start(participant, "color-cascade", "Verification", 3);
+    const colorId = await arena.start(participant, "color-cascade", "Verification", 4);
     assert.equal(await arena.finish(colorId, 70), "saved");
-    assert.ok((await arena.rankings("color-cascade", 3)).entries.some((entry: {id:string}) => entry.id === colorId));
+    assert.ok((await arena.rankings("color-cascade", 4)).entries.some((entry: {id:string}) => entry.id === colorId));
     const shortId = await arena.start(participant, "myth-fact", "Verification", 2);
     const deadline = Date.now() + 90000;
     await database.prepare("INSERT INTO stand_attempts(id,owner,game,seed,progress,deadline) VALUES(?,?,?,?,?,?)")

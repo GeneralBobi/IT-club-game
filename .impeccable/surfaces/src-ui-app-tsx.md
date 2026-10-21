@@ -29,5 +29,9 @@ MEASUREMENT EXCEPTION: The older automated build state still measures the origin
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
-## 21 October laptop adaptation
-Latest user screenshot rejects the page extending below the laptop. Fit the full festival launcher and exact footer from 1024x600 through large laptops, using responsive density rather than scaling or clipping. At very short desktop heights names and controls take priority over redundant taglines. Mobile retains scrolling. Zero Point has one visible-clock attempt with forgiving scoring; Perfect Align auto-advances until a miss and becomes harder. Add the original Color Cascade as the eighth game. Footer moves into the laptop viewport as explicitly required by this adaptation.
+## Latest 21 October correction - overrides the earlier laptop fit
+Boran rejected the previous screenshot with footer logos in the first viewport: the intact footer should remain below the fold and the menu should use that recovered height. Preserve the poster/programme topology and exact branding, with all eight choices fitting from 1024x600 and mobile naturally scrolling. Do not fit the footer back into the screen.
+
+Boran also explicitly rejected the rewritten Color Cascade. Run the three original HTML/CSS/JavaScript files unchanged in their own iframe. Original dark styling, native font, hearts, effects and controls are source truth and override the surrounding station design system inside the frame. Do not reskin or recreate it. Only external score observation, surrounding bilingual instructions and optional fullscreen are added. The prior React engine is removed.
+
+Zero Point: no hiding/blink, random non-repeating target durations, fast one-key next round without setup. Perfect Align: immediate faster start, automatically advancing harder stages, shorter hit feedback. Target Rush: a more active 20-second sprint with immediate replacement targets, visible streak multipliers, gold bonus targets and direct replay. Earlier scores stay separate. The user's current screenshot C:/Users/BORANB~1/AppData/Local/Temp/codex-clipboard-5f4eb147-a63b-4b9f-b979-1c687cad331c.png outranks previous ship reviews.

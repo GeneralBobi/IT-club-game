@@ -1,0 +1,25 @@
+.original-cascade-tools {display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:12px}
+.original-cascade-tools p {margin:0;font-size:16px}
+.original-cascade-tools button {display:flex;align-items:center;gap:8px}
+.original-cascade-frame {display:block;width:100%;height:clamp(480px,75svh,850px);border:0;border-radius:12px;background:#121212}
+.original-cascade-frame:fullscreen {height:100vh;border-radius:0}
+.quick-zero {text-align:center}
+.quick-zero .zero-target {display:block;font:900 clamp(36px,6svh,56px)/1.1 "Big Shoulders Display",sans-serif;margin:8px 0 12px}
+.quick-zero .stage-clock {min-height:clamp(150px,27svh,230px)}
+.zero-feedback {display:flex;justify-content:center;align-items:center;gap:24px;min-height:52px;margin:8px 0 16px;font-size:17px}
+.zero-feedback strong {font-size:26px;font-variant-numeric:tabular-nums}
+.quick-zero .score-save-status {min-height:25px;margin:8px auto}
+.rush-sprint .rush-playfield {min-height:260px;height:clamp(260px,45svh,470px);border-radius:14px;cursor:crosshair}
+.rush-sprint .rush-target {width:var(--target-size,70px);height:var(--target-size,70px);animation:rush-arrive 140ms cubic-bezier(.16,1,.3,1);outline-width:4px}
+.rush-sprint .rush-target.is-golden {background:var(--amber);outline-color:var(--amber)}
+.rush-sprint .rush-target.is-golden:after {border-color:var(--ink)}
+.rush-time-track {height:5px;background:#d4d4ce;border-radius:4px;overflow:hidden;margin-top:12px}
+.rush-time-track span {display:block;height:100%;width:100%;transform-origin:left;background:var(--coral);transition:transform 80ms linear}
+.rush-combo {color:#943731;font-weight:800;min-width:95px;text-align:right}
+.rush-pop {position:absolute;pointer-events:none;transform:translate(-50%,-100%);font-weight:800;font-size:25px;color:var(--paper);animation:rush-score 550ms ease-out forwards;z-index:3}
+.rush-pop.is-golden {color:#f4bf5b}
+.rush-reward {display:flex;justify-content:space-between;gap:12px;font-size:15px;margin-top:10px}
+@keyframes rush-arrive {from {opacity:.5;scale:.65} to {opacity:1;scale:1}}
+@keyframes rush-score {from {opacity:1;translate:0 0} to {opacity:0;translate:0 -35px}}
+@media(prefers-reduced-motion:reduce){.rush-sprint .rush-target,.rush-pop{animation:none}.rush-time-track span{transition:none}}
+@media(max-width:540px){.zero-feedback{gap:12px;font-size:14px}.original-cascade-tools{align-items:flex-start}.original-cascade-tools p{font-size:14px}}
