@@ -25,6 +25,7 @@ import "./festival.css";
 import "./cascade.css";
 import "./stand-fit.css";
 import "./game-flow.css";
+import "./poster-motion.css";
 const StaffApp = lazy(() => import("./App"));
 type Screen = StandGameId | "home" | "scores";
 const validScreens = new Set<string>([...gameList.map((g) => g.id), "scores"]);

@@ -1,0 +1,12 @@
+{
+  "source": "itclub-original.png",
+  "sha256": "39650be1ab7787ff5d86aa4e18cbef858dd0c9d436c61c748394dda26af672d5",
+  "crop": [
+    214,
+    203,
+    526,
+    515
+  ],
+  "method": "Source cream circuit contours, excluding the disk/background. No invented circuit geometry.",
+  "use": "Faint background motif requested 22 October 2026. Primary identities are unchanged."
+}

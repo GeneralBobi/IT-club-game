@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-21T20:32:07.265135Z",
+  "generatedAt": "2026-10-22T08:09:49.4795281Z",
   "title": "Design System: EMU IT Club — EMUCON Games",
   "extensions": {
     "colorMeta": {
@@ -222,12 +222,27 @@
       {
         "name": "poster-arrival",
         "value": "650ms",
-        "purpose": "One headline and underline arrival."
+        "purpose": "One invitation headline and programme underline arrival."
       },
       {
         "name": "rocket-float",
-        "value": "6s ease-in-out infinite",
-        "purpose": "Source rocket only; paused while home is hidden or offscreen."
+        "value": "7s ease-in-out infinite",
+        "purpose": "Source rocket lift/settle, translating at most 11px right and 29px up, rotating 23–27deg; paused while home is hidden or offscreen and disabled for reduced motion."
+      },
+      {
+        "name": "wordmark-ink-uncover",
+        "value": "700ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "One EMUCON wordmark uncover from a 75% bottom clip and 7px downward translation; disabled for reduced motion."
+      },
+      {
+        "name": "year-stamp-arrival",
+        "value": "650ms cubic-bezier(0.16, 1, 0.3, 1) 120ms backwards",
+        "purpose": "One year-stamp settle from -9deg and scale 1.07 to -3deg and scale 1, removing 0.8px blur; disabled for reduced motion."
+      },
+      {
+        "name": "source-star-pulse",
+        "value": "3.8s ease-in-out infinite",
+        "purpose": "Three original event stars vary opacity 0.38–1, scale 0.85–1.12 and rotation 0–12deg; second and third phases are -1.4s and -2.6s. Hidden/offscreen pauses; reduced motion disables."
       },
       {
         "name": "preview-demo",
@@ -386,6 +401,8 @@
     "dos": [
       "Do use the final paper token for shared page backgrounds.",
       "Do preserve original event illustrations, grain, halftone and complete institutional artwork.",
+      "Do keep the source-derived circuit motif static and faint; retain complete original identities in their own quiet areas.",
+      "Do adapt print output with the original outlined university lockup, vector type and illustrations, CMYK FOGRA39 and at least 300 effective ppi for placed raster artwork.",
       "Do keep both language states legible and use the corresponding supplied organizer strip.",
       "Do show the control hint beside each game and keep the primary action broad.",
       "Do honor reduced motion and pause home animation when hidden or offscreen.",

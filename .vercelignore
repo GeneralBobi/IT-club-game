@@ -9,3 +9,8 @@ playwright-report/
 dist/
 dist-server/
 vendor/
+
+output/
+tmp/
+assets/print/
+scripts/poster/

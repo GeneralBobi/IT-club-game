@@ -16,3 +16,6 @@ playwright-report/
 .impeccable/review/
 .impeccable/build/
 .impeccable/mocks/decision/
+
+output/
+tmp/

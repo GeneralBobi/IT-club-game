@@ -29,7 +29,7 @@ Follow the supplied DAÜ logo usage manual. Use original artwork, proportional s
 
 Boran supplied the EMUCON 2026 Drive artwork pack for reuse and adaptation, and named https://emurpg.com/emucon and https://emu-itclub-projeler-aksami.vercel.app/ as references. The current neon command-center / sci-fi HUD treatment is rejected. The replacement should be simpler and focus on fun, using the actual supplied event material rather than invented logos or unrelated decoration.
 
-An A3 poster will be requested separately. When requested, apply the supplied print acceptance document: final size, 5 mm bleed, at least 5 mm content inset, PDF, embedded/outlined fonts, suitable CMYK and at least 300 dpi for placed raster artwork. Do not generate a final poster in the current website task.
+On 22 October Boran requested an A3 version of the current festival poster, more animation in the web poster, and a faint original club circuit watermark inspired by his supplied October meeting poster. Preserve the current amber composition; the reference is for the faint logo treatment, not its old date/venue or blue palette. Apply the supplied print acceptance document: final size, 5 mm bleed, at least 5 mm content inset, PDF, embedded/outlined fonts, suitable CMYK and at least 300 dpi for placed raster artwork. Deliver the actual A3 print PDF and its rendered preview.
 
 ## Evidence on Hand
 - Original shared source material: `data/design-research/sources/`, including the 41 MB layered poster kit, event illustrations, logos and four fonts. Original Drive folder: https://drive.google.com/drive/folders/1e-vCj2Y1fvXdK3zlI87UGnOXX1XvUoBz

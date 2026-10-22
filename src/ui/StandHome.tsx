@@ -254,6 +254,7 @@ export default function StandHome({
     <main ref={homeRef} className={`stand-home layout-${design}`}>
       {design === "festival" && (
         <aside className="festival-poster">
+          <img className="festival-watermark" src="/brand/itclub-circuit-watermark.svg" alt="" aria-hidden="true" />
           <div className="festival-wordmark">
             <span className="festival-title">EMUCON</span>
             <span className="festival-year">2026</span>
@@ -268,6 +269,11 @@ export default function StandHome({
             src="/event/rocket-flame.svg"
             alt=""
           />
+          <div className="festival-flight-stars" aria-hidden="true">
+            <img src="/event/star-1.svg" alt="" />
+            <img src="/event/star-2.svg" alt="" />
+            <img src="/event/star-1.svg" alt="" />
+          </div>
           <img className="festival-planet" src="/event/planet-1.svg" alt="" />
           <div className="festival-date">
             {copy("24 EKİM · DAÜ STADYUMU", "24 OCTOBER · EMU STADIUM")}

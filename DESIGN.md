@@ -172,6 +172,8 @@ Amber and coral carry the festival print; neutral paper and ink carry reading an
 ### Named Rules
 **The Original Identity Rule.** Use complete supplied identity artwork at its original proportions, with quiet clearspace; keep logos static and free of effects.
 
+The separately supplied club circuit motif is a decorative source-derived exception, not a replacement identity. Its contours are traced from the actual club artwork and recorded in `public/brand/WATERMARK-SOURCE.json`; the complete club and university signatures retain the rule above.
+
 ## Typography
 
 **Display Font:** Big Shoulders Display (sans-serif fallback), self-hosted black (900).
@@ -240,7 +242,12 @@ Real key labels sit in small light keycaps beside concise instructions; mouse an
 ### Game Previews and Motion
 Previews show miniature mechanics: timer, target field, alignment zone, falling color tiles, snake, quiz answers or case records. Dark scene surfaces keep pale text and coral/amber marks distinct; the source planet forms a foreground horizon. Treat previews as illustrations of gameplay rather than additional controls.
 
-Poster headline and underline arrive once (650ms). Hover and keyboard focus trigger short one-shot demonstrations (750–1100ms). The source rocket floats gently (6s); home animations pause when the page is hidden or the home surface is offscreen. Native route view transitions use a short exit (160ms) and entry (300ms), with a game-page arrival (450ms). Reduced-motion preference disables animations and transitions.
+The invitation headline and programme underline arrive once (650ms). The EMUCON wordmark uncovers like printed ink (700ms); its year stamp settles once (650ms, delayed 120ms). The source rocket lifts and settles on a gentle repeating flight (7s), moving at most 11px right and 29px up while its angle varies from 23 to 27 degrees. Three small original event stars pulse and turn subtly (3.8s), with staggered phases. The planet, circuit watermark and complete institutional identities stay static. Hover and keyboard focus trigger short one-shot game demonstrations (750–1100ms). Home animations pause when the page is hidden or the home surface is offscreen. Native route view transitions use a short exit (160ms) and entry (300ms), with a game-page arrival (450ms). Reduced-motion preference disables animations and transitions.
+
+### Source Artwork and Print Adaptation
+The club circuit contour sits faintly behind the web poster at its right edge (10% opacity, 89% width, right offset -23%, top 21%). It uses source geometry rather than invented circuit decoration. The October reference supplies this motif treatment; the existing amber festival palette and current event information remain the composition's source.
+
+The A3 adaptation retains the same printed materials, condensed type, source planet and rocket, and static circuit motif. It uses a portrait trim (297 × 420mm), surrounding bleed (5mm; media 307 × 430mm) and content inset of at least 5mm. The university signature comes from the supplied guide's original outlined vector lockup, with its emblem at 33mm; the Turkish organizer strip stays whole. Independently composed lettering is outlined, event illustrations remain vectors, and placed raster artwork meets at least 300 effective ppi. Print colors use CMYK with a FOGRA39 output intent. These are print-production adaptations, not replacement web tokens. `scripts/poster/build_a3.py` produces the PDF, its rendered trim preview and the print-check report under `output/pdf/`.
 
 ### Game State Presentation
 Zero Point presents a target duration and a continuously visible clock. Targets vary from 1.5 to 7 seconds and never repeat the immediately preceding target. The result shows points and timing error beside the same clock; Space, Enter or the broad next-target action starts another round directly without setup. Forgiving scoring awards up to 1000 points, with a 100ms full-score tolerance.
@@ -258,6 +265,8 @@ All four changed games use the current rules version for their scoreboards, keep
 ### Do:
 - **Do** use the final paper token for shared page backgrounds.
 - **Do** preserve original event illustrations, grain, halftone and complete institutional artwork.
+- **Do** keep the source-derived circuit motif static and faint; retain complete original identities in their own quiet areas.
+- **Do** adapt print output with the original outlined university lockup, vector type and illustrations, CMYK FOGRA39 and at least 300 effective ppi for placed raster artwork.
 - **Do** keep both language states legible and use the corresponding supplied organizer strip.
 - **Do** show the control hint beside each game and keep the primary action broad.
 - **Do** honor reduced motion and pause home animation when hidden or offscreen.
