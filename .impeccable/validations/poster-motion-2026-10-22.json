@@ -1,0 +1,37 @@
+{
+  "kind": "scoped-build-validation",
+  "date": "2026-10-22",
+  "scope": "Current festival poster motion, authentic faint circuit watermark and A3 print adaptation",
+  "sourceCommit": "8bcf09c",
+  "legacyState": ".impeccable/build/state.json",
+  "legacyPhaseDisposition": {
+    "plates": "Historical open result retained. Generated malformed institutional identity is superseded by the user's explicit requirement to use the authentic complete official signature.",
+    "hero": "Historical pending phase retained. User-selected festival composition and later explicit laptop-height/footer-below-fold correction define the current accepted direction; old hero gate is not current-scope evidence.",
+    "gateClaim": "No historical gate is closed, overridden or reported as passed by this validation."
+  },
+  "currentEvidence": {
+    "direction": ".impeccable/surfaces/src-ui-app-tsx.md",
+    "printDirection": ".impeccable/surfaces/emucon-a3.md",
+    "captures": [".impeccable/review/poster-motion/festival-1536.png", ".impeccable/review/poster-motion/festival-390.png", ".impeccable/review/poster-motion/poster-1536.png", ".impeccable/review/poster-motion/poster-390.png"],
+    "motion": ".impeccable/review/poster-motion/motion.json",
+    "detector": ".impeccable/review/poster-motion/detector.json",
+    "printPdf": "output/pdf/EMUCON-IT-Club-Oyuna-Gel-A3-baski.pdf",
+    "printPreview": "output/pdf/EMUCON-IT-Club-Oyuna-Gel-A3-onizleme.png",
+    "printChecks": "output/pdf/EMUCON-A3-baski-kontrol.json",
+    "deployment": "https://emu-it-club-game-mtgwuiose-emu-it.vercel.app",
+    "liveChecks": "data/design-research/live-poster-motion.json"
+  },
+  "observedResults": {
+    "build": "passed",
+    "detectorFindings": 0,
+    "desktop": "1536x736, all eight choices visible, menu bottom 721.27px, footer begins 762.23px, no horizontal overflow",
+    "mobile": "390x844, no horizontal overflow",
+    "motion": "Rocket transforms change over time; paused when hidden/offscreen; reduced motion disables spatial loops",
+    "language": "English toggle works",
+    "apiHealth": "200 ok",
+    "colorCascade": "All three published original files match vendor source byte for byte",
+    "print": "A3 trim and 5mm bleed, CMYK FOGRA39, outlined type, original vector signatures and source images at least 300 effective ppi",
+    "review": "Fresh reviewer found no visual or print fixes; requested this scoped persistence validation. Final persistence verdict is recorded separately by the reviewer."
+  },
+  "limitations": ["This is validation of the requested narrow extension, not a historical comp phase-gate pass or a new user acceptance of all gameplay.", "No game logic changed in this extension."]
+}
