@@ -11,6 +11,7 @@ import {
 import { useLanguage } from "./i18n";
 import { useChallengerIdentity } from "./arena-data";
 import "./cases.css";
+import "./game-experience.css";
 type View = {
   id: string;
   game: string;
@@ -40,15 +41,18 @@ type View = {
     correct?: boolean;
   }[];
 };
-async function request(path: string, body?: unknown) {
+class CaseRequestError extends Error {
+  constructor(public status: number) { super(String(status)); }
+}
+async function request(path: string, body?: unknown, signal?: AbortSignal) {
   const response = await fetch(`/api/stand${path}`, {
     method: body ? "POST" : "GET",
     headers: body ? { "Content-Type": "application/json" } : undefined,
     body: body ? JSON.stringify(body) : undefined,
-    signal: AbortSignal.timeout(12000),
+    signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(12000)]) : AbortSignal.timeout(12000),
   });
+  if (!response.ok) throw new CaseRequestError(response.status);
   const result = await response.json();
-  if (!response.ok) throw new Error(String(response.status));
   return result as View;
 }
 export default function StandCases({
@@ -65,36 +69,44 @@ export default function StandCases({
     [reveal, setReveal] = useState(false),
     [answers, setAnswers] = useState<(number | null)[]>([null, null, null]),
     [remaining, setRemaining] = useState(0);
+  const [recovering, setRecovering] = useState(false);
   const base = useRef({ server: 0, local: 0 }),
-    lock = useRef(false);
+    lock = useRef(false), nextExpiryCheck = useRef(0);
   const apply = (result: View) => {
     base.current = { server: result.serverNow, local: performance.now() };
     setView(result);
+    setRecovering(false);
+    setError("");
+    if(result.game==="digital-detective"&&!result.completed){
+      try{const saved=JSON.parse(sessionStorage.getItem(`stand-draft-${result.id}`)??"null");if(Array.isArray(saved)&&saved.length===3&&saved.every(value=>value===null||[0,1,2].includes(value)))setAnswers(saved);}catch{/* Invalid local drafts are ignored. */}
+    }
     setRemaining(
       Math.max(0, Math.ceil((result.deadline - result.serverNow) / 1000)),
     );
   };
   useEffect(() => {
     let active = true;
+    const controller = new AbortController();
     const id = sessionStorage.getItem(`stand-${game}`);
     if (!id) {
       setLoading(false);
       return;
     }
     setLoading(true);
-    request(`/${id}?language=${language}`)
+    request(`/${id}?language=${language}`, undefined, controller.signal)
       .then((result) => {
         if (active) {
           apply(result);
-          if(game==="digital-detective"){
-            try{const saved=JSON.parse(sessionStorage.getItem(`stand-draft-${result.id}`)??"null");if(Array.isArray(saved)&&saved.length===3&&saved.every(value=>value===null||[0,1,2].includes(value)))setAnswers(saved);}catch{/* An invalid local draft is ignored. */}
-          }
         }
       })
-      .catch(() => {
+      .catch((failure: unknown) => {
         if (active) {
-          sessionStorage.removeItem(`stand-${game}`);
-          setView(null);
+          if(failure instanceof CaseRequestError && [403,404].includes(failure.status)) {
+            sessionStorage.removeItem(`stand-${game}`);setView(null);setRecovering(false);
+          } else {
+            setRecovering(true);
+            setError(copy("Devam eden oyununa bağlanılamadı. Turun korunuyor; bağlantıyı kontrol edip tekrar dene.", "Could not reconnect to your game. Your run is kept; check your connection and retry."));
+          }
         }
       })
       .finally(() => {
@@ -102,6 +114,7 @@ export default function StandCases({
       });
     return () => {
       active = false;
+      controller.abort();
     };
   }, [game, language]);
   useEffect(()=>{if(view?.game==="digital-detective"&&!view.completed)sessionStorage.setItem(`stand-draft-${view.id}`,JSON.stringify(answers));},[view?.id,view?.completed,answers]);
@@ -111,7 +124,8 @@ export default function StandCases({
       const now = base.current.server + performance.now() - base.current.local,
         left = Math.max(0, Math.ceil((view.deadline - now) / 1000));
       setRemaining(left);
-      if (left === 0 && !lock.current) {
+      if (left === 0 && !lock.current && performance.now() >= nextExpiryCheck.current) {
+        nextExpiryCheck.current = performance.now() + 5000;
         lock.current = true;
         void request(`/${view.id}?language=${language}`)
           .then(apply)
@@ -139,7 +153,11 @@ export default function StandCases({
       const result = await action();
       apply(result);
       return result;
-    } catch {
+    } catch (failure: unknown) {
+      if(failure instanceof CaseRequestError && [403,404].includes(failure.status)) {
+        sessionStorage.removeItem(`stand-${game}`);
+        setView(null);setRecovering(false);setReveal(false);
+      }
       setError(
         copy(
           "Yanıt kaydedilemedi. Bağlantıyı kontrol edip tekrar dene.",
@@ -205,6 +223,7 @@ export default function StandCases({
     setReveal(false);
     setAnswers([null, null, null]);
     setError("");
+    setRecovering(false);
   };
   return (
     <main className="stand-game-page stand-case-page">
@@ -227,9 +246,11 @@ export default function StandCases({
           {error}
           <button
             className="quiet-button"
+            disabled={busy}
             onClick={() => {
-              if (view)
-                void act(() => request(`/${view.id}?language=${language}`));
+              const id = view?.id ?? sessionStorage.getItem(`stand-${game}`);
+              if (id)
+                void act(() => request(`/${id}?language=${language}`));
               else void start();
             }}
           >
@@ -239,6 +260,8 @@ export default function StandCases({
       )}
       {loading ? (
         <p role="status">{copy("Oyun hazırlanıyor…", "Preparing the game…")}</p>
+      ) : !view && recovering ? (
+        <div className="case-reconnect"><FileSearch size={46} aria-hidden="true"/><h2>{copy("Turuna devam et.", "Continue your run.")}</h2><p>{copy("Yukarıdaki Tekrar dene düğmesi son kaydedilen oyunu açar.", "Retry above to open your last saved game.")}</p></div>
       ) : !view ? (
         <div className="game-setup">
           <div className="case-intro-art">
@@ -325,7 +348,7 @@ export default function StandCases({
           </p>
         </section>
       ) : game === "myth-fact" ? (
-        <section className="game-stage">
+        <section className="game-stage myth-stage" data-state={reveal ? "reveal" : "question"}>
           <div className="stage-meta">
             <span>
               {copy("İddia", "Claim")}{" "}
@@ -336,8 +359,10 @@ export default function StandCases({
               {view.score} {copy("puan", "points")}
             </span>
           </div>
+          <div className="question-progress" aria-hidden="true">{Array.from({length:5},(_,i)=><i key={i} data-complete={i<(view.cursor??0)} data-current={i===(view.cursor??0)}/>)}</div>
           {reveal && view.reveal ? (
-            <div className="stand-result" aria-live="polite">
+            <div className="stand-result myth-reveal" data-correct={view.reveal.correct} aria-live="polite">
+              {view.reveal.correct ? <Check size={40} aria-hidden="true"/> : <X size={40} aria-hidden="true"/>}
               <h2>
                 {view.reveal.correct
                   ? copy("DOĞRU!", "CORRECT!")
@@ -358,7 +383,7 @@ export default function StandCases({
             </div>
           ) : (
             <>
-              <h2 className="claim-statement">{view.statement}</h2>
+              <h2 key={view.cursor} className="claim-statement">{view.statement}</h2>
               <div className="claim-choices">
                 <button
                   disabled={busy}
@@ -389,7 +414,7 @@ export default function StandCases({
           )}
         </section>
       ) : (
-        <section className="game-stage">
+        <section className="game-stage detective-stage">
           <div className="stage-meta">
             <strong>{view.title}</strong>
             <span role="timer">
@@ -439,6 +464,7 @@ export default function StandCases({
                 </fieldset>
               ))}
             </div>
+            <p className="detective-answer-count" aria-live="polite">{answers.filter(a=>a!==null).length}/3 {copy("karar hazır", "conclusions ready")}</p>
             <button
               className="play-link"
               disabled={busy || answers.some((a) => a === null)}

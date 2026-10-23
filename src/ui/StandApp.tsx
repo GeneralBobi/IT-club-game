@@ -3,10 +3,7 @@ import { flushSync } from "react-dom";
 import {
   ArrowLeft,
   ArrowRight,
-  Trophy,
   UserRoundPlus,
-  Volume2,
-  VolumeX,
 } from "lucide-react";
 import StandHome, {
   gameList,
@@ -14,18 +11,18 @@ import StandHome, {
   type StandGameId,
 } from "./StandHome";
 import { LanguageProvider, useLanguage } from "./i18n";
-import { useLiveData, type Rankings } from "./arena-data";
-import { setSoundMuted, soundIsMuted } from "./sound";
 import StandGames from "./StandGames";
 import StandCases from "./StandCases";
 import ColorCascade from "./ColorCascade";
-import { currentStandRules } from "../games/stand-rules";
+import StandScores from "./StandScores";
+import StandTools, { savedMotionPreference } from "./StandTools";
 import "./stand.css";
 import "./festival.css";
 import "./cascade.css";
 import "./stand-fit.css";
 import "./game-flow.css";
 import "./poster-motion.css";
+import "./stand-experience.css";
 const StaffApp = lazy(() => import("./App"));
 type Screen = StandGameId | "home" | "scores";
 const validScreens = new Set<string>([...gameList.map((g) => g.id), "scores"]);
@@ -52,7 +49,11 @@ function Stand() {
     [resetOpen, setResetOpen] = useState(false),
     [resetBusy, setResetBusy] = useState(false),
     [resetError, setResetError] = useState("");
-  const [muted, setMuted] = useState(soundIsMuted);
+  const [motionPaused, setMotionPaused] = useState(savedMotionPreference);
+  const changeMotion = (paused: boolean) => {
+    setMotionPaused(paused);
+    try { localStorage.setItem("arena-motion-paused", String(paused)); } catch { /* Optional preference. */ }
+  };
   useEffect(() => {
     if (!resetOpen) return;
     const previous = document.activeElement as HTMLElement | null;
@@ -134,7 +135,9 @@ function Stand() {
   return (
     <div
       className={`stand-root design-${route.design}${route.screen === "home" ? " is-home" : ""}`}
+      data-effects={motionPaused ? "paused" : "playing"}
     >
+      <a className="stand-skip-link" href="#stand-content">{copy("İçeriğe geç", "Skip to content")}</a>
       <header className="stand-header">
         <a
           className="stand-identity"
@@ -159,6 +162,7 @@ function Stand() {
             alt="Doğu Akdeniz Üniversitesi / Eastern Mediterranean University"
           />
         </div>
+        <StandTools onScores={() => go("scores")} motionPaused={motionPaused} onMotionChange={changeMotion} />
         <div className="language-switch" aria-label={copy("Dil", "Language")}>
           <button
             lang="tr"
@@ -188,11 +192,11 @@ function Stand() {
           </button>
         </nav>
       )}
-      <div key={epoch} className="stand-content">
+      <div key={epoch} id="stand-content" tabIndex={-1} className="stand-content">
         {route.screen === "home" ? (
           <StandHome design={route.design} onPlay={go} />
         ) : route.screen === "scores" ? (
-          <StandScores />
+          <StandScores onPlay={go} />
         ) : route.screen === "color-cascade" ? (
           <ColorCascade />
         ) : route.screen === "myth-fact" ||
@@ -211,30 +215,12 @@ function Stand() {
             )}
           </span>
           <div>
-            <button onClick={() => go("scores")}>
-              <Trophy size={17} />
-              {copy("Skorlar", "Scores")}
-            </button>
             {route.screen === "home" && (
               <button onClick={() => setResetOpen(true)}>
                 <UserRoundPlus size={17} />
                 {copy("Yeni oyuncu", "Next player")}
               </button>
             )}
-            <button
-              aria-label={
-                muted
-                  ? copy("Sesi aç", "Enable sound")
-                  : copy("Sesi kapat", "Mute sound")
-              }
-              aria-pressed={!muted}
-              onClick={() => {
-                setSoundMuted(!muted);
-                setMuted(!muted);
-              }}
-            >
-              {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-            </button>
           </div>
           {route.design === "lobby" && (
             <img
@@ -297,93 +283,6 @@ function Stand() {
         </div>
       )}
     </div>
-  );
-}
-function StandScores() {
-  const { copy } = useLanguage();
-  const [game, setGame] = useState<string>("zero-point"),
-    [version, setVersion] = useState("current");
-  const { data, error } = useLiveData<Rankings>(
-    `/api/leaderboard/${game}?rules=${version === "current" ? currentStandRules(game) : version}`,
-  );
-  return (
-    <main className="stand-scores">
-      <h1>{copy("SKORLAR.", "SCORES.")}</h1>
-      <p>
-        {copy(
-          "Kısa turlar kendi aralarında sıralanır. Önceki sürümün rekorları ayrı tutulur.",
-          "Short rounds compete with short rounds. Earlier records have their own board.",
-        )}
-      </p>
-      <div className="score-filters">
-        <label>
-          {copy("Oyun", "Game")}
-          <select
-            value={game}
-            onChange={(e) => {
-              setGame(e.target.value);
-              setVersion("current");
-            }}
-          >
-            {gameList.map((g) => (
-              <option key={g.id} value={g.id}>
-                {g.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          {copy("Sürüm", "Rules")}
-          <select value={version} onChange={(e) => setVersion(e.target.value)}>
-            <option value="current">
-              {copy("Güncel oyun", "Current game")}
-            </option>
-            {currentStandRules(game) === 4 && (
-              <option value="3">{copy("Önceki oyun", "Previous game")}</option>
-            )}
-            {game !== "color-cascade" && (
-              <option value="2">
-                {copy("Önceki stant turları", "Earlier stand rounds")}
-              </option>
-            )}
-            {game !== "color-cascade" && (
-              <option value="1">{copy("İlk sürüm", "Original version")}</option>
-            )}
-          </select>
-        </label>
-      </div>
-      {error ? (
-        <p role="alert">
-          {copy(
-            "Skorlar yüklenemedi. Bağlantıyı kontrol et.",
-            "Scores could not load. Check the connection.",
-          )}
-        </p>
-      ) : !data ? (
-        <p role="status">{copy("Yükleniyor…", "Loading…")}</p>
-      ) : data.entries.length ? (
-        <ol className="stand-score-list">
-          {data.entries.map((entry) => (
-            <li key={entry.id}>
-              <span>{entry.rank}</span>
-              <strong>
-                {entry.challenger === "Anonymous Challenger"
-                  ? copy("İsimsiz oyuncu", "Anonymous player")
-                  : entry.challenger}
-              </strong>
-              <b>{entry.score.toLocaleString()}</b>
-            </li>
-          ))}
-        </ol>
-      ) : (
-        <p>
-          {copy(
-            "Henüz bir skor yok. İlk tur senin olsun.",
-            "No scores yet. Make the first run yours.",
-          )}
-        </p>
-      )}
-    </main>
   );
 }
 export default function StandApp() {

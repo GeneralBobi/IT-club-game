@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useLanguage } from "./i18n";
+import { installHomeMotion } from "./home-motion";
 export type Design = "lobby" | "festival" | "classic";
 export const gameList = [
   {
@@ -92,7 +93,9 @@ export function GamePreview({ id }: { id: StandGameId }) {
       )}
       {id === "zero-point" && (
         <>
-          <strong>05.00</strong>
+          <strong className="preview-clock">
+            <span>05.00</span><span>04.96</span>
+          </strong>
           <div className="preview-time-track">
             <i />
           </div>
@@ -233,6 +236,7 @@ export default function StandHome({
   useEffect(() => {
     const home = homeRef.current;
     if (!home) return;
+    const removeMotion = installHomeMotion(home);
     let visible = true;
     const update = () => {
       home.dataset.motion = visible && !document.hidden ? "running" : "paused";
@@ -247,6 +251,7 @@ export default function StandHome({
     return () => {
       observer.disconnect();
       document.removeEventListener("visibilitychange", update);
+      removeMotion();
     };
   }, []);
   const main = design === "classic" ? gameList : gameList.slice(0, 3);
@@ -264,14 +269,24 @@ export default function StandHome({
           <p>
             {copy("Bir oyun seç, bir tur dene.", "Pick a game. Give it a go.")}
           </p>
-          <img
-            className="festival-rocket"
-            src="/event/rocket-flame.svg"
-            alt=""
-          />
+          <div className="festival-rocket" aria-hidden="true">
+            <svg className="festival-exhaust" viewBox="0 0 120 170" fill="none">
+              <path d="M46 12C43 58 18 75 26 115" />
+              <path d="M62 13C66 55 91 84 84 144" />
+              <path d="M55 38C47 78 61 107 49 158" />
+            </svg>
+            <img className="festival-engine" src="/event/rocket-flame.svg" alt="" />
+            <img className="festival-spacecraft" src="/event/rocket.svg" alt="" />
+          </div>
           <div className="festival-flight-stars" aria-hidden="true">
             <img src="/event/star-1.svg" alt="" />
             <img src="/event/star-2.svg" alt="" />
+            <img src="/event/star-1.svg" alt="" />
+            <img src="/event/star-2.svg" alt="" />
+            <img src="/event/star-1.svg" alt="" />
+          </div>
+          <div className="festival-passing-star" aria-hidden="true">
+            <i />
             <img src="/event/star-1.svg" alt="" />
           </div>
           <img className="festival-planet" src="/event/planet-1.svg" alt="" />
@@ -305,7 +320,7 @@ export default function StandHome({
         </div>
         <div className="stand-game-grid">
           {main.map((game) => (
-            <article className="stand-game" key={game.id}>
+            <article className="stand-game" key={game.id} data-game={game.id}>
               <div className="stand-game-copy">
                 <h2>{game.name}</h2>
                 <p>{language === "tr" ? game.tr : game.en}</p>

@@ -13,6 +13,7 @@ colors:
   focus: "#154b87"
   myth: "#7a2e2b"
   fact: "#285b42"
+  gold: "#985d09"
 typography:
   display:
     fontFamily: "Big Shoulders Display, sans-serif"
@@ -129,6 +130,18 @@ components:
     backgroundColor: "{colors.myth}"
     textColor: "#f3efe6"
     rounded: "{rounded.choice}"
+  station-tool:
+    textColor: "{colors.ink}"
+    rounded: "{rounded.action}"
+    padding: "8px"
+    width: "40px"
+  score-filter:
+    textColor: "{colors.ink}"
+    rounded: "{rounded.secondary-lobby}"
+    padding: "8px 14px"
+  score-filter-selected:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.paper}"
   choice-fact:
     backgroundColor: "{colors.fact}"
     textColor: "#f3efe6"
@@ -150,7 +163,7 @@ The shared shell gives original institutional identities quiet space above and b
 - Printed source material with neutral paper and dark ink.
 - Condensed headlines paired with readable Bricolage instructions.
 - Rounded game surfaces, visible controls and direct amber actions.
-- Static original identities and restrained, purposeful motion.
+- Static original identities, coordinated source-art flight and controllable miniature demonstrations.
 
 ## Colors
 
@@ -160,6 +173,7 @@ Amber and coral carry the festival print; neutral paper and ink carry reading an
 - **Festival Amber:** poster field, play actions, selected language underline and heading strokes. The lighter amber is the button hover state.
 
 ### Secondary
+- **Record Gold:** trophy and ranking accents, distinct from broad amber play actions.
 - **Registration Coral:** source planet, year stamp, poster registration and scene accents.
 - **Myth Maroon / Fact Green:** the two large Myth or Fact answer controls; paper lettering keeps both readable.
 
@@ -205,10 +219,11 @@ Lobby uses three dominant game cards with a quieter five-choice group. Classic u
 
 ## Elevation & Depth
 
-The interface is largely flat: buttons have no box shadow. Ink borders, colored preview scenes, source grain and halftone distinguish surfaces. Dialogs use a translucent ink backdrop (#121a2c80), without introducing a raised card shadow. Source art remains layered within the poster and previews.
+The interface is largely flat: buttons have no box shadow. Ink borders, colored preview scenes, source grain and halftone distinguish surfaces. Dialogs use a translucent ink backdrop (#121a2c80), without introducing a raised card shadow. A station-control error notice uses a small diffuse shadow to remain readable over the page; this is an overlay exception. Source art remains layered within the poster and previews.
 
 ### Shadow Vocabulary
 - **Poster registration** (`text-shadow: 3px 3px 0 var(--coral)`): the event wordmark and festival invitation only.
+- **Control error notice** (`box-shadow: 0 8px 24px #121a2c18`): a small recovery overlay beneath the station controls.
 - **Preview cursor** (`filter: drop-shadow(1px 2px 2px #0005)`): the small aiming cursor inside Target Rush’s scene.
 
 ### Named Rules
@@ -236,27 +251,40 @@ Light field fill, warm thin border (1px), small corners and comfortable padding;
 ### Navigation
 The identity area leads the shared header. Language controls are text buttons with an amber underline on the selected state. Game navigation and footer utilities pair small line SVG icons with text; hover underlines the label. Responsive wrapping preserves language access while the club-name text is hidden at the narrowest width. Original IT Club artwork and the full DAÜ signature remain whole; the supplied Turkish or English EMURPG / DAÜ / ÖGESİM strip follows below.
 
+### Station Controls and Scoreboards
+Compact line-SVG controls keep scores, sound, menu-animation pause and supported fullscreen in the header. Tool buttons have a 44px minimum height and 40px width (36px on narrow phones), small action curves and a muted-paper hover fill. Pressed toggles use ink with paper icons. Accessible names describe the action; the scores label hides at narrow widths while its button remains available. The mobile header uses two rows, preserving language access. Fullscreen failure appears as a short status notice beneath the controls.
+
+The scoreboard uses a centered 1080px canvas, wrapping game filters with an ink/paper selected state, strong top rule, ranked rows and a pale amber leader band. Large tabular points align at the right; long nicknames wrap. On narrow phones the score unit stacks beneath its number. Loading rows breathe, refresh rotates, and reduced-motion removes both effects. Empty and error states show concrete play or retry actions; earlier-rule boards remain available in disclosure content. Shared results separate score/summary from game detail in two columns, then place replay and save status across the bottom; at 700px they stack with the replay action first.
+
 ### Control Hints
 Real key labels sit in small light keycaps beside concise instructions; mouse and arrow controls use line SVGs. Festival keycaps use an ink outline (1.5px), medium body weight and a compact curve. The hint communicates the actual control before play.
 
 ### Game Previews and Motion
 Previews show miniature mechanics: timer, target field, alignment zone, falling color tiles, snake, quiz answers or case records. Dark scene surfaces keep pale text and coral/amber marks distinct; the source planet forms a foreground horizon. Treat previews as illustrations of gameplay rather than additional controls.
 
-The invitation headline and programme underline arrive once (650ms). The EMUCON wordmark uncovers like printed ink (700ms); its year stamp settles once (650ms, delayed 120ms). The source rocket lifts and settles on a gentle repeating flight (7s), moving at most 11px right and 29px up while its angle varies from 23 to 27 degrees. Three small original event stars pulse and turn subtly (3.8s), with staggered phases. The planet, circuit watermark and complete institutional identities stay static. Hover and keyboard focus trigger short one-shot game demonstrations (750–1100ms). Home animations pause when the page is hidden or the home surface is offscreen. Native route view transitions use a short exit (160ms) and entry (300ms), with a game-page arrival (450ms). Reduced-motion preference disables animations and transitions.
+The printed wordmark uncovers once (720ms), the year stamp lands (650ms after 180ms), and the invitation follows with short clipped reveals (600ms and 500ms). One source-art flight grammar coordinates the rocket (4.8s; up to 13px right and 31px up, 23–28 degrees), independently breathing engine (780ms), dashed exhaust (1.7s, with a 1.3s inner trail), five original stars (3.3s) and a passing star (9.2s). Fine-pointer input adds bounded rocket steering (±9px horizontally, ±8px vertically, ±2 degrees), returning to rest on pointer leave. The planet, circuit watermark and complete institutional identities remain static.
+
+Featured previews demonstrate their mechanics repeatedly at rest, with readable dwells: Zero Point (5.2s), Perfect Align (4.1s), Target Rush (5.6s). Hover or keyboard focus shortens those cycles (2.8s, 2.3s, 3.1s), while row fill and amber actions respond without shifting the grid. This is the user-authorized comprehensive experience revision; the earlier one-shot-only preview rule is superseded.
+
+Home animation pauses when the document is hidden or home is offscreen; individual poster and preview scenes also pause outside the viewport. The header motion toggle pauses menu animation, including pseudo-elements, and persists the preference. Reduced-motion disables decorative flight, preview and transition motion; exhaust and passing-star trails disappear. Native route transitions retain a short exit (160ms) and entry (300ms). Game feedback respects reduced motion separately: Target Rush retains a stepped, four-state target-lifetime indicator because it communicates time rather than decoration.
 
 ### Source Artwork and Print Adaptation
 The club circuit contour sits faintly behind the web poster at its right edge (10% opacity, 89% width, right offset -23%, top 21%). It uses source geometry rather than invented circuit decoration. The October reference supplies this motif treatment; the existing amber festival palette and current event information remain the composition's source.
 
-The A3 adaptation retains the same printed materials, condensed type, source planet and rocket, and static circuit motif. It uses a portrait trim (297 × 420mm), surrounding bleed (5mm; media 307 × 430mm) and content inset of at least 5mm. The university signature comes from the supplied guide's original outlined vector lockup, with its emblem at 33mm; the Turkish organizer strip stays whole. Independently composed lettering is outlined, event illustrations remain vectors, and placed raster artwork meets at least 300 effective ppi. Print colors use CMYK with a FOGRA39 output intent. These are print-production adaptations, not replacement web tokens. `scripts/poster/build_a3.py` produces the PDF, its rendered trim preview and the print-check report under `output/pdf/`.
+The current A3 v2 directly reconstructs the user's 584×748 amber poster crop with the actual source vectors and fonts. The artwork fills the upper 375mm (89.3% of the 297 × 420mm trim), followed by one quiet 45mm institutional row; there is no upper identity band. The full official DAÜ outlined signature appears once, with a 33mm emblem, beside the whole club, directorate and EMURPG identities. The first adaptation with large separate white header/footer bands is rejected historical output, not an approved pattern.
+
+The final page has 5mm bleed (307 × 430mm media) and at least 5mm content inset. Independently composed type is outlined; source illustrations remain vectors. The v2 check records no embedded fonts, no RGB paint streams, DeviceCMYK with a FOGRA39 output intent, 300ppi background and identity rasters above 600 effective ppi. `scripts/poster/build_a3_v2.py` with `poster_tools.py` produces `output/pdf/EMUCON-Oyuna-Gel-A3-v2-baski.pdf`, `-onizleme.png` and `-kontrol.json`. These are production adaptations, not additional web palette tokens.
 
 ### Game State Presentation
 Zero Point presents a target duration and a continuously visible clock. Targets vary from 1.5 to 7 seconds and never repeat the immediately preceding target. The result shows points and timing error beside the same clock; Space, Enter or the broad next-target action starts another round directly without setup. Forgiving scoring awards up to 1000 points, with a 100ms full-score tolerance.
 
 Perfect Align starts moving immediately after the initial action. The normalized marker speed starts at 0.65 and rises by 0.045 per hit, capped at 1.25; the target zone narrows with progression. Successful hits keep the marker, zone and streak feedback visible for 220ms before the next stage begins automatically. A miss ends the run.
 
-Target Rush is a 20-second sprint. Each hit immediately replaces the target; the score, time and streak multiplier stay visible above the field. Consecutive hits increase the multiplier in four-hit steps, capped at five; gold targets award triple points. Misses and expired targets reset the streak without subtracting earned points. The result action starts a new sprint directly. Target arrival (140ms) and floating score feedback (550ms) support the action; the remaining-time track changes by transform (80ms), with reduced-motion overrides.
+Target Rush is a 20-second sprint. Each hit immediately replaces the target; the score, time and streak multiplier stay visible above the field. Consecutive hits increase the multiplier in four-hit steps, capped at five; gold targets award triple points. Misses and expired targets reset the streak without subtracting earned points. The result action starts a new sprint directly. Target arrival (130ms) and floating score feedback (550ms) support the action; the remaining-time track changes by transform (80ms), with reduced-motion overrides.
 
 Color Cascade runs the original HTML, CSS and JavaScript from public/games/color-cascade in an iframe, byte-identical to vendor/color-cascade. The source's dark styling, native Segoe UI font stack, four game colors, hearts, effects, internal English text and mouse controls override station rules inside the frame. Preserve the source rather than recreate or reskin it: no added numeric tile labels, lane keys, pause UI or replacement engine. The outer station provides bilingual instructions, optional player name, navigation, fullscreen and an observer that reads the original final score without modifying the source. Its frame has a responsive height (clamp(480px, 75svh, 850px)) and a rounded outer edge (12px); fullscreen removes the outer curve. These original game materials are a local source exception, not new shared tokens.
+
+The feedback extension adds a visible Zero Point progress measure and five-round history, an alignment hit ribbon and last-shot replay diagram, Target Rush target-lifetime ring, impact marks and multiplier steps, and clear quiz correctness feedback with numbered answer keycaps. Short result reveals (360ms), question reveals (220ms), hit registration (220ms) and score response (180ms) support the existing game rules. Failures to reconnect or save show recovery copy and retry controls rather than replacing an active round with an empty screen.
 
 All four changed games use the current rules version for their scoreboards, keeping earlier-rule scores separate.
 
@@ -269,7 +297,7 @@ All four changed games use the current rules version for their scoreboards, keep
 - **Do** adapt print output with the original outlined university lockup, vector type and illustrations, CMYK FOGRA39 and at least 300 effective ppi for placed raster artwork.
 - **Do** keep both language states legible and use the corresponding supplied organizer strip.
 - **Do** show the control hint beside each game and keep the primary action broad.
-- **Do** honor reduced motion and pause home animation when hidden or offscreen.
+- **Do** honor reduced motion, the persistent menu-animation pause control, and hidden/offscreen scene pauses.
 - **Do** keep the laptop menu in the first viewport and the intact institutional footer below the fold.
 - **Do** preserve Color Cascade’s original source and presentation inside its iframe; apply station styling and bilingual instructions around it.
 
@@ -277,5 +305,8 @@ All four changed games use the current rules version for their scoreboards, keep
 - **Don't** redraw, distort, recolor, rotate or animate institutional identities.
 - **Don't** carry the rejected neon command-center or sci-fi HUD treatment into new surfaces.
 - **Don't** turn poster registration into hard offset shadows on controls or containers.
-- **Don't** run repeating game demonstrations across the menu; demonstrations are one-shot responses to hover or keyboard focus.
+- **Don't** apply the superseded one-shot-only restriction to the featured menu previews; preserve their readable dwells and controllable cycles.
 - **Don't** add numeric labels, lane keys, pause controls or a replacement engine to the original Color Cascade.
+
+
+The legacy measurement exception remains: an older automated lobby comparison demands replacing the exact official university asset to match a malformed generated signature. Keep the original identity; do not claim that gate passed or force its state. Current evidence is the festival screenshot packet under `.impeccable/review/experience-v2/` and the v2 print preview/check report. These documents describe the implementation and do not assert user acceptance.

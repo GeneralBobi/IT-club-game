@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLanguage } from "./i18n";
 
 export type Ranking = { id: string; rank: number; challenger: string; score: number; completedAt: number };
@@ -6,7 +6,9 @@ export type Rankings = { game: string; entries: Ranking[]; updatedAt: string };
 export type Overview = { participants: number; gamesPlayed: number; activeSessions: number; database: string; updatedAt: string };
 
 async function request<T>(url: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(url, { ...options, signal: AbortSignal.timeout(10_000) });
+  const timeout = AbortSignal.timeout(10_000);
+  const signal = options?.signal ? AbortSignal.any([options.signal, timeout]) : timeout;
+  const response = await fetch(url, { ...options, signal });
   if (!response.ok) throw new Error("Unable to reach the arena database. Please retry.");
   return response.status === 204 ? undefined as T : response.json();
 }
@@ -15,32 +17,48 @@ export function useLiveData<T>(url: string) {
   const [result, setResult] = useState<{ url: string; data: T } | null>(null);
   const [error, setError] = useState(false);
   const [connected, setConnected] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const refreshRef = useRef<() => Promise<void>>(async () => {});
+  const refreshNow = useCallback(() => refreshRef.current(), []);
   useEffect(() => {
     let disposed = false;
     let loading = false;
     let queued = false;
+    const controller = new AbortController();
     setError(false);
     setConnected(false);
     const refresh = async () => {
       if (loading) { queued = true; return; }
       loading = true;
+      if (!disposed) setRefreshing(true);
       try {
-        const data = await request<T>(url);
+        const data = await request<T>(url, { signal: controller.signal });
         if (!disposed) { setResult({ url, data }); setError(false); }
       } catch { if (!disposed) setError(true); }
-      finally { loading = false; if (queued && !disposed) { queued = false; void refresh(); } }
+      finally {
+        loading = false;
+        if (!disposed) setRefreshing(false);
+        if (queued && !disposed) { queued = false; void refresh(); }
+      }
     };
+    refreshRef.current = refresh;
     void refresh();
     const events = new EventSource("/api/events");
     events.onopen = () => { if (!disposed) { setConnected(true); void refresh(); } };
     events.onerror = () => { if (!disposed) setConnected(false); };
     events.addEventListener("change", refresh);
     // Polling also catches expired sessions and provides a fallback when streaming is unavailable.
-    const interval = window.setInterval(refresh, 15_000);
-    window.addEventListener("focus", refresh);
-    return () => { disposed = true; events.close(); clearInterval(interval); window.removeEventListener("focus", refresh); };
+    const refreshVisible = () => { if (!document.hidden) void refresh(); };
+    const interval = window.setInterval(refreshVisible, 15_000);
+    window.addEventListener("focus", refreshVisible);
+    document.addEventListener("visibilitychange", refreshVisible);
+    return () => {
+      disposed = true; controller.abort(); events.close(); clearInterval(interval);
+      window.removeEventListener("focus", refreshVisible);
+      document.removeEventListener("visibilitychange", refreshVisible);
+    };
   }, [url]);
-  return { data: result?.url === url ? result.data : null, error, live: connected && !error };
+  return { data: result?.url === url ? result.data : null, error, live: connected && !error, refreshing, refresh: refreshNow };
 }
 
 function stored(key: string, fallback: () => string) {

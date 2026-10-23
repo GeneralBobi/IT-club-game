@@ -64,3 +64,24 @@ test("Digital Detective keeps its fictional clues after refresh and gives a supp
 test("Next player waits for a successful reset, traps focus and clears the nickname and owned run",async({page})=>{
  await page.goto("/lobby/myth-fact");await page.getByRole("textbox",{name:"Takma ad",exact:true}).fill("Previous visitor");await page.getByRole("button",{name:"Başla",exact:true}).click();await expect(page.locator(".claim-statement")).toBeVisible();await page.getByRole("button",{name:"Yeni oyuncu",exact:true}).click();const dialog=page.getByRole("dialog");await expect(dialog).toBeVisible();await page.route("**/api/player/reset",route=>route.fulfill({status:503,body:""}));await dialog.getByRole("button",{name:"Yeni oyuncuyu hazırla",exact:true}).click();await expect(dialog.getByRole("alert")).toBeVisible();expect(await page.evaluate(()=>localStorage.getItem("arena-challenger"))).toBe("Previous visitor");await page.unroute("**/api/player/reset");await dialog.getByRole("button",{name:"Yeni oyuncuyu hazırla",exact:true}).click();await expect(page.locator(".stand-home")).toBeVisible();expect(await page.evaluate(()=>localStorage.getItem("arena-challenger"))).toBeNull();await page.getByRole("button",{name:"Myth or Fact",exact:false}).click();await expect(page.getByRole("textbox",{name:"Takma ad",exact:true})).toHaveValue("");
 });
+
+test("Station controls pause menu motion persistently and keep scores within reach",async({page})=>{
+ await page.goto('/festival');
+ const pause=page.getByRole('button',{name:'Menü animasyonlarını duraklat',exact:true});await pause.click();
+ await expect(page.locator('.stand-root')).toHaveAttribute('data-effects','paused');
+ expect(await page.locator('.festival-rocket').evaluate(e=>getComputedStyle(e).animationPlayState)).toBe('paused');
+ await page.reload();await expect(page.getByRole('button',{name:'Menü animasyonlarını sürdür',exact:true})).toHaveAttribute('aria-pressed','true');
+ await page.getByRole('button',{name:'Menü animasyonlarını sürdür',exact:true}).click();await expect(page.locator('.stand-root')).toHaveAttribute('data-effects','playing');
+ await page.getByRole('button',{name:'Sesi aç',exact:true}).click();await expect(page.getByRole('button',{name:'Sesi kapat',exact:true})).toHaveAttribute('aria-pressed','true');
+ const scores=page.getByRole('button',{name:'Skorlar',exact:true});const box=await scores.boundingBox();expect(box!.y+box!.height).toBeLessThan(110);await scores.click();await expect(page).toHaveURL(/\/festival\/scores$/);
+});
+
+test("Scoreboard recovers from a failed request and empty boards launch the chosen game",async({page})=>{
+ let unavailable=true;
+ await page.route('**/api/events',route=>route.abort());
+ await page.route('**/api/leaderboard/**',route=>unavailable?route.fulfill({status:503,contentType:'application/json',body:'{}'}):route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({game:'zero-point',entries:[],updatedAt:new Date().toISOString()})}));
+ await page.goto('/festival/scores');await expect(page.getByRole('alert')).toContainText('Skorlar güncellenemedi');
+ await expect(page.getByRole('button',{name:'Tekrar dene',exact:true})).toBeEnabled();unavailable=false;await page.getByRole('button',{name:'Tekrar dene',exact:true}).click();await expect(page.getByRole('heading',{name:'İlk skor senin olsun.',exact:true})).toBeVisible();
+ await page.getByRole('group',{name:'Oyun',exact:true}).getByRole('button',{name:'Perfect Align',exact:true}).click();await expect(page.getByRole('button',{name:'Perfect Align',exact:true})).toHaveAttribute('aria-pressed','true');
+ await page.getByRole('button',{name:'Oyuna geç',exact:true}).click();await expect(page).toHaveURL(/\/festival\/perfect-align$/);await expect(page.getByRole('button',{name:'Başla',exact:true})).toBeVisible();
+});

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-22T08:09:49.4795281Z",
+  "generatedAt": "2026-10-22T12:04:10.616041+00:00",
   "title": "Design System: EMU IT Club — EMUCON Games",
   "extensions": {
     "colorMeta": {
@@ -157,6 +157,20 @@
           "oklch(84% 0.0696 160.04)",
           "oklch(95% 0.0696 160.04)"
         ]
+      },
+      "gold": {
+        "role": "secondary",
+        "displayName": "Record Gold",
+        "tonalRamp": [
+          "oklch(15% 0.112 74)",
+          "oklch(26% 0.112 74)",
+          "oklch(38% 0.112 74)",
+          "oklch(49% 0.112 74)",
+          "oklch(61% 0.112 74)",
+          "oklch(72% 0.112 74)",
+          "oklch(84% 0.112 74)",
+          "oklch(95% 0.112 74)"
+        ]
       }
     },
     "typographyMeta": {
@@ -211,6 +225,11 @@
         "name": "preview-cursor",
         "value": "drop-shadow(1px 2px 2px #0005)",
         "purpose": "Filter on the Target Rush preview cursor only."
+      },
+      {
+        "name": "control-error",
+        "value": "0 8px 24px #121a2c18",
+        "purpose": "Station fullscreen recovery status overlay only."
       }
     ],
     "motion": [
@@ -223,31 +242,6 @@
         "name": "poster-arrival",
         "value": "650ms",
         "purpose": "One invitation headline and programme underline arrival."
-      },
-      {
-        "name": "rocket-float",
-        "value": "7s ease-in-out infinite",
-        "purpose": "Source rocket lift/settle, translating at most 11px right and 29px up, rotating 23–27deg; paused while home is hidden or offscreen and disabled for reduced motion."
-      },
-      {
-        "name": "wordmark-ink-uncover",
-        "value": "700ms cubic-bezier(0.16, 1, 0.3, 1)",
-        "purpose": "One EMUCON wordmark uncover from a 75% bottom clip and 7px downward translation; disabled for reduced motion."
-      },
-      {
-        "name": "year-stamp-arrival",
-        "value": "650ms cubic-bezier(0.16, 1, 0.3, 1) 120ms backwards",
-        "purpose": "One year-stamp settle from -9deg and scale 1.07 to -3deg and scale 1, removing 0.8px blur; disabled for reduced motion."
-      },
-      {
-        "name": "source-star-pulse",
-        "value": "3.8s ease-in-out infinite",
-        "purpose": "Three original event stars vary opacity 0.38–1, scale 0.85–1.12 and rotation 0–12deg; second and third phases are -1.4s and -2.6s. Hidden/offscreen pauses; reduced motion disables."
-      },
-      {
-        "name": "preview-demo",
-        "value": "750ms–1100ms",
-        "purpose": "One-shot hover and keyboard-focus demos."
       },
       {
         "name": "route-exit",
@@ -266,7 +260,7 @@
       },
       {
         "name": "rush-arrival",
-        "value": "140ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "value": "130ms cubic-bezier(.16,1,.3,1)",
         "purpose": "Immediate replacement target arrival; disabled for reduced motion."
       },
       {
@@ -278,6 +272,76 @@
         "name": "rush-time-track",
         "value": "80ms linear",
         "purpose": "Transform-based remaining-time track; disabled for reduced motion."
+      },
+      {
+        "name": "source-flight",
+        "value": "4.8s ease-in-out infinite",
+        "purpose": "Source rocket lifts up to 13px right and 31px up, rotating 23–28deg."
+      },
+      {
+        "name": "engine-breathe",
+        "value": "780ms ease-in-out infinite",
+        "purpose": "Independent original engine breathing."
+      },
+      {
+        "name": "exhaust",
+        "value": "1.7s linear infinite",
+        "purpose": "Dashed source-art flight trails; inner trail 1.3s."
+      },
+      {
+        "name": "wordmark-ink-uncover",
+        "value": "720ms cubic-bezier(.16,1,.3,1)",
+        "purpose": "One clipped wordmark arrival."
+      },
+      {
+        "name": "year-stamp-arrival",
+        "value": "650ms cubic-bezier(.16,1,.3,1) 180ms backwards",
+        "purpose": "One printed year-stamp landing."
+      },
+      {
+        "name": "source-star-pulse",
+        "value": "3.3s ease-in-out infinite",
+        "purpose": "Five staggered original stars; original identities remain static."
+      },
+      {
+        "name": "passing-star",
+        "value": "9.2s cubic-bezier(.3,.6,.6,1) infinite",
+        "purpose": "Infrequent source star with short trail."
+      },
+      {
+        "name": "preview-zero",
+        "value": "5.2s; hover/focus 2.8s",
+        "purpose": "Repeating timer demonstration with readable dwell."
+      },
+      {
+        "name": "preview-align",
+        "value": "4.1s; hover/focus 2.3s",
+        "purpose": "Repeating marker and hit demonstration."
+      },
+      {
+        "name": "preview-rush",
+        "value": "5.6s; hover/focus 3.1s",
+        "purpose": "Repeating cursor and hit demonstration."
+      },
+      {
+        "name": "result-print",
+        "value": "360ms cubic-bezier(.16,1,.3,1)",
+        "purpose": "Short shared result reveal."
+      },
+      {
+        "name": "question-ink",
+        "value": "220ms ease-out",
+        "purpose": "Question arrival; feedback 180ms."
+      },
+      {
+        "name": "score-refresh",
+        "value": "850ms linear infinite",
+        "purpose": "Refresh icon during loading; reduced-motion disables."
+      },
+      {
+        "name": "score-loading",
+        "value": "1.5s ease-in-out infinite",
+        "purpose": "Breathing skeleton rows; reduced-motion disables."
       }
     ],
     "breakpoints": [
@@ -296,6 +360,14 @@
       {
         "name": "festival-laptop-fit",
         "value": "(min-width: 1000px) and (min-height: 560px)"
+      },
+      {
+        "name": "result-stack",
+        "value": "700px"
+      },
+      {
+        "name": "station-phone",
+        "value": "420px"
       }
     ]
   },
@@ -348,28 +420,28 @@
       "css": ".ds-hint{display:flex;align-items:center;gap:12px;font:400 17px/1.5 Bricolage,Arial,sans-serif;color:var(--ink,#121a2c)}.ds-hint kbd{font:500 17px/1.5 Bricolage,Arial,sans-serif;border:1.5px solid var(--ink,#121a2c);background:#f9f6ef;border-radius:5px;padding:7px 20px}"
     },
     {
-      "name": "Efsane Choice",
-      "kind": "button",
-      "refersTo": "choice-myth",
-      "description": "Large answer control in Myth or Fact.",
-      "html": "<button class=\"ds-myth\">Efsane</button>",
-      "css": ".ds-myth{font:800 30px/1.5 Bricolage,Arial,sans-serif;background:var(--myth,#7a2e2b);color:#f3efe6;border:1px solid transparent;border-radius:12px;min-height:100px;padding:12px 30px}.ds-myth:hover{filter:brightness(1.15)}.ds-myth:focus-visible{outline:3px solid #154b87;outline-offset:5px}"
-    },
-    {
-      "name": "Gerçek Choice",
-      "kind": "button",
-      "refersTo": "choice-fact",
-      "description": "Large answer control in Myth or Fact.",
-      "html": "<button class=\"ds-fact\">Gerçek</button>",
-      "css": ".ds-fact{font:800 30px/1.5 Bricolage,Arial,sans-serif;background:var(--fact,#285b42);color:#f3efe6;border:1px solid transparent;border-radius:12px;min-height:100px;padding:12px 30px}.ds-fact:hover{filter:brightness(1.15)}.ds-fact:focus-visible{outline:3px solid #154b87;outline-offset:5px}"
-    },
-    {
       "name": "Laptop Festival Action",
       "kind": "button",
       "refersTo": "button-festival-laptop",
       "description": "Height-aware Festival play action; minimum height 44px.",
       "html": "<button class=\"ds-laptop-play\">Oyna <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M5 12h14m-6-6 6 6-6 6\"/></svg></button>",
       "css": ".ds-laptop-play{display:flex;align-items:center;justify-content:center;gap:10px;font:800 clamp(20px,3svh,27px)/1.1 Bricolage,Arial,sans-serif;background:var(--amber,#de9e36);color:var(--ink,#121a2c);border:1px solid transparent;border-radius:10px;padding:10px 12px;min-height:44px;height:clamp(44px,7.5svh,64px);transition:background 160ms,transform 200ms cubic-bezier(.16,1,.3,1)}.ds-laptop-play svg{width:21px;height:21px;transition:transform 200ms cubic-bezier(.16,1,.3,1)}.ds-laptop-play:hover{background:var(--amber-hover,#efb654)}.ds-laptop-play:active{transform:scale(.97)}.ds-laptop-play:focus-visible{outline:3px solid #154b87;outline-offset:5px}.ds-laptop-play:is(:hover,:focus-visible) svg{transform:translateX(4px)}@media(prefers-reduced-motion:reduce){.ds-laptop-play,.ds-laptop-play svg{transition:none}}"
+    },
+    {
+      "name": "Station Toggle",
+      "kind": "button",
+      "refersTo": "station-tool",
+      "description": "Compact menu-motion pause control; pressed state uses ink and paper.",
+      "html": "<button class=\"ds-tool\" aria-pressed=\"true\" aria-label=\"Menu animation paused\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"6\" y=\"4\" width=\"4\" height=\"16\"/><rect x=\"14\" y=\"4\" width=\"4\" height=\"16\"/></svg></button>",
+      "css": ".ds-tool{display:inline-flex;align-items:center;justify-content:center;width:40px;min-height:44px;border:0;border-radius:10px;background:transparent;color:var(--ink,#121a2c);padding:8px;transition:background 150ms,color 150ms}.ds-tool:hover{background:#ded9ce}.ds-tool[aria-pressed=true]{background:var(--ink,#121a2c);color:var(--paper,#f0ede6)}.ds-tool:active svg{transform:scale(.9)}.ds-tool:focus-visible{outline:3px solid #154b87;outline-offset:5px}"
+    },
+    {
+      "name": "Score Filter",
+      "kind": "chip",
+      "refersTo": "score-filter",
+      "description": "Wrapping scoreboard game selection.",
+      "html": "<button class=\"ds-score-filter\" aria-pressed=\"true\">Zero Point</button>",
+      "css": ".ds-score-filter{min-height:44px;padding:8px 14px;border:1px solid var(--line,#b6b5ae);background:transparent;color:var(--ink,#121a2c);border-radius:8px;font:600 14px Bricolage,Arial,sans-serif;transition:background 150ms,border-color 150ms}.ds-score-filter:hover{background:#e6e0d4;border-color:var(--ink,#121a2c)}.ds-score-filter[aria-pressed=true]{background:var(--ink,#121a2c);color:var(--paper,#f0ede6);border-color:var(--ink,#121a2c)}.ds-score-filter:focus-visible{outline:3px solid #154b87;outline-offset:5px}"
     }
   ],
   "narrative": {
@@ -379,7 +451,7 @@
       "Printed source material with neutral paper and dark ink.",
       "Condensed headlines paired with readable Bricolage instructions.",
       "Rounded game surfaces, visible controls and direct amber actions.",
-      "Static original identities and restrained, purposeful motion."
+      "Static original identities, coordinated source-art flight and controllable miniature demonstrations."
     ],
     "rules": [
       {
@@ -405,7 +477,7 @@
       "Do adapt print output with the original outlined university lockup, vector type and illustrations, CMYK FOGRA39 and at least 300 effective ppi for placed raster artwork.",
       "Do keep both language states legible and use the corresponding supplied organizer strip.",
       "Do show the control hint beside each game and keep the primary action broad.",
-      "Do honor reduced motion and pause home animation when hidden or offscreen.",
+      "Do honor reduced motion, the persistent menu-animation pause control, and hidden/offscreen scene pauses.",
       "Do keep the laptop menu in the first viewport and the intact institutional footer below the fold.",
       "Do preserve Color Cascade’s original source and presentation inside its iframe; apply station styling and bilingual instructions around it."
     ],
@@ -413,7 +485,7 @@
       "Don't redraw, distort, recolor, rotate or animate institutional identities.",
       "Don't carry the rejected neon command-center or sci-fi HUD treatment into new surfaces.",
       "Don't turn poster registration into hard offset shadows on controls or containers.",
-      "Don't run repeating game demonstrations across the menu; demonstrations are one-shot responses to hover or keyboard focus.",
+      "Don't apply the superseded one-shot-only restriction to the featured menu previews; preserve their readable dwells and controllable cycles.",
       "Don't add numeric labels, lane keys, pause controls or a replacement engine to the original Color Cascade."
     ]
   }

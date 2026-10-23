@@ -29,6 +29,9 @@ MEASUREMENT EXCEPTION: The older automated build state still measures the origin
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
+## 22 October comprehensive experience revision
+The user found the first extension underwhelming and explicitly asked for more visible animation, stronger dynamic character, code/UX improvements and parallel agents. This overrides the earlier prohibition on simultaneously repeating featured previews. Use a coordinated source-art flight scene with independently alive engine/exhaust/stars, readable at-rest miniature demonstrations and pointer/keyboard feedback. Full logos and the faint circuit remain static. Add reachable station controls for scores, sound, menu-motion pause and fullscreen; keep the laptop header height and first-screen eight choices. Improve actual game feedback and transient-error recovery without changing scoring contracts or the original Color Cascade files. The A3 composition must now follow the user's direct poster crop; the old large white header/footer adaptation is rejected.
+
 ## Latest 21 October correction - overrides the earlier laptop fit
 Boran rejected the previous screenshot with footer logos in the first viewport: the intact footer should remain below the fold and the menu should use that recovered height. Preserve the poster/programme topology and exact branding, with all eight choices fitting from 1024x600 and mobile naturally scrolling. Do not fit the footer back into the screen.
 

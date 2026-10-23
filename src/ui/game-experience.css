@@ -1,0 +1,159 @@
+/* Play feedback follows the festival's ink, paper and registration colors. */
+.stand-game-page .big-stop {border-radius:14px;min-height:82px;transition:background-color 130ms,transform 130ms}
+.stand-game-page .big-stop:active:not(:disabled) {transform:scale(.99)}
+.stand-game-page .big-stop:disabled {opacity:1;background:#285b42;color:var(--paper)}
+.stand-game-page .stand-result {animation:game-result-print 360ms cubic-bezier(.16,1,.3,1)}
+.stand-game-page .stand-result>svg {color:#93413b;stroke-width:1.6}
+.stand-game-page .stand-result-score {font-size:clamp(78px,12svh,112px)}
+.stand-game-page .quick-zero .zero-target {color:var(--muted);font-size:clamp(28px,4.5svh,43px)}
+.stand-game-page .quick-zero .zero-target span {color:var(--ink)}
+.stand-game-page .quick-zero .stage-clock {min-height:clamp(150px,25svh,215px)}
+.stand-game-page .quick-zero .visible-clock {font-size:clamp(96px,20svh,170px);letter-spacing:-.025em}
+.stand-game-page .zero-measure {height:12px;margin:0 12px 34px;border:1px solid var(--ink);border-radius:6px;position:relative;container-type:inline-size;background:#e0dbd1}
+.stand-game-page .zero-measure-fill {position:absolute;inset:0;background:var(--amber);transform-origin:left;border-radius:5px}
+.stand-game-page .zero-measure-target {position:absolute;left:80%;top:-8px;bottom:-8px;width:2px;background:var(--ink)}
+.stand-game-page .zero-measure-marker {position:absolute;left:0;top:-2px;bottom:-2px;width:5px;background:var(--ink);margin-left:-2px;border-radius:2px}
+.stand-game-page .zero-measure small {position:absolute;top:18px;font-size:13px;line-height:1;font-variant-numeric:tabular-nums}
+.stand-game-page .zero-measure small:not(:last-child) {left:0}
+.stand-game-page .zero-measure small:last-child {left:80%;translate:-50% 0;font-weight:800}
+.stand-game-page .zero-feedback {min-height:48px}
+.stand-game-page .quick-zero[data-state="complete"] .zero-feedback {animation:game-result-print 240ms ease-out;color:var(--ink)}
+.stand-game-page .zero-feedback .zero-points {font:900 42px/1 "Big Shoulders Display",sans-serif}
+.stand-game-page .zero-history {border-top:1px solid var(--line);padding-top:16px;margin-top:24px;text-align:left;display:flex;gap:24px;align-items:center}
+.stand-game-page .zero-history>span {font-size:13px;color:var(--muted);max-width:8ch}
+.stand-game-page .zero-history ol {display:flex;gap:clamp(12px,3vw,32px);list-style:none;margin:0;padding:0;flex-wrap:wrap}
+.stand-game-page .zero-history li {display:grid;gap:3px;font-variant-numeric:tabular-nums}
+.stand-game-page .zero-history li>span, .stand-game-page .zero-history li>small {font-size:12px;color:var(--muted)}
+.stand-game-page .zero-history li>strong {font:900 32px/1 "Big Shoulders Display",sans-serif}
+.stand-game-page .align-streak-feedback {text-align:center;min-height:32px;margin:28px 0 0;font-size:19px;font-weight:700}
+.stand-game-page .align-streak-stage[data-state="result"] .align-streak-feedback {color:#285b42}
+.stand-game-page .align-game-track {height:52px;margin:clamp(65px,12svh,105px) 0;background:#dcd8d0;border:1px solid #a9a69e;border-radius:12px}
+.stand-game-page .align-game-zone {border-radius:10px;background:#78a888;border:1px solid #285b42;display:flex;justify-content:center;align-items:center;transition:background-color 100ms}
+.stand-game-page .align-game-zone>i {height:16px;width:2px;background:#285b42;opacity:.65}
+.stand-game-page .align-marker-rail {position:absolute;inset:0;container-type:inline-size;pointer-events:none}
+.stand-game-page .align-marker-rail .align-game-marker {left:0;top:-20px;height:90px;width:6px;margin-left:-3px;border-radius:3px}
+.stand-game-page .align-game-marker::before, .stand-game-page .align-game-marker::after {content:"";position:absolute;left:-5px;width:16px;height:5px;background:var(--ink);border-radius:3px}
+.stand-game-page .align-game-marker::before {top:0}.align-game-marker::after {bottom:0}
+.stand-game-page .align-game-track[data-state="result"] .align-game-zone {background:#b0cead;animation:align-hit-ink 220ms ease-out}
+.stand-game-page .align-game-track[data-state="result"] .align-game-marker {background:#285b42}
+.stand-game-page .align-score-ribbon {display:flex;align-items:center;justify-content:center;gap:8px;margin:0 0 28px;min-height:25px}
+.stand-game-page .align-score-ribbon>span {display:grid;place-items:center;width:25px;height:25px;border:1px solid var(--line);border-radius:50%}
+.stand-game-page .align-score-ribbon>span[data-hit="true"] {background:#285b42;border-color:#285b42;color:var(--paper)}
+.stand-game-page .align-score-ribbon strong {font-size:13px;margin-left:8px;font-weight:500}
+.stand-game-page .align-finish {display:block;margin:16px auto 0}
+.stand-game-page .align-last-shot {max-width:680px;margin:30px auto 0;text-align:left}
+.stand-game-page .align-last-shot p {font-size:15px;color:var(--muted);text-align:center}
+.stand-game-page .align-last-shot .align-game-track {margin:34px 0 44px;height:34px}
+.stand-game-page .align-last-shot .align-game-marker {top:-11px;height:54px;background:var(--coral)}
+.stand-game-page .align-last-shot .align-game-marker::before, .stand-game-page .align-last-shot .align-game-marker::after {background:var(--coral)}
+.stand-game-page .rush-sprint .stage-meta {align-items:center;gap:12px}
+.stand-game-page .rush-seconds {font:900 clamp(32px,5svh,46px)/1 "Big Shoulders Display",sans-serif;min-width:70px}
+.stand-game-page .rush-score-total {font-size:clamp(18px,3svh,26px);animation:rush-score-ink 180ms ease-out}
+.stand-game-page .rush-sprint[data-pressure="true"] .rush-seconds {color:#943731}
+.stand-game-page .rush-sprint .rush-playfield {background:#1e2333;border-radius:18px}
+.stand-game-page .rush-sprint .rush-target {animation:rush-target-register 130ms cubic-bezier(.16,1,.3,1);outline:0;border:3px solid var(--paper);background:var(--coral)}
+.stand-game-page .rush-sprint .rush-target:hover {background:#dc6b62}
+.stand-game-page .rush-sprint .rush-target.is-golden {background:var(--amber)}
+.stand-game-page .rush-sprint .rush-target:focus-visible {outline:3px solid #fffdf7;outline-offset:12px}
+.stand-game-page .rush-target-life {position:absolute;inset:-12px;width:calc(100% + 24px);height:calc(100% + 24px);overflow:visible;rotate:-90deg;pointer-events:none}
+.stand-game-page .rush-target-life circle {fill:none;stroke:var(--paper);stroke-width:3;stroke-dasharray:1;animation:rush-life var(--target-lifetime) linear forwards}
+.stand-game-page .is-golden .rush-target-life circle {stroke:var(--amber)}
+.stand-game-page .rush-gold-value {position:relative;z-index:1;font-size:15px;font-weight:800;color:var(--ink);pointer-events:none}
+.stand-game-page .rush-target:has(.rush-gold-value):after {inset:9px;opacity:.5}
+.stand-game-page .rush-feedback-position {position:absolute;pointer-events:none;z-index:3}
+.stand-game-page .rush-feedback-position .rush-pop {position:relative;display:block;left:auto;top:auto;white-space:nowrap}
+.stand-game-page .rush-impact {position:absolute;width:62px;height:62px;left:-31px;top:-31px;border:3px solid var(--paper);border-radius:50%;animation:rush-impact 350ms ease-out forwards}
+.stand-game-page .rush-impact.is-golden {border-color:var(--amber)}
+.stand-game-page .rush-impact.is-miss {border-color:var(--coral);width:32px;height:32px;left:-16px;top:-16px}
+.stand-game-page .rush-pop.is-miss {color:#f1b0a6;animation-duration:350ms}
+.stand-game-page .rush-reward {align-items:center;flex-wrap:wrap;justify-content:flex-start;font-size:14px;gap:10px}
+.stand-game-page .rush-reward>span:last-child {margin-left:auto}
+.stand-game-page .rush-combo-steps {display:flex;gap:4px}
+.stand-game-page .rush-combo-steps i {width:10px;height:10px;background:#d1c9ba;border-radius:50%;transition:background-color 120ms,transform 120ms}
+.stand-game-page .rush-combo-steps i[data-filled="true"] {background:var(--coral);transform:scale(1.1)}
+.stand-game-page .question-progress {display:flex;gap:8px;margin-top:20px}
+.stand-game-page .question-progress i {height:5px;flex:1;background:#d8d2c6;border-radius:3px}
+.stand-game-page .question-progress i[data-complete="true"] {background:var(--ink)}
+.stand-game-page .question-progress i[data-current="true"] {background:var(--amber)}
+.stand-game-page .quiz-question {animation:game-question-ink 220ms ease-out}
+.stand-game-page .quiz-stage .quiz-options button {display:flex;align-items:center;gap:14px;border-radius:12px;transition:background-color 120ms,border-color 120ms}
+.stand-game-page .quiz-options kbd {font-family:inherit;border:1px solid var(--line);border-radius:5px;min-width:29px;height:29px;display:grid;place-items:center;font-size:13px;flex-shrink:0}
+.stand-game-page .quiz-options button>span {flex:1}
+.stand-game-page .quiz-stage .quiz-options button:disabled {opacity:1}
+.stand-game-page .quiz-stage .quiz-options button[data-wrong="true"] {background:#f1d7cf;border-color:#93413b}
+.stand-game-page .quiz-stage .quiz-options button[data-correct="true"] {border-color:#285b42;background:#d0e5ce}
+.stand-game-page .quiz-options button>svg {flex-shrink:0}
+.stand-game-page .quiz-feedback {animation:game-question-ink 180ms ease-out}
+.stand-game-page .quiz-feedback>strong {font-size:24px;color:#7a2e2b}
+.stand-game-page .quiz-feedback[data-correct="true"]>strong {color:#285b42}
+.stand-game-page .quiz-feedback .play-link {justify-self:start}
+.stand-game-page[data-game="snake"] .snake-playfield {border-radius:14px;overflow:hidden;width:min(100%,720px,74.4svh);max-width:100%}
+.stand-game-page .snake-playfield .snake-food {animation:snake-food-arrive 220ms ease-out}
+.stand-game-page .snake-touch button {border-radius:10px;transition:background-color 120ms}
+.stand-game-page .snake-touch button:active {background:var(--amber)}
+.stand-game-page .case-reconnect {padding:32px 0;display:grid;justify-items:center;gap:20px;text-align:center}
+.stand-game-page .case-reconnect h2 {font-size:42px}
+.stand-game-page .myth-stage .claim-statement {animation:game-question-ink 220ms ease-out;margin:clamp(28px,7svh,60px) auto!important}
+.stand-game-page .myth-stage .claim-choices button {transition:background-color 130ms,transform 130ms}
+.stand-game-page .myth-stage .claim-choices button:active {transform:scale(.99)}
+.stand-game-page .myth-reveal>svg {color:#93413b}
+.stand-game-page .myth-reveal[data-correct="true"]>svg {color:#285b42}
+.stand-game-page .myth-reveal .play-link {margin:24px auto 0}
+.stand-game-page .myth-reveal h2 {font-size:clamp(40px,6svh,58px)}
+.stand-game-page .detective-stage .detective-questions label {border-radius:10px;transition:background-color 130ms,border-color 130ms}
+.stand-game-page .detective-answer-count {font-size:15px;color:var(--muted);margin:0 0 14px}
+@keyframes game-result-print {from {clip-path:inset(0 0 10% 0);opacity:.6;transform:translateY(6px)}to {clip-path:inset(0);opacity:1;transform:translateY(0)}}
+@keyframes game-question-ink {from {opacity:.65;transform:translateY(4px)}to {opacity:1;transform:translateY(0)}}
+@keyframes align-hit-ink {from {background-color:#eff5e9}to {background-color:#b0cead}}
+@keyframes rush-target-register {from {clip-path:circle(30%);opacity:.7;scale:.9}to {clip-path:circle(80%);opacity:1;scale:1}}
+@keyframes rush-life {from {stroke-dashoffset:0}to {stroke-dashoffset:1}}
+@keyframes rush-impact {from {opacity:.85;scale:.75}to {opacity:0;scale:1.8}}
+@keyframes rush-score-ink {from {color:#943731}to {color:var(--ink)}}
+@keyframes snake-food-arrive {from {scale:.65}to {scale:1}}
+.stand-game-page .stand-result {display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:24px 40px;padding:18px 0 22px}
+.stand-game-page .result-summary>svg {color:#93413b;stroke-width:1.6}
+.stand-game-page .result-summary h2 {font-size:clamp(38px,6.5svh,52px);margin:12px 0}
+.stand-game-page .result-summary .stand-result-score {font-size:clamp(66px,11svh,90px)}
+.stand-game-page .result-summary>p {font-size:16px;margin:4px 0 0}
+.stand-game-page .result-detail {min-width:0;text-align:center}
+.stand-game-page .result-detail>.result-stats {margin:12px 0;gap:24px}
+.stand-game-page .result-detail .align-last-shot {margin:20px auto 0}
+.stand-game-page .result-detail .align-last-shot .align-game-track {margin:26px 0 34px}
+.stand-game-page .result-outcome {grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px 24px}
+.stand-game-page .result-outcome .score-save-status {margin:0;padding:12px 16px;border-radius:8px}
+.stand-game-page .result-outcome .result-actions {margin:0}
+.stand-game-page .result-outcome>p {grid-column:1/-1;margin:0;font-size:14px;color:var(--muted)}
+@media(max-width:700px) {
+  .stand-game-page .stand-result {grid-template-columns:1fr;gap:18px;padding-top:4px}
+  .stand-game-page .result-summary h2 {font-size:40px;margin:8px 0}
+  .stand-game-page .result-summary .stand-result-score {font-size:66px}
+  .stand-game-page .result-summary>svg {width:28px;height:28px}
+  .stand-game-page .result-detail .align-last-shot {margin-top:12px}
+  .stand-game-page .result-outcome {grid-template-columns:1fr;gap:12px}
+  .stand-game-page .result-outcome .result-actions {grid-row:1}
+  .stand-game-page .result-outcome .result-actions .play-link {width:100%;justify-content:center}
+  .stand-game-page .result-outcome>p {font-size:13px}
+}
+@media(max-width:540px) {
+  .stand-game-page .zero-feedback {gap:14px;flex-wrap:wrap}
+  .stand-game-page .zero-history {align-items:flex-start;gap:14px}
+  .stand-game-page .zero-history ol {gap:16px}
+  .stand-game-page .align-score-ribbon {gap:5px;flex-wrap:wrap}
+  .stand-game-page .align-score-ribbon>span {width:21px;height:21px}
+  .stand-game-page .align-score-ribbon strong {font-size:12px}
+  .stand-game-page .rush-sprint .stage-meta {flex-wrap:wrap}
+  .stand-game-page .rush-combo {font-size:14px;min-width:90px}
+  .stand-game-page .rush-reward>span:last-child {width:100%;margin-left:0}
+  .stand-game-page .quiz-stage .quiz-options button {padding:16px;min-height:70px;gap:10px}
+  .stand-game-page .quiz-options kbd {min-width:25px;height:25px}
+  .stand-game-page[data-game="snake"] .snake-playfield {max-height:none;width:100%}
+}
+@media(prefers-reduced-motion:reduce) {
+  .stand-game-page .stand-result, .stand-game-page .quick-zero[data-state="complete"] .zero-feedback, .stand-game-page .align-game-track[data-state="result"] .align-game-zone, .stand-game-page .rush-sprint .rush-target, .stand-game-page .rush-impact, .stand-game-page .rush-score-total, .stand-game-page .quiz-question, .stand-game-page .quiz-feedback, .stand-game-page .snake-playfield .snake-food {animation:none}
+  .stand-game-page .rush-impact {display:none}
+  .stand-game-page .rush-feedback-position .rush-pop {animation:none}
+  .stand-game-page .big-stop, .stand-game-page .rush-combo-steps i, .stand-game-page .quiz-stage .quiz-options button, .stand-game-page .snake-touch button {transition:none}
+  .stand-game-page .myth-stage .claim-statement {animation:none}
+  .stand-game-page .myth-stage .claim-choices button, .stand-game-page .detective-stage .detective-questions label {transition:none}
+  .stand-game-page .rush-target-life circle {animation:rush-life var(--target-lifetime) steps(4,end) forwards!important}
+}
