@@ -1,0 +1,44 @@
+@font-face{font-family:BigShoulders;src:url('art/big-shoulders-black.ttf') format('truetype');font-weight:900;font-display:block}
+@font-face{font-family:Bricolage;src:url('art/bricolage-bold.ttf') format('truetype');font-weight:700;font-display:block}
+@font-face{font-family:CourierPrime;src:url('art/courier-prime-bold.ttf') format('truetype');font-weight:700;font-display:block}
+:root{--ink:#121a2c;--paper:#f3efe6;--amber:#de9e36;--coral:#c85a53;--plum:#3b2537}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--ink)}
+body{width:1080px;height:1350px;color:var(--paper);font-synthesis:none}
+#poster{isolation:isolate;position:relative;width:1080px;height:1350px;overflow:hidden}
+img{display:block;width:100%;height:auto}p,h1{margin:0}
+.night-field{position:absolute;inset:0;background:linear-gradient(155deg,#1d2a44 0%,#202236 48%,#3b2537 100%);z-index:0}
+.club-watermark{position:absolute;left:355px;top:335px;width:770px;height:770px;opacity:.055;filter:brightness(0) invert(1);z-index:1;pointer-events:none}
+#stars{position:absolute;inset:0;z-index:1}
+.star{position:absolute;object-fit:contain}.s1{left:562px;top:148px;width:31px}.s2{left:44px;top:235px;width:17px}.s3{left:967px;top:360px;width:28px}.s4{left:984px;top:784px;width:23px}.s5{left:606px;top:870px;width:18px}.s6{left:518px;top:1020px;width:19px}
+.pin{position:absolute;width:4px;height:4px;border-radius:50%;background:var(--paper);opacity:.48}.p1{left:616px;top:343px}.p2{left:877px;top:314px}.p3{left:1017px;top:577px}.p4{left:649px;top:748px}.p5{left:56px;top:878px}.p6{left:575px;top:64px}.p7{left:622px;top:514px}.p8{left:69px;top:43px}.p9{left:1043px;top:1070px}
+.festival-identity{position:absolute;left:66px;top:55px;z-index:3;transform:rotate(-3deg)}
+.festival-name{font:900 172px/.97 BigShoulders,sans-serif;letter-spacing:-3px}
+.year{display:inline-block;font:900 34px/1 BigShoulders,sans-serif;background:var(--coral);padding:3px 9px 5px;margin-top:8px;margin-left:420px;border:2px solid var(--paper);transform:rotate(-3deg)}
+.institutional-note{position:absolute;left:651px;top:40px;width:369px;height:246px;transform:rotate(4deg);z-index:11;filter:drop-shadow(0 13px 16px #10121c55)}
+.note-paper{position:absolute;inset:0;width:100%;height:100%}
+.institutional-marks{position:absolute;left:35px;top:54px;right:35px;bottom:26px;display:flex;flex-direction:column;justify-content:center;gap:20px;transform:rotate(-4deg)}
+.emu-mark{width:100%;max-height:65px;object-fit:contain;object-position:left center}
+.directorate-mark{width:100%;max-height:65px;object-fit:contain;object-position:left center}
+.club-stamp{position:absolute;left:76px;top:278px;z-index:5;transform:rotate(-7deg);font:700 42px/1.15 CourierPrime,monospace;color:var(--ink);background:var(--amber);padding:8px 20px 7px;border:4px solid var(--coral);outline:2px solid var(--amber);box-shadow:0 7px 12px #10121c30}
+.headline{position:absolute;left:60px;top:425px;z-index:3;transform:rotate(-3deg);font:900 252px/.77 BigShoulders,sans-serif;letter-spacing:-5px;color:var(--paper);text-shadow:6px 6px 0 var(--coral)}
+.headline span{display:block;white-space:nowrap}.headline span+span{margin-top:45px}
+.game-banner{position:absolute;left:644px;top:367px;width:357px;height:636px;z-index:5;transform:rotate(4deg);filter:drop-shadow(0 13px 16px #10121c55);color:var(--ink);border:24px solid transparent;border-image:url('art/paper-slip.png') 40 20 35 20 fill / 32px 16px 30px 16px / 0 stretch}
+.banner-paper{display:none}
+.banner-content{position:absolute;inset:40px 29px 30px}
+.banner-content h2{margin:0 0 18px;font:700 24px/1.06 CourierPrime,monospace;letter-spacing:-.4px}
+.banner-content figure{margin:0 0 14px}
+.banner-content figure img{width:100%;height:122px;object-fit:cover}
+.banner-content figcaption{font:900 27px/1 BigShoulders,sans-serif;margin-top:5px}
+.date-note{position:absolute;left:40px;top:1080px;width:1000px;height:196px;z-index:3;transform:rotate(-3deg);filter:drop-shadow(0 13px 16px #10121c66)}
+.date-paper{position:absolute;inset:0;width:100%;height:100%}
+.date-copy{position:absolute;left:42px;top:32px;color:var(--ink);width:735px}
+.date{font:900 73px/1 BigShoulders,sans-serif;letter-spacing:-1px}
+.venue{display:flex;align-items:baseline;gap:26px;font:700 26px/1 CourierPrime,monospace;letter-spacing:.3px;border-top:2px solid var(--ink);margin-top:10px;padding-top:9px;white-space:nowrap}
+.festival-hours{font:700 22px/1.1 Bricolage,sans-serif;letter-spacing:0}
+.planet{position:absolute;left:-90px;top:1240px;width:1280px;z-index:4}
+.rocket{position:absolute;left:826px;top:1006px;width:126px;height:310px;z-index:5;transform:rotate(16deg);filter:drop-shadow(0 10px 10px #10121c40)}
+#rocket-body{position:absolute;left:0;top:0;width:126px;height:278px;z-index:2}
+#rocket-flame{position:absolute;left:0;top:0;width:126px;height:278px;z-index:1;transform-origin:50% 70%}
+.print-grain{position:absolute;inset:0;background:url('art/riso-grain.png') repeat;background-size:360px 360px;mix-blend-mode:multiply;opacity:.26;pointer-events:none;z-index:10}
+/* Static by default. Named layers are intentionally left unanimated for the video handoff. */
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
