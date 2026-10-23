@@ -15,7 +15,7 @@ Visitors at the IT Club stand during EMUCON on 24 October 2026. The primary play
 Let a visitor quickly understand a game, play, enjoy the result, and hand the laptop to the next person. The user likes the game ideas but rejects the current visual design and finds the controls and gameplay problematic. Technical deployment success is not gameplay acceptance.
 
 ## Operating Context
-EMUCON is the parent festival. The organizer's shared pack states 24 October 2026, 14:00–20:00, EMU Stadium / Yasin Düşüner Stadyumu. This is the festival time; a separate IT Club operating time has not been confirmed. This site is the IT Club's game station, not the parent festival website.
+EMUCON is the parent festival. The organizer's shared pack states 24 October 2026, 14:00–20:00, EMU Stadium / Yasin Düşüner Stadyumu. Boran confirmed the IT Club booth's own operating hours as 15:00–19:00 on 23 October. Keep booth and festival hours distinct. This site is the IT Club's game station, not the parent festival website.
 
 ## Capabilities and Constraints
 Eight games: Zero Point, Target Rush, Perfect Align, Color Cascade, Brain Firewall, Snake, Myth or Fact, Digital Detective. Scoreboards and staff controls exist. Retain the game ideas while improving clarity, controls, feedback and round flow. Prioritize mouse and keyboard on laptops; retain responsive navigation.
